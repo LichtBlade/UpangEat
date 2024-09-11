@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:upang_eat/Pages/home.dart';
+import 'package:upang_eat/Pages/Home.dart';
+import 'package:upang_eat/Pages/Stalls.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
       routes: {
-        "/": (context) => home(),
+        "/": (context) => const Stalls(),
       },
     );
   }

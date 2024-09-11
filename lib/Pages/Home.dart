@@ -3,7 +3,9 @@ import "package:flutter/material.dart";
 import 'package:upang_eat/Widgets/AppBarWidget.dart';
 import "package:upang_eat/Widgets/CategoriesWidget.dart";
 
-class home extends StatelessWidget {
+class Home extends StatelessWidget {
+  const Home({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,4 +76,6 @@ class home extends StatelessWidget {
       ),
     );
   }
+
+
 }
