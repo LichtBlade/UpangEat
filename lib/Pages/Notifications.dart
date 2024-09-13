@@ -1,14 +1,14 @@
 import "package:flutter/material.dart";
 import "package:upang_eat/Widgets/StallsStallCard.dart";
 
-class Stalls extends StatefulWidget {
-  const Stalls({super.key});
+class Notifications extends StatefulWidget {
+  const Notifications({super.key});
 
   @override
-  State<Stalls> createState() => _StallsState();
+  State<Notifications> createState() => _NotificationsState();
 }
 
-class _StallsState extends State<Stalls> {
+class _NotificationsState extends State<Notifications> {
   final List<Map<String, String>> stallData = [
     {
       'stallName': "Boss Sisig!",
