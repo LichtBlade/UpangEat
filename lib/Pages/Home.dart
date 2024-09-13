@@ -3,15 +3,17 @@ import "package:flutter/material.dart";
 import 'package:upang_eat/Widgets/AppBarWidget.dart';
 import "package:upang_eat/Widgets/CategoriesWidget.dart";
 
-class home extends StatelessWidget {
+class Home extends StatelessWidget {
+  const Home({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
         children: [
-          Appbarwidget(),
+          // Appbarwidget(),   Deleted No Need
           Padding(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               vertical: 10,
               horizontal: 15,
             ),
@@ -26,41 +28,41 @@ class home extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 2,
                       blurRadius: 2,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     )
                   ]),
               child: Padding(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 10,
                 ),
                 child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       CupertinoIcons.search,
                       color: Colors.red,
                     ),
-                    Container(
+                    SizedBox(
                       height: 50,
                       width: 300,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 15,
                         ),
                         child: TextFormField(
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: "What would you like to have?",
                             border: InputBorder.none,
                           ),
                         ),
                       ),
                     ),
-                    Icon(Icons.filter_list),
+                    const Icon(Icons.filter_list),
                   ],
                 ),
               ),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 10),
             child: Text(
               "Categories",
@@ -74,4 +76,6 @@ class home extends StatelessWidget {
       ),
     );
   }
+
+
 }
