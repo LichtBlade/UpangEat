@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:upang_eat/Pages/Home.dart';
-import 'package:upang_eat/Pages/Notifications.dart';
-import 'package:upang_eat/Pages/Stalls.dart';
-import 'package:upang_eat/Pages/Tray.dart';
-import 'package:upang_eat/Pages/Wallet.dart';
-import 'package:upang_eat/Widgets/CustomDrawer.dart';
+import 'package:upang_eat/Pages/home.dart';
+import 'package:upang_eat/Pages/notifications.dart';
+import 'package:upang_eat/Pages/stalls.dart';
+import 'package:upang_eat/Pages/tray.dart';
+import 'package:upang_eat/Pages/wallet.dart';
+import 'package:upang_eat/Widgets/custom_drawer.dart';
 
 void main() {
   runApp(const MyApp());
