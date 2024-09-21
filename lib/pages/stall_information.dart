@@ -9,11 +9,11 @@ class StallInformation extends StatefulWidget {
 
 class _StallInformationState extends State<StallInformation> {
   final List<String> foods = [
-    "../assets/drink.png",
-    "../assets/drink.png",
-    "../assets/drink.png",
-    "../assets/drink.png",
-    "../assets/drink.png",
+    "assets/drink.png",
+    "assets/drink.png",
+    "assets/drink.png",
+    "assets/drink.png",
+    "assets/drink.png",
   ];
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class _StallInformationState extends State<StallInformation> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: const AssetImage(
-                            "../assets/NinongRySpecialDelicacy.jpg"),
+                            "assets/NinongRySpecialDelicacy.jpg"),
                         fit: BoxFit.cover,
                         colorFilter: ColorFilter.mode(
                           Colors.black.withOpacity(0.5),

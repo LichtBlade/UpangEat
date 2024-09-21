@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:upang_eat/Pages/StallInformation.dart';
+import 'package:upang_eat/Pages/stall_information.dart';
 
 class StallsStallCard extends StatelessWidget {
   final String? imageProfile;
@@ -8,8 +8,8 @@ class StallsStallCard extends StatelessWidget {
 
   const StallsStallCard(
       {super.key,
-      this.imageProfile = "../assets/BossSisigProfile.jpg",
-      this.imageBanner = "../assets/BossSisigBanner.jpg",
+      this.imageProfile = "assets/BossSisigProfile.jpg",
+      this.imageBanner = "assets/BossSisigBanner.jpg",
       this.stallName = "Default Name"});
 
   @override
