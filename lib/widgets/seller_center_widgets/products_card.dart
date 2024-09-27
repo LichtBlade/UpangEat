@@ -50,7 +50,7 @@ class _ProductsCardState extends State<ProductsCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.only(top: 70.0, bottom: 4.0, left: 8.0, right: 8.0),
+      margin: const EdgeInsets.only(top: 70.0, bottom: 4.0, left: 8.0, right: 8.0),
       elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -59,10 +59,10 @@ class _ProductsCardState extends State<ProductsCard> {
             // Card title
             Row(
               children: [
-                Flexible(
+                const Flexible(
                   flex: 5,
                   fit: FlexFit.tight,
-                  child: const Text(
+                  child: Text(
                     'Products',
                     style: TextStyle(
                       fontSize: 18.0,
@@ -76,7 +76,7 @@ class _ProductsCardState extends State<ProductsCard> {
                   child: IconButton(
                     onPressed:
                         nxtBtnFunction, // Custom icon button functionality
-                    icon: Icon(Icons.arrow_forward_ios_outlined),
+                    icon: const Icon(Icons.arrow_forward_ios_outlined),
                   ),
                 ),
               ],
@@ -84,11 +84,11 @@ class _ProductsCardState extends State<ProductsCard> {
 
             // Card list
             ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 485, minHeight: 100),
+              constraints: const BoxConstraints(maxHeight: 485, minHeight: 100),
               // Mason Grid view
               child: MasonryGridView.builder(
                 itemCount: _productData.length,
-                gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                 ),
                 itemBuilder: (context, index) {
