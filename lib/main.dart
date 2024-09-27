@@ -9,6 +9,7 @@ import 'package:upang_eat/Widgets/custom_drawer.dart';
 import 'package:upang_eat/bloc/stall_bloc/stall_bloc.dart';
 import 'package:upang_eat/repositories/auth_repository_impl.dart';
 import 'package:upang_eat/repositories/stall_repository_impl.dart';
+import 'package:upang_eat/widgets/app_bar_home.dart';
 import 'package:upang_eat/widgets/user_login.dart';
 
 import 'bloc/login_bloc/login_bloc.dart';
@@ -58,41 +59,14 @@ class _MyAppState extends State<MyApp> {
           title: "Upang Eat",
           debugShowCheckedModeBanner: false,
           theme: ThemeData(),
-          // route for login
-          initialRoute: '/login',
+          
+          initialRoute: '/home',
           routes: {
             '/login': (context) => LoginPage(),
-            '/home': (context) => Scaffold(
-                  appBar: AppBar(
-                    title: const Text("Upang Eats"),
-                    actions: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.notifications_none)),
-                            IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.fastfood_outlined)),
-                          ],
-                        ),
-                      )
-                    ],
-                    leading: Builder(
-                      builder: (context) {
-                        return IconButton(
-                          icon: const Icon(Icons.menu),
-                          onPressed: () {
-                            Scaffold.of(context).openDrawer();
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  drawer: const CustomDrawer(),
-                  body: const Home(),
+            '/home': (context) => const Scaffold(
+                  appBar: AppBarHome(),
+                  drawer: CustomDrawer(),
+                  body: Home(),
                 ),
           }),
     );
