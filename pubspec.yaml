@@ -37,6 +37,8 @@ dependencies:
   flutter_bloc: ^8.1.6
   equatable: ^2.0.5
   http: ^1.2.2
+  skeletonizer: ^1.4.2
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:

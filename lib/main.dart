@@ -6,15 +6,12 @@ import 'package:upang_eat/Pages/stalls.dart';
 import 'package:upang_eat/Pages/tray.dart';
 import 'package:upang_eat/Pages/wallet.dart';
 import 'package:upang_eat/Widgets/custom_drawer.dart';
-// stall_bloc
 import 'package:upang_eat/bloc/stall_bloc/stall_bloc.dart';
-import 'package:upang_eat/repositories/stall_repository_impl.dart';
-// login_bloc
-import 'package:upang_eat/widgets/user_login.dart';
-import 'package:upang_eat/bloc/login_bloc/login_bloc.dart';
 import 'package:upang_eat/repositories/auth_repository_impl.dart';
+import 'package:upang_eat/repositories/stall_repository_impl.dart';
+import 'package:upang_eat/widgets/user_login.dart';
 
-
+import 'bloc/login_bloc/login_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,8 +25,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _selectedBottomNavIndex = 0;
-
   final List<Widget> _pages = [
     const Home(),
     const Stalls(),
@@ -46,7 +41,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // MultiBloc for stall_bloc and login_bloc
     return MultiBlocProvider(
       providers: [
         // stall_bloc
@@ -55,56 +49,52 @@ class _MyAppState extends State<MyApp> {
         ),
         // login_bloc
         BlocProvider<LoginBloc>(
-          create: (context) => LoginBloc(authRepository: AuthRepositoryImpl(baseUrl: 'http://localhost:3000')),
+          create: (context) => LoginBloc(
+              authRepository:
+                  AuthRepositoryImpl(baseUrl: 'http://localhost:3000')),
         ),
       ],
       child: MaterialApp(
-        title: "Upang Eat",
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(),
-        // route for login
-        initialRoute: '/login',
-        routes: {
-          '/login': (context) => LoginPage(),
-          '/home': (context) => Scaffold(
-                appBar: AppBar(
-                  title: Text(_appBarTitle[_selectedBottomNavIndex]),
-                  leading: Builder(
-                    builder: (context) {
-                      return IconButton(
-                        icon: const Icon(Icons.menu),
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                      );
-                    },
+          title: "Upang Eat",
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(),
+          // route for login
+          initialRoute: '/login',
+          routes: {
+            '/login': (context) => LoginPage(),
+            '/home': (context) => Scaffold(
+                  appBar: AppBar(
+                    title: const Text("Upang Eats"),
+                    actions: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {},
+                                icon: const Icon(Icons.notifications_none)),
+                            IconButton(
+                                onPressed: () {},
+                                icon: const Icon(Icons.fastfood_outlined)),
+                          ],
+                        ),
+                      )
+                    ],
+                    leading: Builder(
+                      builder: (context) {
+                        return IconButton(
+                          icon: const Icon(Icons.menu),
+                          onPressed: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                        );
+                      },
+                    ),
                   ),
+                  drawer: const CustomDrawer(),
+                  body: const Home(),
                 ),
-                drawer: const CustomDrawer(),
-                body: _pages[_selectedBottomNavIndex],
-                bottomNavigationBar: BottomNavigationBar(
-                  type: BottomNavigationBarType.fixed,
-                  items: const [
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.home_sharp), label: "Home"),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.food_bank_sharp), label: "Stalls"),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.notifications_sharp),
-                        label: "Notifications"),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.fastfood_sharp), label: "Tray"),
-                  ],
-                  currentIndex: _selectedBottomNavIndex,
-                  onTap: (value) {
-                    setState(() {
-                      _selectedBottomNavIndex = value;
-                    });
-                  },
-                ),
-              ),
-        },
-      ),
+          }),
     );
   }
 }
