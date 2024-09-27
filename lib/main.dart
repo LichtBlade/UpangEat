@@ -6,8 +6,15 @@ import 'package:upang_eat/Pages/stalls.dart';
 import 'package:upang_eat/Pages/tray.dart';
 import 'package:upang_eat/Pages/wallet.dart';
 import 'package:upang_eat/Widgets/custom_drawer.dart';
+// stall_bloc
 import 'package:upang_eat/bloc/stall_bloc/stall_bloc.dart';
 import 'package:upang_eat/repositories/stall_repository_impl.dart';
+// login_bloc
+import 'package:upang_eat/widgets/user_login.dart';
+import 'package:upang_eat/bloc/login_bloc/login_bloc.dart';
+import 'package:upang_eat/repositories/auth_repository_impl.dart';
+
+
 
 void main() {
   runApp(const MyApp());
@@ -39,49 +46,64 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Upang Eat",
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(),
-      home: BlocProvider(
-        create: (context) => StallBloc(StallRepositoryImpl()),
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(_appBarTitle[_selectedBottomNavIndex]),
-            leading: Builder(
-              builder: (context) {
-                return IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                );
-              },
-            ),
-          ),
-          drawer: const CustomDrawer(),
-          body: _pages[_selectedBottomNavIndex],
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            items: const [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.home_sharp), label: "Home"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.food_bank_sharp), label: "Stalls"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications_sharp),
-                  label: "Notifications"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.fastfood_sharp), label: "Tray"),
-            ],
-            currentIndex: _selectedBottomNavIndex,
-            onTap: (value) {
-              setState(() {
-                _selectedBottomNavIndex = value;
-              });
-            },
-          ),
+    // MultiBloc for stall_bloc and login_bloc
+    return MultiBlocProvider(
+      providers: [
+        // stall_bloc
+        BlocProvider(
+          create: (context) => StallBloc(StallRepositoryImpl()),
         ),
+        // login_bloc
+        BlocProvider<LoginBloc>(
+          create: (context) => LoginBloc(authRepository: AuthRepositoryImpl(baseUrl: 'http://localhost:3000')),
+        ),
+      ],
+      child: MaterialApp(
+        title: "Upang Eat",
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(),
+        // route for login
+        initialRoute: '/login',
+        routes: {
+          '/login': (context) => LoginPage(),
+          '/home': (context) => Scaffold(
+                appBar: AppBar(
+                  title: Text(_appBarTitle[_selectedBottomNavIndex]),
+                  leading: Builder(
+                    builder: (context) {
+                      return IconButton(
+                        icon: const Icon(Icons.menu),
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                      );
+                    },
+                  ),
+                ),
+                drawer: const CustomDrawer(),
+                body: _pages[_selectedBottomNavIndex],
+                bottomNavigationBar: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  items: const [
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.home_sharp), label: "Home"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.food_bank_sharp), label: "Stalls"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.notifications_sharp),
+                        label: "Notifications"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.fastfood_sharp), label: "Tray"),
+                  ],
+                  currentIndex: _selectedBottomNavIndex,
+                  onTap: (value) {
+                    setState(() {
+                      _selectedBottomNavIndex = value;
+                    });
+                  },
+                ),
+              ),
+        },
       ),
     );
   }
