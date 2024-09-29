@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:upang_eat/models/category_model.dart';
 
 class CategoryCard extends StatelessWidget {
-  final Map<String, String> category;
+  final CategoryModel category;
   const CategoryCard({super.key, required this.category});
 
   @override
@@ -14,16 +15,16 @@ class CategoryCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(6.0),
             child: Image.asset(
-              category['categoryPicUrl']!,
+              category.imageUrl!,
               width: 55,
               height: 55,
               errorBuilder: (context, error, stackTrace) {
-                return const Text('Error loading image');
+                return const Text('Error loading images');
               },
             ),
           ),
         ),
-        Text(category['categoryName']!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),)
+        Text(category.categoryName, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),)
       ],
     );
   }

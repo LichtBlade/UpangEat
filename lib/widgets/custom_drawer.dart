@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:upang_eat/Pages/stalls.dart';
 import 'package:upang_eat/Pages/wallet.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -24,6 +25,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
             onTap: () {
               setState(() {
                 Navigator.pop(context);
+              });
+            },
+          ),
+          ListTile(
+            title: const Text("Stalls"),
+            onTap: () {
+              setState(() {
+                Navigator.pop(context);
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const Stalls()));
               });
             },
           ),

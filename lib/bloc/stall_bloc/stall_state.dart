@@ -6,14 +6,12 @@ abstract class StallState extends Equatable {
 
 class StallInitial extends StallState {
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object> get props => [];
 }
 
 class StallLoading extends StallState {
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object> get props => [];
 }
 
 class StallLoaded extends StallState {

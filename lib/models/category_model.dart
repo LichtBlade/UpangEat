@@ -1,26 +1,30 @@
 import 'package:equatable/equatable.dart';
 
 class CategoryModel extends Equatable {
-  final int foodItemId;
   final int categoryId;
+  final String categoryName;
+  final String? imageUrl;
 
-  const CategoryModel({required this.foodItemId, required this.categoryId});
+  const CategoryModel(
+      {required this.categoryId,
+      required this.categoryName,
+      required this.imageUrl});
 
-  factory CategoryModel.fromJson(Map<String, dynamic> json){
+  factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
-      foodItemId: json['food_item_id'],
-      categoryId: json['category_id'],
-    );
+        categoryId: json['category_id'],
+        categoryName: json['category_name'],
+        imageUrl: json['image_url'] ?? "BossSisigProfile.jpg");
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'food_item_id' : foodItemId,
-      'category_id' : categoryId
+      'category_id': categoryId,
+      'category_name': categoryName,
+      'image_url': imageUrl
     };
   }
 
-
   @override
-  List<Object?> get props => [foodItemId, categoryId];
+  List<Object?> get props => [categoryName, categoryId, imageUrl];
 }

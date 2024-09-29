@@ -30,17 +30,13 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
       ),
       body: const Column(
         children: [
-          Flexible(
-            flex: 1,
-            child: SizedBox(
-              height: 80,
-              child: Center(
-                child: CustomSegmentedButton(),
-              ),
+          SizedBox(
+            height: 80,
+            child: Center(
+              child: CustomSegmentedButton(),
             ),
           ),
           Expanded(
-            flex: 6,
             child: CustomListViewCard(
               itemCount: 5,
               item: OrderList(),

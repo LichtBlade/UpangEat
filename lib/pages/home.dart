@@ -1,10 +1,17 @@
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:upang_eat/Widgets/custom_drawer.dart';
+import 'package:upang_eat/repositories/category_repository.dart';
+import 'package:upang_eat/repositories/category_repository_impl.dart';
 import 'package:upang_eat/widgets/carousel.dart';
+import 'package:upang_eat/widgets/custom_app_bar.dart';
+import '../bloc/category_bloc/category_bloc.dart';
+import '../bloc/food_bloc/food_bloc.dart';
 import '../bloc/stall_bloc/stall_bloc.dart';
 import '../widgets/category_card.dart';
 import '../widgets/home_meal_card.dart';
 import '../widgets/home_stall_card.dart';
+import 'food_category.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -26,6 +33,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _HomeAppBar(),
+      drawer: const CustomDrawer(),
       body: ListView(
         padding: const EdgeInsets.only(top: 8.0),
         children: [
@@ -43,12 +52,53 @@ class _HomeState extends State<Home> {
   }
 }
 
+class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: const Text("Upang Eats"),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            children: [
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.notifications_none)),
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.fastfood_outlined)),
+            ],
+          ),
+        )
+      ],
+      leading: Builder(
+        builder: (context) {
+          return IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        },
+      ),
+    );
+  }
+
+}
+
 class _Header extends StatelessWidget {
   final String title;
   final bool isHaveMore;
   final double topPadding;
   final double bottomPadding;
-  const _Header({required this.title, this.isHaveMore = false, this.topPadding = 8, this.bottomPadding = 8});
+
+  const _Header(
+      {required this.title, this.isHaveMore = false, this.topPadding = 8, this.bottomPadding = 8});
 
   @override
   Widget build(BuildContext context) {
@@ -165,75 +215,94 @@ class _StallCardHorizontalList extends StatelessWidget {
   }
 }
 
-class _MealCardVerticalList extends StatelessWidget {
+class _MealCardVerticalList extends StatefulWidget {
   final List<String> foods;
+
   const _MealCardVerticalList({super.key, required this.foods});
 
   @override
+  State<_MealCardVerticalList> createState() => _MealCardVerticalListState();
+}
+
+class _MealCardVerticalListState extends State<_MealCardVerticalList> {
+  @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        itemCount: foods.length,
-        itemBuilder: (context, index) {
-          final food = foods[index];
-          return HomeMealCard(food: food);
-        });
+    return BlocBuilder<FoodBloc, FoodState>(
+        builder: (context, state) {
+          if (state is FoodInitial){
+            context.read<FoodBloc>().add(LoadFood());
+          } else if (state is FoodLoading){
+            return const CircularProgressIndicator();
+          } else if (state is FoodLoaded){
+            final foods = state.foods;
+            return ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: foods.length,
+                itemBuilder: (context, index) {
+                  final food = foods[index];
+                  return HomeMealCard(food: food);
+                });
+          } else if (state is FoodError) {
+            return Text(state.message);
+          } else {
+            print("unexpected state $state");
+            return const Text("Unexpected state");
+          }
+          return const Text("Unexpected state");
+        }
+    );
   }
 }
 
-class _CategoriesHorizontalList extends StatelessWidget {
-  final List<Map<String, String>> categories = [
-    {
-      'categoryName' : 'Burgers',
-      'categoryPicUrl' : 'categories/Burger.png'
-    },
-    {
-      'categoryName' : 'Bread',
-      'categoryPicUrl' : 'categories/Bread.png'
-    },
-    {
-      'categoryName' : 'Dim sum',
-      'categoryPicUrl' : 'categories/Dimsums.png'
-    },
-    {
-      'categoryName' : 'Drinks',
-      'categoryPicUrl' : 'categories/Drinks.png'
-    },
-    {
-      'categoryName' : 'Fries',
-      'categoryPicUrl' : 'categories/Fries.png'
-    },
-    {
-      'categoryName' : 'Noodles',
-      'categoryPicUrl' : 'categories/Noodles.png'
-    },
-    {
-      'categoryName' : 'RiceMeal',
-      'categoryPicUrl' : 'categories/RiceMeal.png'
-    },
-    {
-      'categoryName' : 'Snack',
-      'categoryPicUrl' : 'categories/Snack.png'
-    },
+class _CategoriesHorizontalList extends StatefulWidget {
+  @override
+  State<_CategoriesHorizontalList> createState() =>
+      _CategoriesHorizontalListState();
+}
 
-  ];
-
-  _CategoriesHorizontalList({super.key});
+class _CategoriesHorizontalListState extends State<_CategoriesHorizontalList> {
 
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 100,
-      child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: categories.length,
-          itemBuilder: (context, index) {
-            final category = categories[index];
-            return CategoryCard(category: category);
+      child: BlocBuilder<CategoryBloc, CategoryState>(
+        builder: (context, state) {
+          if (state is CategoryInitial){
+            context.read<CategoryBloc>().add(LoadCategory());
+          } else if (state is CategoryLoading){
+            return const CircularProgressIndicator();
+          } else if (state is CategoryLoaded){
+            final categories = state.categories;
+            return ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                scrollDirection: Axis.horizontal,
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => FoodCategory(category: category,)));
+                        });
+                      },
+                      child: CategoryCard(category: category),
+                  );
+                });
+          } else if (state is CategoryError) {
+            return Text(state.message);
+          } else {
+            print("unexpected state $state");
+            return const Text("Unexpected state");
           }
+          print("unexpected state $state");
+
+          return const Text("Unexpected state");
+        }
       ),
     );
   }

@@ -33,15 +33,18 @@ class _StallsState extends State<Stalls> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: 350,
-        child: ListView.builder(
-          itemBuilder: (context, index){
-            final stall = stallData[index];
-            return StallsStallCard(imageBanner: stall['imageBanner'], imageProfile: stall['imageProfile'], stallName: stall['stallName'],);
-          },
-          itemCount: stallData.length,
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: SizedBox(
+          width: 350,
+          child: ListView.builder(
+            itemBuilder: (context, index){
+              final stall = stallData[index];
+              return StallsStallCard(imageBanner: stall['imageBanner'], imageProfile: stall['imageProfile'], stallName: stall['stallName'],);
+            },
+            itemCount: stallData.length,
+          ),
         ),
       ),
     );

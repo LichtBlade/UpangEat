@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:upang_eat/repositories/category_repository_impl.dart';
 
-class AppBarHome extends StatelessWidget implements PreferredSizeWidget {
-  const AppBarHome({super.key});
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+  const CustomAppBar({super.key, required this.title});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -10,16 +11,14 @@ class AppBarHome extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text("Upang Eats"),
+      title: Text(title),
       actions: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
             children: [
               IconButton(
-                  onPressed: () {
-                    CategoryRepositoryImpl().fetchFoodByCategory();
-                  },
+                  onPressed: () {},
                   icon: const Icon(Icons.notifications_none)),
               IconButton(
                   onPressed: () {},
