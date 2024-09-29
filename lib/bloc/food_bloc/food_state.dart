@@ -2,17 +2,12 @@ part of 'food_bloc.dart';
 
 sealed class FoodState extends Equatable {
   const FoodState();
-}
 
-final class FoodInitial extends FoodState {
   @override
   List<Object> get props => [];
 }
 
-final class FoodLoading extends FoodState {
-  @override
-  List<Object> get props => [];
-}
+final class FoodLoading extends FoodState {}
 
 final class FoodLoaded extends FoodState {
   final List<FoodModel> foods;

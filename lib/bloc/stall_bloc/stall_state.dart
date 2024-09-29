@@ -1,25 +1,21 @@
 part of 'stall_bloc.dart';
 
-abstract class StallState extends Equatable {
+sealed class StallState extends Equatable {
   const StallState();
-}
 
-class StallInitial extends StallState {
   @override
   List<Object> get props => [];
 }
 
-class StallLoading extends StallState {
-  @override
-  List<Object> get props => [];
-}
+
+class StallLoading extends StallState {}
 
 class StallLoaded extends StallState {
   final List<Stall> stalls;
 
   const StallLoaded(this.stalls);
   @override
-  List<Object?> get props => [stalls];
+  List<Object> get props => [stalls];
 }
 
 class StallError extends StallState {
@@ -28,7 +24,7 @@ class StallError extends StallState {
   const StallError(this.message);
 
   @override
-  List<Object?> get props => [message];
+  List<Object> get props => [message];
 }
 
 

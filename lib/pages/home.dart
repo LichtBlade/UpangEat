@@ -8,6 +8,8 @@ import 'package:upang_eat/widgets/custom_app_bar.dart';
 import '../bloc/category_bloc/category_bloc.dart';
 import '../bloc/food_bloc/food_bloc.dart';
 import '../bloc/stall_bloc/stall_bloc.dart';
+import '../repositories/food_repository_impl.dart';
+import '../repositories/stall_repository_impl.dart';
 import '../widgets/category_card.dart';
 import '../widgets/home_meal_card.dart';
 import '../widgets/home_stall_card.dart';
@@ -32,21 +34,34 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _HomeAppBar(),
-      drawer: const CustomDrawer(),
-      body: ListView(
-        padding: const EdgeInsets.only(top: 8.0),
-        children: [
-          const _HomeSearchBar(),
-          const _Header(title: "Categories", isHaveMore: true),
-          _CategoriesHorizontalList(),
-          const _Header(title: "Stalls", isHaveMore: true, bottomPadding: 0,),
-          _StallCardHorizontalList(),
-          const Carousel(),
-          const _Header(title: "Meals"),
-          _MealCardVerticalList(foods: foods),
-        ],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => StallBloc(StallRepositoryImpl())..add(LoadStalls()),
+        ),
+        BlocProvider(
+          create: (context) => CategoryBloc(CategoryRepositoryImpl())..add(LoadCategory()),
+        ),
+        BlocProvider(
+          create: (context) => FoodBloc(FoodRepositoryImpl())..add(LoadFood()),
+        ),
+      ],
+      child: Scaffold(
+        appBar: _HomeAppBar(),
+        drawer: const CustomDrawer(),
+        body: ListView(
+          padding: const EdgeInsets.only(top: 8.0),
+          children: [
+            const _HomeSearchBar(),
+            const _Header(title: "Categories", isHaveMore: true),
+            _CategoriesHorizontalList(),
+            const _Header(title: "Stalls", isHaveMore: true, bottomPadding: 0,),
+            _StallCardHorizontalList(),
+            const Carousel(),
+            const _Header(title: "Meals"),
+            const _MealCardVerticalList(),
+          ],
+        ),
       ),
     );
   }
@@ -189,10 +204,7 @@ class _StallCardHorizontalList extends StatelessWidget {
       height: 185,
       child: BlocBuilder<StallBloc, StallState>(
         builder: (context, state) {
-          if (state is StallInitial) {
-            context.read<StallBloc>().add(LoadStalls());
-            return const CircularProgressIndicator();
-          } else if (state is StallLoading) {
+          if (state is StallLoading) {
             return const CircularProgressIndicator();
           } else if (state is StallLoaded) {
             final stallData = state.stalls;
@@ -216,9 +228,8 @@ class _StallCardHorizontalList extends StatelessWidget {
 }
 
 class _MealCardVerticalList extends StatefulWidget {
-  final List<String> foods;
 
-  const _MealCardVerticalList({super.key, required this.foods});
+  const _MealCardVerticalList({super.key});
 
   @override
   State<_MealCardVerticalList> createState() => _MealCardVerticalListState();
@@ -229,11 +240,9 @@ class _MealCardVerticalListState extends State<_MealCardVerticalList> {
   Widget build(BuildContext context) {
     return BlocBuilder<FoodBloc, FoodState>(
         builder: (context, state) {
-          if (state is FoodInitial){
-            context.read<FoodBloc>().add(LoadFood());
-          } else if (state is FoodLoading){
+          if (state is FoodLoading) {
             return const CircularProgressIndicator();
-          } else if (state is FoodLoaded){
+          } else if (state is FoodLoaded) {
             final foods = state.foods;
             return ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -271,38 +280,41 @@ class _CategoriesHorizontalListState extends State<_CategoriesHorizontalList> {
     return SizedBox(
       height: 100,
       child: BlocBuilder<CategoryBloc, CategoryState>(
-        builder: (context, state) {
-          if (state is CategoryInitial){
-            context.read<CategoryBloc>().add(LoadCategory());
-          } else if (state is CategoryLoading){
-            return const CircularProgressIndicator();
-          } else if (state is CategoryLoaded){
-            final categories = state.categories;
-            return ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  final category = categories[index];
-                  return GestureDetector(
+          builder: (context, state) {
+            if (state is CategoryInitial) {
+              return const CircularProgressIndicator();
+            } else if (state is CategoryLoading) {
+              return const CircularProgressIndicator();
+            } else if (state is CategoryLoaded) {
+              final categories = state.categories;
+              return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    final category = categories[index];
+                    return GestureDetector(
                       onTap: () {
                         setState(() {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => FoodCategory(category: category,)));
+                          context.read<FoodBloc>().close();
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) =>
+                                  FoodCategory(category: category,)));
                         });
                       },
                       child: CategoryCard(category: category),
-                  );
-                });
-          } else if (state is CategoryError) {
-            return Text(state.message);
-          } else {
+                    );
+                  });
+            } else if (state is CategoryError) {
+              return Text(state.message);
+            } else {
+              print("unexpected state $state");
+              return const Text("Unexpected state");
+            }
             print("unexpected state $state");
+
             return const Text("Unexpected state");
           }
-          print("unexpected state $state");
-
-          return const Text("Unexpected state");
-        }
       ),
     );
   }

@@ -14,7 +14,7 @@ class CategoryModel extends Equatable {
     return CategoryModel(
         categoryId: json['category_id'],
         categoryName: json['category_name'],
-        imageUrl: json['image_url'] ?? "BossSisigProfile.jpg");
+        imageUrl: json['image_url'] ?? "assets/BossSisigProfile.jpg");
   }
 
   Map<String, dynamic> toJson() {

@@ -15,3 +15,5 @@ class LoadFoodCategory extends FoodEvent {
   @override
   List<Object?> get props => [id];
 }
+
+class ResetFoodState extends FoodEvent {}

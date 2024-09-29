@@ -17,18 +17,22 @@ class FoodCategory extends StatefulWidget {
 
 class _FoodCategoryState extends State<FoodCategory> {
   @override
+  void initState() {
+    super.initState();
+    context.read<FoodBloc>().add(LoadFoodCategory(widget.category.categoryId));
+  }
+  @override
   Widget build(BuildContext context) {
     print("wwwowww ${widget.category}");
     return Scaffold(
       appBar: _AppBar(title: widget.category.categoryName,),
       body: BlocBuilder<FoodBloc, FoodState>(
         builder: (context, state) {
-          if (state is FoodInitial) {
-            context.read<FoodBloc>().add(LoadFoodCategory( widget.category.categoryId));
-          } else if (state is FoodLoading) {
+          if (state is FoodLoading) {
             return const CircularProgressIndicator();
           } else if (state is FoodLoaded) {
             final foods = state.foods;
+            print("eyo $foods");
             return ListView.builder(
                 shrinkWrap: true,
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),

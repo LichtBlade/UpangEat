@@ -21,7 +21,7 @@ class _HomeMealCardState extends State<HomeMealCard> {
           ClipRRect(
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(14.0), bottomLeft: Radius.circular(14.0)),
               child: Image.asset(
-                "BossSisigProfile.jpg",
+                "assets/BossSisigProfile.jpg",
                 height: 95,
                 width: 95,
                 fit: BoxFit.cover,

@@ -9,7 +9,7 @@ part 'food_state.dart';
 
 class FoodBloc extends Bloc<FoodEvent, FoodState> {
   final FoodRepository _foodRepository;
-  FoodBloc(this._foodRepository) : super(FoodInitial()) {
+  FoodBloc(this._foodRepository) : super(FoodLoading()) {
     on<LoadFood>((event, emit) async {
       emit(FoodLoading());
       try{
@@ -31,5 +31,6 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
         emit(FoodError(error.toString()));
       }
     });
+
   }
 }

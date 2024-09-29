@@ -9,7 +9,7 @@ part 'stall_state.dart';
 class StallBloc extends Bloc<StallEvent, StallState> {
   final StallRepository _stallRepository;
 
-  StallBloc(this._stallRepository) : super(StallInitial()) {
+  StallBloc(this._stallRepository) : super(StallLoading()) {
     on<LoadStalls>((event, emit) async {
       emit(StallLoading());
       try{
