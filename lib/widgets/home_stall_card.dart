@@ -12,6 +12,7 @@ class HomeStallCard extends StatefulWidget {
 class _HomeStallCardState extends State<HomeStallCard> {
   @override
   Widget build(BuildContext context) {
+    print(widget.stall.imageUrl!);
     return Padding(
       padding: const EdgeInsets.only(left: 6.0, top: 8, bottom: 16, right: 6.0),
       child: Card(

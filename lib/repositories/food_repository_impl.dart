@@ -5,7 +5,8 @@ import 'package:upang_eat/repositories/food_repository.dart';
 import 'package:http/http.dart' as http;
 
 class FoodRepositoryImpl extends FoodRepository {
-  static const String baseUrl = 'http://localhost:3000';
+  static const String baseUrl = 'http://192.168.68.104:3000';
+  // static const String baseUrl = 'http://localhost:3000';
 
   @override
   Future<List<FoodModel>> fetchFood() async {

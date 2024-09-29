@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/Widgets/custom_drawer.dart';
+import 'package:upang_eat/pages/category_more.dart';
 import 'package:upang_eat/repositories/category_repository.dart';
 import 'package:upang_eat/repositories/category_repository_impl.dart';
 import 'package:upang_eat/widgets/carousel.dart';
@@ -131,22 +132,29 @@ class _Header extends StatelessWidget {
             ),
           ),
           if (isHaveMore)
-            const Padding(
-              padding: EdgeInsets.only(right: 24.0),
-              child: Row(
-                children: [
-                  Text(
-                    "View more",
-                    style: TextStyle(fontSize: 11),
-                  ),
-                  SizedBox(
-                    width: 4,
-                  ),
-                  Icon(
-                    Icons.arrow_forward_sharp,
-                    size: 11.0,
-                  )
-                ],
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryMore()));
+              },
+              child: const Padding(
+                padding: EdgeInsets.only(right: 24.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "View more",
+                      style: TextStyle(fontSize: 11),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Icon(
+                      Icons.arrow_forward_sharp,
+                      size: 11.0,
+                    )
+                  ],
+                ),
               ),
             )
         ],

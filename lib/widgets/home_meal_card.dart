@@ -29,7 +29,7 @@ class _HomeMealCardState extends State<HomeMealCard> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: SizedBox(
-              width: 210,
+              width: 230,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

@@ -5,8 +5,8 @@ import 'package:upang_eat/repositories/category_repository.dart';
 import 'package:http/http.dart' as http;
 
 class CategoryRepositoryImpl extends CategoryRepository {
-  static const String baseUrl = 'http://localhost:3000';
-
+  static const String baseUrl = 'http://192.168.68.104:3000';
+  // static const String baseUrl = 'http://localhost:3000';
 
   @override
   Future<List<CategoryModel>> fetchCategory() async {
