@@ -62,7 +62,7 @@ class StallsStallCard extends StatelessWidget {
                     stall.stallName,
                     style: const TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),

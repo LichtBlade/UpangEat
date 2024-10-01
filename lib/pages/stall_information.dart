@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/models/stall_model.dart';
+import 'package:upang_eat/widgets/meal_card_square.dart';
 
 import '../bloc/food_bloc/food_bloc.dart';
 import '../widgets/home_meal_card.dart';
@@ -18,7 +19,7 @@ class StallInformation extends StatefulWidget {
 class _StallInformationState extends State<StallInformation> {
   @override
   void initState() {
-    context.read<FoodBloc>().add(LoadFood());
+    context.read<FoodBloc>().add(LoadFoodByStallId(widget.stall.stallId));
     super.initState();
   }
 
@@ -49,7 +50,43 @@ class _StallInformationState extends State<StallInformation> {
                     child: ListView(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       children: [
-                        const _Header(),
+                        const SizedBox(height: 12,),
+                        const _Header(icon: Icons.recommend, iconSize: 26, title: "Recommendation",isSubtitle: true,),
+                        const SizedBox(height: 4,),
+                        BlocBuilder<FoodBloc, FoodState>(
+                            builder: (context, state) {
+                              if (state is FoodLoading) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (state is FoodLoaded) {
+                                final foods = state.foods;
+                                return GridView.builder(
+                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 8.0,
+                                      mainAxisSpacing: 8.0,
+                                    childAspectRatio: 1/1
+                                  ),
+                                    padding:const EdgeInsets.symmetric(horizontal: 8.0),
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: 4,
+                                    itemBuilder: (context, index) {
+                                      final food = foods[index];
+                                      return MealCardSquare(
+                                        food: food,
+                                      );
+                                    });
+                              } else if (state is FoodError) {
+                                return Text(state.message);
+                              } else {
+                                return const Text("Unexpected state");
+                              }
+                            }),
+                        const SizedBox(height: 12,),
+                        const _Header(icon: Icons.menu_book, iconSize: 26, title: "Everything on the Menu",isSubtitle: false,),
+                        const SizedBox(height: 4,),
                         BlocBuilder<FoodBloc, FoodState>(
                             builder: (context, state) {
                           if (state is FoodLoading) {
@@ -185,11 +222,15 @@ class _StallName extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({super.key});
+  final bool isSubtitle;
+  final IconData? icon;
+  final String title;
+  final double iconSize;
+  const _Header({super.key, required this.isSubtitle, required this.icon, required this.title, required this.iconSize});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
@@ -197,27 +238,35 @@ class _Header extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
-              Icons.menu_book,
-              size: 26.0,
+              icon,
+              size: iconSize,
             ),
-            SizedBox(
+            const SizedBox(
               width: 4,
             ),
             Text(
-              "Recommendation",
-              style: TextStyle(
+              title,
+              style: const TextStyle(
+                  shadows: [
+                    Shadow(
+                      offset: Offset(2.0, 2.0),
+                      blurRadius: 6.0,
+                      color: Colors.grey,
+                    ),
+                  ],
                   fontWeight: FontWeight.w500,
                   fontSize: 22),
             )
           ],
         ),
-        Text(
+        if (isSubtitle)
+        const Text(
           "Most ordered right now",
           style: TextStyle(
               shadows: [
                 Shadow(
                   offset: Offset(2.0, 2.0),
-                  blurRadius: 4.0,
+                  blurRadius: 3.0,
                   color: Colors.grey,
                 ),
               ],

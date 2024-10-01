@@ -32,5 +32,15 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
       }
     });
 
+    on<LoadFoodByStallId>((event, emit) async {
+      emit(FoodLoading());
+      try{
+        final foods = await _foodRepository.fetchFoodByStallId(event.id);
+        emit(FoodLoaded(foods));
+      } catch (error) {
+        emit(FoodError(error.toString()));
+      }
+    });
+
   }
 }

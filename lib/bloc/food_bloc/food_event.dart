@@ -16,4 +16,12 @@ class LoadFoodCategory extends FoodEvent {
   List<Object?> get props => [id];
 }
 
+class LoadFoodByStallId extends FoodEvent {
+  final int id;
+  const LoadFoodByStallId(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}
+
 class ResetFoodState extends FoodEvent {}

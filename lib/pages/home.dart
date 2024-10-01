@@ -140,7 +140,7 @@ class _Header extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      "View more",
+                      "Expand",
                       style: TextStyle(fontSize: 11),
                     ),
                     SizedBox(
@@ -232,39 +232,37 @@ class _StallCardHorizontalList extends StatelessWidget {
   }
 }
 
-class _MealCardVerticalList extends StatefulWidget {
+class _MealCardVerticalList extends StatelessWidget {
 
   const _MealCardVerticalList({super.key});
 
   @override
-  State<_MealCardVerticalList> createState() => _MealCardVerticalListState();
-}
-
-class _MealCardVerticalListState extends State<_MealCardVerticalList> {
-  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FoodBloc, FoodState>(
-        builder: (context, state) {
-          if (state is FoodLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is FoodLoaded) {
-            final foods = state.foods;
-            return ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: foods.length,
-                itemBuilder: (context, index) {
-                  final food = foods[index];
-                  return HomeMealCard(food: food, isShowStallName: true,);
-                });
-          } else if (state is FoodError) {
-            return Text(state.message);
-          } else {
-            return const Text("Unexpected state");
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: BlocBuilder<FoodBloc, FoodState>(
+          builder: (context, state) {
+            if (state is FoodLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is FoodLoaded) {
+              final foods = state.foods;
+              return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: foods.length,
+                  itemBuilder: (context, index) {
+                    final food = foods[index];
+                    return HomeMealCard(food: food, isShowStallName: true,);
+                  });
+            } else if (state is FoodError) {
+              return Text(state.message);
+            } else {
+              return const Text("Unexpected state");
+            }
           }
-        }
+      ),
     );
   }
 }
