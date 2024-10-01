@@ -257,7 +257,7 @@ class _MealCardVerticalListState extends State<_MealCardVerticalList> {
                 itemCount: foods.length,
                 itemBuilder: (context, index) {
                   final food = foods[index];
-                  return HomeMealCard(food: food);
+                  return HomeMealCard(food: food, isShowStallName: true,);
                 });
           } else if (state is FoodError) {
             return Text(state.message);

@@ -38,7 +38,7 @@ class _FoodCategoryState extends State<FoodCategory> {
                 itemCount: foods.length,
                 itemBuilder: (context, index) {
                   final food = foods[index];
-                  return HomeMealCard(food: food);
+                  return HomeMealCard(food: food, isShowStallName: true,);
                 })
                 :
                 const Center(child: Text("Wow. So Empty"),);

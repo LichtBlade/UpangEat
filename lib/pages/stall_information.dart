@@ -21,87 +21,65 @@ class _StallInformationState extends State<StallInformation> {
     context.read<FoodBloc>().add(LoadFood());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: const _AppBar(),
         body: Stack(fit: StackFit.expand, children: [
+          _StallImage(imageUrl: widget.stall.imageUrl!),
+          const _Gradient(),
+          _StallName(stallName: widget.stall.stallName,),
           Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              width: double.infinity,
-              height: 250,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                    widget.stall.imageUrl!,
-                  ),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.5),
-                    BlendMode.darken,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            top: 90,
-            child: Center(
-              child: Text(
-                widget.stall.stallName,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          Positioned(
-              top: 230,
+              top: 180,
               bottom: 0,
               left: 0,
               right: 0,
               child: Card(
-                margin: EdgeInsets.zero,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(18.0),
-                    topRight: Radius.circular(18.0),
+                  margin: EdgeInsets.zero,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(18.0),
+                      topRight: Radius.circular(18.0),
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-                  child: BlocBuilder<FoodBloc, FoodState>(
-                      builder: (context, state) {
-                        if (state is FoodLoading) {
-                          return const Center(child: CircularProgressIndicator());
-                        } else if (state is FoodLoaded) {
-                          final foods = state.foods;
-                          return ListView.builder(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: foods.length,
-                              itemBuilder: (context, index) {
-                                final food = foods[index];
-                                return HomeMealCard(food: food);
-                              });
-                        } else if (state is FoodError) {
-                          return Text(state.message);
-                        } else {
-                          return const Text("Unexpected state");
-                        }
-                      }
-                  ),
-                )
-              )),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 12.0, left: 12.0),
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      children: [
+                        const _Header(),
+                        BlocBuilder<FoodBloc, FoodState>(
+                            builder: (context, state) {
+                          if (state is FoodLoading) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (state is FoodLoaded) {
+                            final foods = state.foods;
+                            return ListView.builder(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: foods.length,
+                                itemBuilder: (context, index) {
+                                  final food = foods[index];
+                                  return HomeMealCard(
+                                    food: food,
+                                    isShowStallName: false,
+                                  );
+                                });
+                          } else if (state is FoodError) {
+                            return Text(state.message);
+                          } else {
+                            return const Text("Unexpected state");
+                          }
+                        }),
+                      ],
+                    ),
+                  ))),
         ]));
   }
 }
@@ -114,16 +92,12 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      leading: Container(
-        margin: const EdgeInsets.all(8.0),
-        decoration:
-            const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-        child: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        color: Colors.white,
+        onPressed: () {
+          Navigator.pop(context);
+        },
       ),
     );
   }
@@ -131,3 +105,130 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
+
+class _StallImage extends StatelessWidget {
+  final String imageUrl;
+  const _StallImage({super.key, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        width: double.infinity,
+        height: 200,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              imageUrl,
+            ),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.5),
+              BlendMode.darken,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Gradient extends StatelessWidget {
+  const _Gradient({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: 0,
+      right: 0,
+      top: 70,
+      child: Container(
+        height: 140,
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Colors.transparent,
+              Color.fromARGB(90, 255, 123, 123)
+            ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+      ),
+    );
+  }
+}
+
+class _StallName extends StatelessWidget {
+  final String stallName;
+  const _StallName({super.key, required this.stallName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: 0,
+      right: 0,
+      top: 60,
+      child: SizedBox(
+        height: 70,
+        child: Center(
+          child: Text(
+            stallName,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.menu_book,
+              size: 26.0,
+            ),
+            SizedBox(
+              width: 4,
+            ),
+            Text(
+              "Recommendation",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 22),
+            )
+          ],
+        ),
+        Text(
+          "Most ordered right now",
+          style: TextStyle(
+              shadows: [
+                Shadow(
+                  offset: Offset(2.0, 2.0),
+                  blurRadius: 4.0,
+                  color: Colors.grey,
+                ),
+              ],
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+              color: Color.fromARGB(255, 121, 116, 126)),
+        )
+      ],
+    );
+  }
+}
+
+
+
