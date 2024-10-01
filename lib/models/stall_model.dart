@@ -28,8 +28,8 @@ class Stall extends Equatable {
       ownerId: json['owner_id'],
       description: json['description'] ?? "No Desc",
       contactNumber: json['contact_number'] ?? 0,
-      imageUrl: json['image_url'] ?? "BossSisigProfile.jpg",
-      imageBannerUrl: json['image_banner_url'] ?? "BossSisigBanner.jpg",
+      imageUrl: json['image_url'] ?? "assets/stalls/banners/BossSisigBanner.jpg",
+      imageBannerUrl: json['image_banner_url'] ?? "assets/stalls/profiles/1.jpg",
       isActive: json['is_active'] == 1,
     );
   }

@@ -12,22 +12,22 @@ class _NotificationsState extends State<Notifications> {
   final List<Map<String, String>> stallData = [
     {
       'stallName': "Boss Sisig!",
-      'imageProfile': "assets/BossSisigProfile.jpg",
+      'imageProfile': "assets/1.jpg",
       'imageBanner': "assets/BossSisigBanner.jpg"
     },
     {
       'stallName': "Ninong Ry's Exotic Delicacy",
-      'imageProfile': "assets/NinongRySpecialDelicacy.jpg",
+      'imageProfile': "assets/2.jpg",
       'imageBanner': "assets/NinongRySpecialDelicacyBanner.jpg"
     },
     {
       'stallName': "Mekus Mekus Tayo Insan!",
-      'imageProfile': "assets/MekusMekusTayoInsan.jpg",
+      'imageProfile': "assets/3.jpg",
       'imageBanner': "assets/MekusMekusTayoInsanBanner.jpeg"
     },
     {
       'stallName': "Masamsamit So Adele",
-      'imageProfile': "assets/MasamsamitSoAdele.jpg",
+      'imageProfile': "assets/4.jpg",
       'imageBanner': "assets/MasamsamitSoAdeleBanner.jpg"
     }
   ];
@@ -39,7 +39,7 @@ class _NotificationsState extends State<Notifications> {
         child: ListView.builder(
           itemBuilder: (context, index){
             final stall = stallData[index];
-            return StallsStallCard(imageBanner: stall['imageBanner'], imageProfile: stall['imageProfile'], stallName: stall['stallName'],);
+            return const Center(child:Text("WOW"));
           },
           itemCount: stallData.length,
         ),

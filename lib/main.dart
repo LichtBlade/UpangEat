@@ -31,33 +31,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final List<Widget> _pages = [
-    const Home(),
-    const Stalls(),
-    const Notifications(),
-    const Tray(),
-  ];
-
-  final List<String> _appBarTitle = [
-    'UPANG Eats',
-    "Stalls",
-    "Notifications",
-    "Tray"
-  ];
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        // stall_bloc
-        BlocProvider(
-          create: (context) => StallBloc(StallRepositoryImpl()),
-        ),
         // login_bloc
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(
               authRepository:
                   AuthRepositoryImpl(baseUrl: 'http://localhost:3000')),
+        ),
+        BlocProvider<StallBloc>(
+          create: (context) => StallBloc(StallRepositoryImpl()),
         ),
         BlocProvider<CategoryBloc>(
           create: (context) => CategoryBloc(CategoryRepositoryImpl()),

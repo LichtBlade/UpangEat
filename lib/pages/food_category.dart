@@ -23,7 +23,6 @@ class _FoodCategoryState extends State<FoodCategory> {
   }
   @override
   Widget build(BuildContext context) {
-    print("wwwowww ${widget.category}");
     return Scaffold(
       appBar: _AppBar(title: widget.category.categoryName,),
       body: BlocBuilder<FoodBloc, FoodState>(
@@ -32,15 +31,17 @@ class _FoodCategoryState extends State<FoodCategory> {
             return const CircularProgressIndicator();
           } else if (state is FoodLoaded) {
             final foods = state.foods;
-            print("eyo $foods");
-            return ListView.builder(
+            return foods.isNotEmpty ?
+            ListView.builder(
                 shrinkWrap: true,
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 itemCount: foods.length,
                 itemBuilder: (context, index) {
                   final food = foods[index];
                   return HomeMealCard(food: food);
-                });
+                })
+                :
+                const Center(child: Text("Wow. So Empty"),);
           } else if (state is FoodError) {
 
           } else {

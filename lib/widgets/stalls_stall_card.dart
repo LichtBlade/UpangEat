@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:upang_eat/Pages/stall_information.dart';
+import 'package:upang_eat/models/stall_model.dart';
 
 class StallsStallCard extends StatelessWidget {
-  final String? imageProfile;
-  final String? imageBanner;
-  final String? stallName;
+  final Stall stall;
 
-  const StallsStallCard(
-      {super.key,
-      this.imageProfile = "assets/BossSisigProfile.jpg",
-      this.imageBanner = "assets/BossSisigBanner.jpg",
-      this.stallName = "Default Name"});
+  const StallsStallCard({super.key, required this.stall});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +13,10 @@ class StallsStallCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const StallInformation()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => StallInformation(stall: stall)));
         },
         child: Card(
           elevation: 6,
@@ -26,8 +24,7 @@ class StallsStallCard extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding:
-                const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(8),
@@ -36,7 +33,7 @@ class StallsStallCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Image.asset(
-                        imageProfile!,
+                        stall.imageUrl!,
                         height: 100,
                         width: 100,
                         fit: BoxFit.cover,
@@ -45,10 +42,8 @@ class StallsStallCard extends StatelessWidget {
                         width: 8,
                       ),
                       Expanded(
-                          child: Image.asset(
-                              imageBanner!,
-                              height: 100,
-                              fit: BoxFit.cover))
+                          child: Image.asset(stall.imageBannerUrl!,
+                              height: 100, fit: BoxFit.cover))
                     ],
                   ),
                 ),
@@ -60,12 +55,16 @@ class StallsStallCard extends StatelessWidget {
               ),
               Padding(
                 padding:
-                const EdgeInsets.only(bottom: 8.0, left: 16.0, right: 16.0),
+                    const EdgeInsets.only(bottom: 8.0, left: 16.0, right: 16.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(stallName!,
+                  child: Text(
+                    stall.stallName,
                     style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold, ),),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               )
             ],

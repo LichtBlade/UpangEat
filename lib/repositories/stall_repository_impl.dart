@@ -16,7 +16,6 @@ class StallRepositoryImpl implements StallRepository {
 
     if (response.statusCode == 200) {
       final List<dynamic> stallData = json.decode(response.body);
-      print(stallData);
       return stallData.map((json) => Stall.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load notes');

@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:upang_eat/Pages/stalls.dart';
 import 'package:upang_eat/Widgets/custom_drawer.dart';
 import 'package:upang_eat/pages/category_more.dart';
 import 'package:upang_eat/repositories/category_repository.dart';
@@ -24,22 +25,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<String> foods = [
-    "assets/BossSisigBanner.jpg",
-    "assets/BossSisigBanner.jpg",
-    "assets/BossSisigBanner.jpg",
-    "assets/BossSisigBanner.jpg",
-    "assets/BossSisigBanner.jpg",
-  ];
+  @override
+  void initState() {
+    context.read<StallBloc>().add(LoadStalls());
 
-
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => StallBloc(StallRepositoryImpl())..add(LoadStalls()),
-        ),
         BlocProvider(
           create: (context) => CategoryBloc(CategoryRepositoryImpl())..add(LoadCategory()),
         ),
@@ -104,7 +99,6 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
 }
 
 class _Header extends StatelessWidget {
@@ -134,9 +128,12 @@ class _Header extends StatelessWidget {
           if (isHaveMore)
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
-
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryMore()));
+                final route = switch (title) {
+                  'Category' => const CategoryMore(),
+                  'Stalls' => const Stalls(),
+                  _ => const CategoryMore()
+                };
+                Navigator.push(context, MaterialPageRoute(builder: (context) => route));
               },
               child: const Padding(
                 padding: EdgeInsets.only(right: 24.0),
@@ -213,7 +210,7 @@ class _StallCardHorizontalList extends StatelessWidget {
       child: BlocBuilder<StallBloc, StallState>(
         builder: (context, state) {
           if (state is StallLoading) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           } else if (state is StallLoaded) {
             final stallData = state.stalls;
             return ListView.builder(
@@ -249,7 +246,7 @@ class _MealCardVerticalListState extends State<_MealCardVerticalList> {
     return BlocBuilder<FoodBloc, FoodState>(
         builder: (context, state) {
           if (state is FoodLoading) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           } else if (state is FoodLoaded) {
             final foods = state.foods;
             return ListView.builder(
@@ -265,10 +262,8 @@ class _MealCardVerticalListState extends State<_MealCardVerticalList> {
           } else if (state is FoodError) {
             return Text(state.message);
           } else {
-            print("unexpected state $state");
             return const Text("Unexpected state");
           }
-          return const Text("Unexpected state");
         }
     );
   }
@@ -290,9 +285,9 @@ class _CategoriesHorizontalListState extends State<_CategoriesHorizontalList> {
       child: BlocBuilder<CategoryBloc, CategoryState>(
           builder: (context, state) {
             if (state is CategoryInitial) {
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             } else if (state is CategoryLoading) {
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             } else if (state is CategoryLoaded) {
               final categories = state.categories;
               return ListView.builder(
@@ -316,12 +311,8 @@ class _CategoriesHorizontalListState extends State<_CategoriesHorizontalList> {
             } else if (state is CategoryError) {
               return Text(state.message);
             } else {
-              print("unexpected state $state");
               return const Text("Unexpected state");
             }
-            print("unexpected state $state");
-
-            return const Text("Unexpected state");
           }
       ),
     );
