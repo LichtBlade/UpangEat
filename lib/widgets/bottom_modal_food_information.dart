@@ -25,7 +25,7 @@ void bottomModalFoodInformation(BuildContext context, FoodModel food) {
             top: 250,
             left: 0,
             right: 0,
-            bottom: 0,
+            bottom: -10,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(24),
@@ -54,9 +54,11 @@ void bottomModalFoodInformation(BuildContext context, FoodModel food) {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               _Price(price: food.price,),
-                              const _BookmarkAndAddToTray()
+                              const _BookmarkAndAddToTray(),
                             ],
-                          ))
+                          )),
+                      const SizedBox(height: 10,)
+
                     ],
                   ),
                 ),

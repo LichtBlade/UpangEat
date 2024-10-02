@@ -247,13 +247,13 @@ class _Header extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                  shadows: [
-                    Shadow(
-                      offset: Offset(2.0, 2.0),
-                      blurRadius: 6.0,
-                      color: Colors.grey,
-                    ),
-                  ],
+                  // shadows: [
+                  //   Shadow(
+                  //     offset: Offset(2.0, 2.0),
+                  //     blurRadius: 6.0,
+                  //     color: Colors.grey,
+                  //   ),
+                  // ],
                   fontWeight: FontWeight.w500,
                   fontSize: 22),
             )
@@ -263,13 +263,13 @@ class _Header extends StatelessWidget {
         const Text(
           "Most ordered right now",
           style: TextStyle(
-              shadows: [
-                Shadow(
-                  offset: Offset(2.0, 2.0),
-                  blurRadius: 3.0,
-                  color: Colors.grey,
-                ),
-              ],
+              // shadows: [
+              //   Shadow(
+              //     offset: Offset(2.0, 2.0),
+              //     blurRadius: 3.0,
+              //     color: Colors.grey,
+              //   ),
+              // ],
               fontWeight: FontWeight.w600,
               fontSize: 12,
               color: Color.fromARGB(255, 121, 116, 126)),
