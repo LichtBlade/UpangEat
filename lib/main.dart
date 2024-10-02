@@ -23,7 +23,9 @@ void main() {
   runApp(const MyApp());
 }
 
-
+mixin FakeData {
+  
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

@@ -1,9 +1,11 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:skeletonizer/skeletonizer.dart";
 import "package:upang_eat/Widgets/stalls_stall_card.dart";
 import "package:upang_eat/repositories/stall_repository_impl.dart";
 
 import "../bloc/stall_bloc/stall_bloc.dart";
+import "../fake_data.dart";
 
 class Stalls extends StatefulWidget {
   const Stalls({super.key});
@@ -31,7 +33,14 @@ class _StallsState extends State<Stalls> {
           child: BlocBuilder<StallBloc, StallState>(
             builder: (context, state) {
               if (state is StallLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return Skeletonizer(
+                  child: ListView.builder(itemCount: 4,
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) {
+                        return StallsStallCard(stall: FakeData.fakeStall);
+                      }),
+                );;
               } else if (state is StallLoaded) {
                 final stallData = state.stalls;
                 return ListView.builder(

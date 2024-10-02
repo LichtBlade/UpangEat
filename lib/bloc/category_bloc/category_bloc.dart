@@ -10,7 +10,7 @@ part 'category_state.dart';
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final CategoryRepository _categoryRepository;
 
-  CategoryBloc(this._categoryRepository) : super(CategoryInitial()) {
+  CategoryBloc(this._categoryRepository) : super(CategoryLoading()) {
     on<LoadCategory>((event, emit) async {
       emit(CategoryLoading());
       try {

@@ -31,12 +31,10 @@ class _HomeStallCardState extends State<HomeStallCard> {
                       (context, error, stackTrace) {
                     return const Text('Error loading image');
                   }),
-              Expanded(
-                child: SizedBox(
-                  width: 110,
-                  child:
-                  Center(child: Text(widget.stall.stallName, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600),)),
-                ),
+              SizedBox(
+                width: 110,
+                child:
+                Center(child: Text(widget.stall.stallName, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600),)),
               ),
               const SizedBox(height: 4,)
             ]),

@@ -2,20 +2,19 @@ import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/Pages/stalls.dart';
 import 'package:upang_eat/Widgets/custom_drawer.dart';
+import 'package:upang_eat/fake_data.dart';
 import 'package:upang_eat/pages/category_more.dart';
-import 'package:upang_eat/repositories/category_repository.dart';
 import 'package:upang_eat/repositories/category_repository_impl.dart';
 import 'package:upang_eat/widgets/carousel.dart';
-import 'package:upang_eat/widgets/custom_app_bar.dart';
 import '../bloc/category_bloc/category_bloc.dart';
 import '../bloc/food_bloc/food_bloc.dart';
 import '../bloc/stall_bloc/stall_bloc.dart';
 import '../repositories/food_repository_impl.dart';
-import '../repositories/stall_repository_impl.dart';
 import '../widgets/category_card.dart';
 import '../widgets/home_meal_card.dart';
 import '../widgets/home_stall_card.dart';
 import 'food_category.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -28,36 +27,27 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     context.read<StallBloc>().add(LoadStalls());
-
+    context.read<FoodBloc>().add(LoadFood());
+    context.read<CategoryBloc>().add(LoadCategory());
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => CategoryBloc(CategoryRepositoryImpl())..add(LoadCategory()),
-        ),
-        BlocProvider(
-          create: (context) => FoodBloc(FoodRepositoryImpl())..add(LoadFood()),
-        ),
-      ],
-      child: Scaffold(
-        appBar: _HomeAppBar(),
-        drawer: const CustomDrawer(),
-        body: ListView(
-          padding: const EdgeInsets.only(top: 8.0),
-          children: [
-            const _HomeSearchBar(),
-            const _Header(title: "Categories", isHaveMore: true),
-            _CategoriesHorizontalList(),
-            const _Header(title: "Stalls", isHaveMore: true, bottomPadding: 0,),
-            _StallCardHorizontalList(),
-            const Carousel(),
-            const _Header(title: "Meals"),
-            const _MealCardVerticalList(),
-          ],
-        ),
+    return Scaffold(
+      appBar: _HomeAppBar(),
+      drawer: const CustomDrawer(),
+      body: ListView(
+        padding: const EdgeInsets.only(top: 8.0),
+        children: [
+          const _HomeSearchBar(),
+          const _Header(title: "Categories", isHaveMore: true),
+          _CategoriesHorizontalList(),
+          const _Header(title: "Stalls", isHaveMore: true, bottomPadding: 0,),
+          _StallCardHorizontalList(),
+          const Carousel(),
+          const _Header(title: "Meals"),
+          const _MealCardVerticalList(),
+        ],
       ),
     );
   }
@@ -210,7 +200,14 @@ class _StallCardHorizontalList extends StatelessWidget {
       child: BlocBuilder<StallBloc, StallState>(
         builder: (context, state) {
           if (state is StallLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return Skeletonizer(
+              child: ListView.builder(itemCount: 4,
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return HomeStallCard(stall: FakeData.fakeStall);
+                  }),
+            );
           } else if (state is StallLoaded) {
             final stallData = state.stalls;
             return ListView.builder(
@@ -243,7 +240,16 @@ class _MealCardVerticalList extends StatelessWidget {
       child: BlocBuilder<FoodBloc, FoodState>(
           builder: (context, state) {
             if (state is FoodLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return Skeletonizer(
+                child: SizedBox(
+                  width: 380,
+                  height: 500,
+                  child: ListView.builder(itemCount: 4,
+                      itemBuilder: (context, index) {
+                        return HomeMealCard(food: FakeData.fakeFood, isShowStallName: true);
+                  }),
+                ),
+              );
             } else if (state is FoodLoaded) {
               final foods = state.foods;
               return ListView.builder(
@@ -282,10 +288,18 @@ class _CategoriesHorizontalListState extends State<_CategoriesHorizontalList> {
       height: 100,
       child: BlocBuilder<CategoryBloc, CategoryState>(
           builder: (context, state) {
-            if (state is CategoryInitial) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is CategoryLoading) {
-              return const Center(child: CircularProgressIndicator());
+            if (state is CategoryLoading) {
+              return Skeletonizer(
+                child: SizedBox(
+                  child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        return CategoryCard(category: FakeData.fakeCategory);
+                      }),
+                ),
+              );
             } else if (state is CategoryLoaded) {
               final categories = state.categories;
               return ListView.builder(
