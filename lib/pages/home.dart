@@ -39,19 +39,25 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         appBar: _HomeAppBar(),
         drawer: const CustomDrawer(),
-        body: SingleChildScrollView(
-          // padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            children: [
-              const _HomeSearchBar(),
-              const _Header(title: "Categories", isHaveMore: true),
-              _CategoriesHorizontalList(),
-              const _Header(title: "Stalls", isHaveMore: true, bottomPadding: 0,),
-              _StallCardHorizontalList(),
-              const Carousel(),
-              const _Header(title: "Meals"),
-              const _MealCardVerticalList(),
-            ],
+        body: RefreshIndicator(
+          onRefresh: () async {
+            context.read<StallBloc>().add(LoadStalls());
+            context.read<CategoryBloc>().add(LoadCategory());
+          },
+          child: SingleChildScrollView(
+            // padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              children: [
+                const _HomeSearchBar(),
+                const _Header(title: "Categories", isHaveMore: true),
+                _CategoriesHorizontalList(),
+                const _Header(title: "Stalls", isHaveMore: true, bottomPadding: 0,),
+                _StallCardHorizontalList(),
+                const Carousel(),
+                const _Header(title: "Meals"),
+                const _MealCardVerticalList(),
+              ],
+            ),
           ),
         ),
       ),

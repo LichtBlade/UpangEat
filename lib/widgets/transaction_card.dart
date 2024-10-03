@@ -80,13 +80,27 @@ class _Amount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      "${getTransactionAmountWithSign(transactionType)}₱$amount",
-      textAlign: TextAlign.end,
-      style: TextStyle(
-        color: getTransactionColor(transactionType),
-        fontSize: 20,
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      // mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          "${getTransactionAmountWithSign(transactionType)}₱$amount",
+          textAlign: TextAlign.end,
+          style: TextStyle(
+            color: getTransactionColor(transactionType),
+            fontSize: 20,
+          ),
+        ),
+        const Text(
+          "₱10000",
+          textAlign: TextAlign.end,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 14,
+          ),
+        ),
+      ],
     );
   }
   Color getTransactionColor(String transactionType) {

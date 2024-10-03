@@ -26,7 +26,7 @@ void main() {
 }
 
 class IpAddress {
-  static String get ipAddress => "http://192.168.100.59:3000";
+  static String get ipAddress => "http://192.168.218.138:3000";
 }
 
 class MyApp extends StatefulWidget {
