@@ -39,18 +39,20 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         appBar: _HomeAppBar(),
         drawer: const CustomDrawer(),
-        body: ListView(
-          padding: const EdgeInsets.only(top: 8.0),
-          children: [
-            const _HomeSearchBar(),
-            const _Header(title: "Categories", isHaveMore: true),
-            _CategoriesHorizontalList(),
-            const _Header(title: "Stalls", isHaveMore: true, bottomPadding: 0,),
-            _StallCardHorizontalList(),
-            const Carousel(),
-            const _Header(title: "Meals"),
-            const _MealCardVerticalList(),
-          ],
+        body: SingleChildScrollView(
+          // padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            children: [
+              const _HomeSearchBar(),
+              const _Header(title: "Categories", isHaveMore: true),
+              _CategoriesHorizontalList(),
+              const _Header(title: "Stalls", isHaveMore: true, bottomPadding: 0,),
+              _StallCardHorizontalList(),
+              const Carousel(),
+              const _Header(title: "Meals"),
+              const _MealCardVerticalList(),
+            ],
+          ),
         ),
       ),
     );

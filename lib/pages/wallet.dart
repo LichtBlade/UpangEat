@@ -42,8 +42,8 @@ class _WalletState extends State<Wallet> {
                 child: Column(
                   children: [
                     Card(
-
                       margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                      color: Colors.white,
                       elevation: 16,
                       child: SizedBox(
                         height: 245,
@@ -68,27 +68,30 @@ class _WalletState extends State<Wallet> {
                                 ),
                                 Expanded(
                                   child: Container(
-                                    alignment: Alignment.centerRight,
-                                    padding: const EdgeInsets.only(top: 20, right: 40),
-                                    child: const Text(
-                                      '123456.789',
-                                      style: TextStyle(
-                                        color: Color(0xFF202020),
-                                        fontSize: 30,
-                                      ),
+                                    child: const Column(
+                                      children: [
+                                        Text(
+                                          '123456.789',
+                                          style: TextStyle(
+                                            color: Color(0xFF202020),
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                        Text(
+                                          '87as46eg54a6cv1',
+                                          style: TextStyle(
+                                            color: Color(0xFF202020),
+                                            fontSize: 16,
+                                          ),
+                                        )
+                                      ],
                                     ),
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 15),
-                            const Text(
-                              '87as46eg54a6cv1',
-                              style: TextStyle(
-                                color: Color(0xFF202020),
-                                fontSize: 16,
-                              ),
-                            ),
+
                             const SizedBox(height: 15),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

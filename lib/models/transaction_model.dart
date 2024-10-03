@@ -28,12 +28,12 @@ class TransactionModel extends Equatable {
     return TransactionModel(
       transactionId: json['transaction_id'],
       userId: json['user_id'],
-      transactionType: json['transaction_type'],
+      transactionType: _toSentenceCase(json['transaction_type']),
       amount: json['amount'],
       sourceId: json['source_id'],
       destinationId: json['destination_id'],
-      transactionDate: json['transaction_date'],
-      status: json['status'],
+      transactionDate: DateFormat("M/d/yy HH:mm").format(DateTime.parse(json['transaction_date'])),
+      status: _toSentenceCase(json['status']),
       description: json['description'],
     );
   }
@@ -64,4 +64,10 @@ class TransactionModel extends Equatable {
         status,
         description
       ];
+
+  static String _toSentenceCase(String str) {
+    if (str.isEmpty) return str;
+    return str[0].toUpperCase() + str.substring(1).toLowerCase();
+  }
 }
+

@@ -12,66 +12,24 @@ class TransactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Container(
-          height: 100,
-          width: 400,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                spreadRadius: 2,
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Column(
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      color: Colors.white,
+      elevation: 16,
+      child: SizedBox(
+        height: 100,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 40, top: 10),
-                child: Row(
-                  children: [
-                    Text(
-                      transaction.transactionType,
-                      style: const TextStyle(
-                        color: Color(0xFFDE0F39),
-                        fontSize: 20,
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(top: 10, right: 40),
-                        child: Text(
-                          transaction.amount.toStringAsFixed(2), // Display as currency
-                          style: const TextStyle(
-                            color: Color(0xFF202020),
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
+              _TransactionDateAndType(transactionDate: transaction.transactionDate!, transactionType: transaction.transactionType),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40),
-                    child: Text(
-                      "text",
-                      // DateFormat('yyyy-MM-dd').format(transaction.transactionDate), // Format the date
-                      style: const TextStyle(
-                        color: Color(0xFF202020),
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
+                  SizedBox(child: _Amount(amount: transaction.amount, transactionType: transaction.transactionType,)),
+
                 ],
               ),
             ],
@@ -79,5 +37,83 @@ class TransactionCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _TransactionDateAndType extends StatelessWidget {
+  final String transactionType;
+  final String transactionDate;
+  const _TransactionDateAndType({super.key, required this.transactionType, required this.transactionDate});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 2,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            transactionType,
+            style: const TextStyle(
+              color: Color(0xFFDE0F39),
+              fontSize: 20,
+            ),
+          ),
+          Text(
+            transactionDate,
+            style: const TextStyle(
+              color: Color(0xFF202020),
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Amount extends StatelessWidget {
+  final String transactionType;
+  final int amount;
+  const _Amount({super.key, required this.amount, required this.transactionType});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "${getTransactionAmountWithSign(transactionType)}₱$amount",
+      textAlign: TextAlign.end,
+      style: TextStyle(
+        color: getTransactionColor(transactionType),
+        fontSize: 20,
+      ),
+    );
+  }
+  Color getTransactionColor(String transactionType) {
+    switch (transactionType) {
+      case 'Deposit':
+      case 'Receive':
+        return Colors.green;
+      case 'Send':
+      case 'Refund':
+      case 'Withdraw':
+        return Colors.red;
+      default:
+        return Colors.black; // Or a default color of your choice
+    }
+  }
+
+  String getTransactionAmountWithSign(String transactionType) {
+    switch (transactionType) {
+      case 'Deposit':
+      case 'Receive':
+        return '+';
+      case 'Send':
+      case 'Refund':
+      case 'Withdraw':
+        return '-';
+      default:
+        return '';
+    }
   }
 }
