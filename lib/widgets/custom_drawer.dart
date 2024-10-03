@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/Pages/stalls.dart';
 import 'package:upang_eat/Pages/wallet.dart';
+import 'package:upang_eat/bloc/transaction_bloc/transaction_bloc.dart';
+import 'package:upang_eat/repositories/transaction_repository_impl.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -52,7 +55,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
               setState(() {
                 Navigator.pop(context);
 
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const Wallet()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => TransactionBloc(TransactionRepositoryImpl())..add(LoadTransaction()),
+                      child: const Wallet(),
+                    ),
+                  ),
+                );
               });
             },
           ),
