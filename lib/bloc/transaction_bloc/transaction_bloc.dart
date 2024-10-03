@@ -10,11 +10,11 @@ part 'transaction_state.dart';
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final TransactionRepository _transactionRepository;
 
-  TransactionBloc(this._transactionRepository) : super(TransactionInitial()) {
+  TransactionBloc(this._transactionRepository) : super(TransactionLoading()) {
     on<LoadTransaction>((event, emit) async {
       emit(TransactionLoading());
       try {
-        final transactions = await _transactionRepository.fetchTransaction();
+        final transactions = await _transactionRepository.fetchTransactionByUserId(event.id);
         emit(TransactionLoaded(transactions));
       } catch(error) {
         emit(TransactionError(error.toString()));

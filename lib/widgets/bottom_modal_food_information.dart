@@ -39,7 +39,7 @@ void bottomModalFoodInformation(BuildContext context, FoodModel food) {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _Title(foodName: food.itemName, stallName: food.stallName!,),
@@ -93,7 +93,7 @@ class _Title extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                   fontSize: 12,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   color: Color.fromARGB(200, 0, 0, 0)),
             ),
           ),

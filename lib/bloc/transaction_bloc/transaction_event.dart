@@ -7,4 +7,10 @@ sealed class TransactionEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadTransaction extends TransactionEvent {}
+class LoadTransaction extends TransactionEvent {
+  final int id;
+  const LoadTransaction(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}

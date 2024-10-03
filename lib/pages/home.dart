@@ -31,23 +31,27 @@ class _HomeState extends State<Home> {
     context.read<CategoryBloc>().add(LoadCategory());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _HomeAppBar(),
-      drawer: const CustomDrawer(),
-      body: ListView(
-        padding: const EdgeInsets.only(top: 8.0),
-        children: [
-          const _HomeSearchBar(),
-          const _Header(title: "Categories", isHaveMore: true),
-          _CategoriesHorizontalList(),
-          const _Header(title: "Stalls", isHaveMore: true, bottomPadding: 0,),
-          _StallCardHorizontalList(),
-          const Carousel(),
-          const _Header(title: "Meals"),
-          const _MealCardVerticalList(),
-        ],
+    return BlocProvider(
+      create: (context) => FoodBloc(FoodRepositoryImpl())..add(LoadFood()),
+      child: Scaffold(
+        appBar: _HomeAppBar(),
+        drawer: const CustomDrawer(),
+        body: ListView(
+          padding: const EdgeInsets.only(top: 8.0),
+          children: [
+            const _HomeSearchBar(),
+            const _Header(title: "Categories", isHaveMore: true),
+            _CategoriesHorizontalList(),
+            const _Header(title: "Stalls", isHaveMore: true, bottomPadding: 0,),
+            _StallCardHorizontalList(),
+            const Carousel(),
+            const _Header(title: "Meals"),
+            const _MealCardVerticalList(),
+          ],
+        ),
       ),
     );
   }
@@ -123,7 +127,8 @@ class _Header extends StatelessWidget {
                   'Stalls' => const Stalls(),
                   _ => const CategoryMore()
                 };
-                Navigator.push(context, MaterialPageRoute(builder: (context) => route));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => route));
               },
               child: const Padding(
                 padding: EdgeInsets.only(right: 24.0),
@@ -246,8 +251,9 @@ class _MealCardVerticalList extends StatelessWidget {
                   height: 500,
                   child: ListView.builder(itemCount: 4,
                       itemBuilder: (context, index) {
-                        return HomeMealCard(food: FakeData.fakeFood, isShowStallName: true);
-                  }),
+                        return HomeMealCard(
+                            food: FakeData.fakeFood, isShowStallName: true);
+                      }),
                 ),
               );
             } else if (state is FoodLoaded) {
@@ -311,7 +317,6 @@ class _CategoriesHorizontalListState extends State<_CategoriesHorizontalList> {
                     return GestureDetector(
                       onTap: () {
                         setState(() {
-                          context.read<FoodBloc>().close();
                           Navigator.push(context, MaterialPageRoute(
                               builder: (context) =>
                                   FoodCategory(category: category,)));

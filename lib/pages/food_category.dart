@@ -16,6 +16,7 @@ class FoodCategory extends StatefulWidget {
 }
 
 class _FoodCategoryState extends State<FoodCategory> {
+
   @override
   void initState() {
     super.initState();

@@ -4,10 +4,11 @@ import 'package:upang_eat/models/stall_model.dart';
 import 'package:upang_eat/repositories/stall_repository.dart';
 import 'package:http/http.dart' as http;
 
+import '../main.dart';
+
 
 class StallRepositoryImpl implements StallRepository {
-  static const String baseUrl = 'http://192.168.68.104:3000';
-  // static const String baseUrl = 'http://localhost:3000';
+  final String baseUrl = IpAddress.ipAddress;
 
 
   @override

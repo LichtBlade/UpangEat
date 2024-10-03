@@ -58,10 +58,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (context) => TransactionBloc(TransactionRepositoryImpl())..add(LoadTransaction()),
-                      child: const Wallet(),
-                    ),
+                    builder: (context) => const Wallet(),
                   ),
                 );
               });

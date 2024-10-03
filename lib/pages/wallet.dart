@@ -15,17 +15,16 @@ class _WalletState extends State<Wallet> {
   final coin = "assets/FlameCoin.png";
 
   final ButtonStyle style_Button = ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFFDE0F39),
+    backgroundColor: const Color(0xFFDE163D),
     elevation: 5,
     foregroundColor: Colors.white,
-    textStyle: const TextStyle(fontSize: 20),
+    textStyle: const TextStyle(fontSize: 12),
   );
 
   @override
   void initState() {
     super.initState();
-    // Trigger the loading of transactions when the widget is initialized
-    context.read<TransactionBloc>().add(LoadTransaction());
+    context.read<TransactionBloc>().add(const LoadTransaction(1));
   }
 
   @override
@@ -42,79 +41,77 @@ class _WalletState extends State<Wallet> {
                 padding: const EdgeInsets.only(top: 10),
                 child: Column(
                   children: [
-                    Container(
-                      width: 400,
-                      height: 225,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            spreadRadius: 2,
-                            blurRadius: 10,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20, left: 40),
-                                child: Image.asset(
-                                  coin,
-                                  width: 100,
-                                  height: 100,
+                    Card(
+
+                      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                      elevation: 16,
+                      child: SizedBox(
+                        height: 245,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 16.0),
+                                  child: Image.asset(
+                                    coin,
+                                    width: 100,
+                                    height: 100,
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  alignment: Alignment.centerRight,
-                                  padding: const EdgeInsets.only(top: 20, right: 40),
-                                  child: const Text(
-                                    '123456.789',
-                                    style: TextStyle(
-                                      color: Color(0xFF202020),
-                                      fontSize: 30,
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.only(top: 20, right: 40),
+                                    child: const Text(
+                                      '123456.789',
+                                      style: TextStyle(
+                                        color: Color(0xFF202020),
+                                        fontSize: 30,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 15),
-                          const Text(
-                            '87as46eg54a6cv1',
-                            style: TextStyle(
-                              color: Color(0xFF202020),
-                              fontSize: 16,
+                              ],
                             ),
-                          ),
-                          const SizedBox(height: 15),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: style_Button,
-                                child: const Text('Deposit'),
+                            const SizedBox(height: 15),
+                            const Text(
+                              '87as46eg54a6cv1',
+                              style: TextStyle(
+                                color: Color(0xFF202020),
+                                fontSize: 16,
                               ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: style_Button,
-                                child: const Text('Transfer'),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: style_Button,
-                                child: const Text('Convert'),
-                              ),
-                            ],
-                          ),
-                        ],
+                            ),
+                            const SizedBox(height: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {},
+                                  style: style_Button,
+                                  child: const Text('Deposit', style: TextStyle(fontSize: 14),),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {},
+                                  style: style_Button,
+                                  child: const Text('Transfer', style: TextStyle(fontSize: 14),),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {},
+                                  style: style_Button,
+                                  child: const Text('Convert', style: TextStyle(fontSize: 14),),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 30),

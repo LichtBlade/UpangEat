@@ -1,12 +1,12 @@
 import 'dart:convert';
 
+import 'package:upang_eat/main.dart';
 import 'package:upang_eat/models/tray_model.dart';
 import 'package:upang_eat/repositories/tray_repository.dart';
 import 'package:http/http.dart' as http;
 
 class TrayRepositoryImpl extends TrayRepository {
-  static const String baseUrl = 'http://192.168.68.104:3000'; //CJ IP
-  // static const String baseUrl = 'http://localhost:3000';
+  final String baseUrl = IpAddress.ipAddress;
   @override
   Future<void> addToTray(TrayModel tray) async {
     final response = await http.post(Uri.parse('$baseUrl/trays'),

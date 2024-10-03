@@ -48,7 +48,7 @@ class TransactionCard extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         padding: const EdgeInsets.only(top: 10, right: 40),
                         child: Text(
-                          '\$${transaction.transactionAmount.toStringAsFixed(2)}', // Display as currency
+                          transaction.amount.toStringAsFixed(2), // Display as currency
                           style: const TextStyle(
                             color: Color(0xFF202020),
                             fontSize: 20,
@@ -64,7 +64,8 @@ class TransactionCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 40),
                     child: Text(
-                      DateFormat('yyyy-MM-dd').format(transaction.transactionDate), // Format the date
+                      "text",
+                      // DateFormat('yyyy-MM-dd').format(transaction.transactionDate), // Format the date
                       style: const TextStyle(
                         color: Color(0xFF202020),
                         fontSize: 16,

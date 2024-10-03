@@ -38,7 +38,7 @@ class _MealCardSquareState extends State<MealCardSquare> {
                   child:
                   Center(child: Row(
                     children: [
-                      Expanded(flex: 3,child: Text(widget.food.itemName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600),)),
+                      Expanded(flex: 2,child: Text(widget.food.itemName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600),)),
                       Expanded(child: Text("₱${widget.food.price}",textAlign: TextAlign.end, style: const TextStyle(fontWeight: FontWeight.w600),),)
                     ],
                   )),
