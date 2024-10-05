@@ -1,7 +1,17 @@
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:upang_eat/Widgets/stalls_stall_card.dart";
+import "package:upang_eat/bloc/tray_bloc/tray_bloc.dart";
+import "package:upang_eat/models/food_model.dart";
+import "package:upang_eat/models/tray_model.dart";
+
+import "../bloc/food_bloc/food_bloc.dart";
+import "../fake_data.dart";
+import "../widgets/tray_card.dart";
 
 class Tray extends StatefulWidget {
+  final int id = 1;
+
   const Tray({super.key});
 
   @override
@@ -9,80 +19,43 @@ class Tray extends StatefulWidget {
 }
 
 class _TrayState extends State<Tray> {
-  final List<String> foods = [
-    "assets/drink.png",
-    "assets/drink.png",
-    "assets/drink.png",
-    "assets/drink.png",
-    "assets/drink.png",
-    "assets/drink.png",
-    "assets/drink.png",
-    "assets/drink.png",
-    "assets/drink.png",
-    "assets/drink.png",
-  ];
-  final List<Map<String, String>> stallData = [
-    {
-      'stallName': "Boss Sisig!",
-      'imageProfile': "assets/1.jpg",
-      'imageBanner': "assets/BossSisigBanner.jpg"
-    },
-    {
-      'stallName': "Ninong Ry's Exotic Delicacy",
-      'imageProfile': "assets/2.jpg",
-      'imageBanner': "assets/NinongRySpecialDelicacyBanner.jpg"
-    },
-    {
-      'stallName': "Mekus Mekus Tayo Insan!",
-      'imageProfile': "assets/3.jpg",
-      'imageBanner': "assets/MekusMekusTayoInsanBanner.jpeg"
-    },
-    {
-      'stallName': "Masamsamit So Adele",
-      'imageProfile': "assets/4.jpg",
-      'imageBanner': "assets/MasamsamitSoAdeleBanner.jpg"
-    }
-  ];
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<FoodBloc>().add(LoadFoodTray(widget.id));
+    
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: 350,
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            final food = foods[index];
-            bool isChecked = false;
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 18.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    Checkbox(
-                        value: isChecked,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            isChecked = value!;
-                          });
-                        }),
-                    const SizedBox(width: 16),
-                    Image.asset(food, width: 80, height: 80, fit: BoxFit.cover,),
-                    const SizedBox(width: 16),
-                    const Column(
-                      children: [
-                        Text("data"),
-                        Text("data"),
-                        Text("data"),
-                        Text("data"),
-                      ],
-                    )
-                  ],
-                ),
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Tray"),
+      ),
+      body: BlocBuilder<FoodBloc, FoodState>(
+        builder: (context, state) {
+          if (state is FoodLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          },
-          itemCount: foods.length,
-        ),
+          } else if (state is FoodLoaded) {
+            final foods = state.foods;
+            return foods.isNotEmpty ?
+            ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                itemCount: foods.length,
+                itemBuilder: (context, index) {
+                  final food = foods[index];
+                  return TrayCard(food: food);
+                })
+            : const Text("Empty");
+          } else if (state is FoodError) {
+            return Text(state.message);
+          } else {
+            return const Text("Unexpected state");
+          }
+        },
       ),
     );
   }

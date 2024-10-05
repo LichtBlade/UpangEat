@@ -18,8 +18,13 @@ class TrayRepositoryImpl extends TrayRepository {
   }
 
   @override
-  Future<List<TrayModel>> fetchTrayByUserId() {
-    // TODO: implement fetchTrayByUserId
-    throw UnimplementedError();
+  Future<List<TrayModel>> fetchTrayByUserId(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl/trays/$id'));
+    if (response.statusCode == 200) {
+      final List<dynamic> trayCategoryData = json.decode(response.body);
+      return trayCategoryData.map((json) => TrayModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load trays');
+    }
   }
 }

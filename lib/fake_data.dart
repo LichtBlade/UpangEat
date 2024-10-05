@@ -1,6 +1,7 @@
 import 'package:upang_eat/models/category_model.dart';
 import 'package:upang_eat/models/food_model.dart';
 import 'package:upang_eat/models/stall_model.dart';
+import 'package:upang_eat/models/tray_model.dart';
 
 class FakeData {
   static FoodModel get fakeFood => const FoodModel(
@@ -28,4 +29,5 @@ class FakeData {
       categoryId: 0,
       categoryName: "Burigir",
       imageUrl: "assets/categories/Bread.png");
+  static TrayModel get fakeTray => const TrayModel(trayId: 0, userId: 0, itemId: 0, quantity: 1);
 }

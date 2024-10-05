@@ -16,17 +16,19 @@ import 'package:upang_eat/repositories/category_repository_impl.dart';
 import 'package:upang_eat/repositories/food_repository_impl.dart';
 import 'package:upang_eat/repositories/stall_repository_impl.dart';
 import 'package:upang_eat/repositories/transaction_repository_impl.dart';
+import 'package:upang_eat/repositories/tray_repository_impl.dart';
 import 'package:upang_eat/widgets/custom_app_bar.dart';
 import 'package:upang_eat/widgets/user_login.dart';
 
 import 'bloc/login_bloc/login_bloc.dart';
+import 'bloc/tray_bloc/tray_bloc.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class IpAddress {
-  static String get ipAddress => "http://192.168.204.138:3000";
+  static String get ipAddress => "http://192.168.100.25:3000";
 }
 
 class MyApp extends StatefulWidget {
@@ -59,6 +61,10 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<TransactionBloc>(
           create: (context) => TransactionBloc(TransactionRepositoryImpl()),
         ),
+        BlocProvider<TrayBloc>(
+          create: (context) => TrayBloc(TrayRepositoryImpl()),
+        ),
+
       ],
       child: MaterialApp(
           title: "Upang Eat",

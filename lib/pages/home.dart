@@ -1,17 +1,15 @@
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:upang_eat/Pages/stalls.dart';
 import 'package:upang_eat/Widgets/custom_drawer.dart';
 import 'package:upang_eat/fake_data.dart';
 import 'package:upang_eat/pages/category_more.dart';
-import 'package:upang_eat/repositories/category_repository_impl.dart';
+import 'package:upang_eat/pages/tray.dart';
 import 'package:upang_eat/repositories/food_repository.dart';
 import 'package:upang_eat/widgets/carousel.dart';
 import '../bloc/category_bloc/category_bloc.dart';
 import '../bloc/food_bloc/food_bloc.dart';
 import '../bloc/stall_bloc/stall_bloc.dart';
-import '../models/food_model.dart';
 import '../repositories/food_repository_impl.dart';
 import '../widgets/category_card.dart';
 import '../widgets/home_meal_card.dart';
@@ -27,6 +25,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  
   @override
   void initState() {
     context.read<StallBloc>().add(LoadStalls());
@@ -68,10 +67,15 @@ class _HomeState extends State<Home> {
   }
 }
 
-class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-
+class _HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  @override
+  State<_HomeAppBar> createState() => _HomeAppBarState();
+}
+
+class _HomeAppBarState extends State<_HomeAppBar> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -83,10 +87,12 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             children: [
               IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.notifications_none)),
-              IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const Tray()));
+              });
+                  },
                   icon: const Icon(Icons.fastfood_outlined)),
             ],
           ),
@@ -242,17 +248,6 @@ class _MealCardVerticalList extends StatefulWidget {
 }
 
 class _MealCardVerticalListState extends State<_MealCardVerticalList> {
-  static const int _itemsPerPage = 8;
-  final FoodRepository _foodRepository = FoodRepositoryImpl();
- var _controller = 
-
-
-  @override
-  void initState() {
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(

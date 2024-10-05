@@ -8,14 +8,12 @@ sealed class FoodEvent extends Equatable {
 
 class LoadFood extends FoodEvent {}
 
-class LoadFoodPaginated extends FoodEvent {
-  final int pageKey;
-  final int itemsPerPage;
-  const LoadFoodPaginated(this.pageKey, this.itemsPerPage);
+class LoadFoodTray extends FoodEvent {
+  final int id;
+  const LoadFoodTray(this.id);
 
   @override
-  List<Object?> get props => [pageKey, itemsPerPage];
-
+  List<Object> get props => [id];
 }
 
 class LoadFoodCategory extends FoodEvent {
