@@ -20,7 +20,7 @@ class _HomeMealCardState extends State<HomeMealCard> {
       onTap: () {
         bottomModalFoodInformation(context, widget.food);
       },
-      child: Card.outlined(
+      child: Card.filled(
         margin: const EdgeInsets.symmetric(vertical: 8.0),
         child: SizedBox(
           width: 360,

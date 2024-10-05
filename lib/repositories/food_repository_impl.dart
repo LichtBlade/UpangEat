@@ -42,4 +42,16 @@ class FoodRepositoryImpl extends FoodRepository {
       throw Exception('Failed to load foods');
     }
   }
+
+  @override
+  Future<List<FoodModel>> fetchPaginatedFood(int pageKey, int itemsPerPage) async {
+    final response = await http.get(Uri.parse('$baseUrl/foods?offset=$pageKey&limit=$itemsPerPage'));
+    if (response.statusCode == 200) {
+      final List<dynamic> foodCategoryData = json.decode(response.body);
+
+      return foodCategoryData.map((json) => FoodModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load foods');
+    }
+  }
 }

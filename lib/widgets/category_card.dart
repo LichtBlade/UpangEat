@@ -9,9 +9,9 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Card(
+        Card.filled(
+          color: Colors.white,
           margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
-          elevation: 4,
           child: Padding(
             padding: const EdgeInsets.all(6.0),
             child: Image.asset(

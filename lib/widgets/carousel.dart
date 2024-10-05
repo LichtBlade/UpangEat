@@ -31,9 +31,18 @@ class CarouselState extends State<Carousel> {
           items: [1, 2, 3, 4, 5].map((i) {
             return Builder(
               builder: (BuildContext context) {
+                Color color = switch (i) {
+                  1 => Colors.pinkAccent,
+                  2 => Colors.blueAccent,
+                  3 => Colors.lightGreenAccent,
+                4 => Colors.deepOrangeAccent,
+                5 => Colors.yellowAccent,
+                  _ => Colors.white,
+                };
                 return SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    child: Card(
+                    child: Card.filled(
+                      color: color,
                         child: Text(
                           'text $i',
                           style: const TextStyle(fontSize: 16.0),

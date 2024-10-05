@@ -20,8 +20,7 @@ class _MealCardSquareState extends State<MealCardSquare> {
         onTap: () {
           bottomModalFoodInformation(context, widget.food);
         },
-        child: Card(
-          elevation: 8,
+        child: Card.filled(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(14.0),
             child: Column(children: [

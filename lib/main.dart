@@ -26,7 +26,7 @@ void main() {
 }
 
 class IpAddress {
-  static String get ipAddress => "http://192.168.218.138:3000";
+  static String get ipAddress => "http://192.168.204.138:3000";
 }
 
 class MyApp extends StatefulWidget {
@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
           title: "Upang Eat",
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(),
+          theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFF8F8F8), cardTheme: const CardTheme(color: Colors.white), appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
           home: const Home(),
           ),
     );

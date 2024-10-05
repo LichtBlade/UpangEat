@@ -22,6 +22,16 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
       }
     });
 
+    on<LoadFoodPaginated>((event, emit) async {
+      emit(FoodLoading());
+      try{
+        final foods = await _foodRepository.fetchPaginatedFood(event.pageKey, event.itemsPerPage);
+        emit(FoodLoaded(foods));
+      } catch (error) {
+        emit(FoodError(error.toString()));
+      }
+    });
+
     on<LoadFoodCategory>((event, emit) async {
       emit(FoodLoading());
       try{

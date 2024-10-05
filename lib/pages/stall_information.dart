@@ -37,7 +37,8 @@ class _StallInformationState extends State<StallInformation> {
               bottom: 0,
               left: 0,
               right: 0,
-              child: Card(
+              child: Card.outlined(
+                color:  const Color(0xFFF8F8F8),
                   margin: EdgeInsets.zero,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(

@@ -1,14 +1,17 @@
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:upang_eat/Pages/stalls.dart';
 import 'package:upang_eat/Widgets/custom_drawer.dart';
 import 'package:upang_eat/fake_data.dart';
 import 'package:upang_eat/pages/category_more.dart';
 import 'package:upang_eat/repositories/category_repository_impl.dart';
+import 'package:upang_eat/repositories/food_repository.dart';
 import 'package:upang_eat/widgets/carousel.dart';
 import '../bloc/category_bloc/category_bloc.dart';
 import '../bloc/food_bloc/food_bloc.dart';
 import '../bloc/stall_bloc/stall_bloc.dart';
+import '../models/food_model.dart';
 import '../repositories/food_repository_impl.dart';
 import '../widgets/category_card.dart';
 import '../widgets/home_meal_card.dart';
@@ -173,20 +176,8 @@ class _HomeSearchBar extends StatelessWidget {
         vertical: 10,
         horizontal: 15,
       ),
-      child: Container(
-        width: 320,
-        height: 50,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 2,
-                offset: const Offset(0, 3),
-              )
-            ]),
+      child: Card.filled(
+        color: Colors.white,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -242,9 +233,25 @@ class _StallCardHorizontalList extends StatelessWidget {
   }
 }
 
-class _MealCardVerticalList extends StatelessWidget {
+class _MealCardVerticalList extends StatefulWidget {
 
   const _MealCardVerticalList({super.key});
+
+  @override
+  State<_MealCardVerticalList> createState() => _MealCardVerticalListState();
+}
+
+class _MealCardVerticalListState extends State<_MealCardVerticalList> {
+  static const int _itemsPerPage = 8;
+  final FoodRepository _foodRepository = FoodRepositoryImpl();
+ var _controller = 
+
+
+  @override
+  void initState() {
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

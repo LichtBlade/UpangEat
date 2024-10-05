@@ -19,8 +19,7 @@ class _HomeStallCardState extends State<HomeStallCard> {
         onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context) => StallInformation(stall: widget.stall)));
         },
-        child: Card(
-          elevation: 8,
+        child: Card.filled(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(14.0),
             child: Column(children: [
