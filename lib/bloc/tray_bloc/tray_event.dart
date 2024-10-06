@@ -14,3 +14,12 @@ class LoadTray extends TrayEvent {
   @override
   List<Object> get props => [id];
 }
+
+class CreateTray extends TrayEvent{
+  final int foodItemId;
+  final int quantity;
+  const CreateTray(this.foodItemId, this.quantity);
+
+  @override
+  List<Object> get props => [foodItemId, quantity];
+}

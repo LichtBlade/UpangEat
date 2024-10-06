@@ -42,7 +42,8 @@ dependencies:
   flutter_staggered_grid_view: ^0.7.0
   modal_bottom_sheet: ^3.0.0
   intl: ^0.17.0
-  infinite_scroll_pagination: ^4.0.0
+  awesome_snackbar_content: ^0.1.1
+  flutter_svg: ^1.1.6
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,7 @@ flutter:
     - assets/foods/
     - assets/stalls/profiles/
     - assets/stalls/banners/
+    - assets/types/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -46,20 +46,18 @@ class _HomeState extends State<Home> {
             context.read<StallBloc>().add(LoadStalls());
             context.read<CategoryBloc>().add(LoadCategory());
           },
-          child: SingleChildScrollView(
-            // padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              children: [
-                const _HomeSearchBar(),
-                const _Header(title: "Categories", isHaveMore: true),
-                _CategoriesHorizontalList(),
-                const _Header(title: "Stalls", isHaveMore: true, bottomPadding: 0,),
-                _StallCardHorizontalList(),
-                const Carousel(),
-                const _Header(title: "Meals"),
-                const _MealCardVerticalList(),
-              ],
-            ),
+          child:  CustomScrollView(
+            slivers: [
+              const SliverToBoxAdapter(child: _HomeSearchBar(),),
+              const SliverToBoxAdapter(child:_Header(title: "Categories", isHaveMore: true),),
+        SliverToBoxAdapter(child:_CategoriesHorizontalList(),),
+              const SliverToBoxAdapter(child: _Header(title: "Stalls", isHaveMore: true, bottomPadding: 0,),),
+        SliverToBoxAdapter(child:_StallCardHorizontalList(),),
+              const SliverToBoxAdapter(child:Carousel(),),
+              const SliverToBoxAdapter(child:_Header(title: "Meals"),),
+              const _MealCardVerticalList()
+
+            ],
           ),
         ),
       ),
@@ -250,12 +248,11 @@ class _MealCardVerticalList extends StatefulWidget {
 class _MealCardVerticalListState extends State<_MealCardVerticalList> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: BlocBuilder<FoodBloc, FoodState>(
-          builder: (context, state) {
-            if (state is FoodLoading) {
-              return Skeletonizer(
+    return BlocBuilder<FoodBloc, FoodState>(
+        builder: (context, state) {
+          if (state is FoodLoading) {
+            return SliverToBoxAdapter(
+              child: Skeletonizer(
                 child: SizedBox(
                   width: 380,
                   height: 500,
@@ -265,26 +262,37 @@ class _MealCardVerticalListState extends State<_MealCardVerticalList> {
                             food: FakeData.fakeFood, isShowStallName: true);
                       }),
                 ),
-              );
-            } else if (state is FoodLoaded) {
-              final foods = state.foods;
-              return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: foods.length,
-                  itemBuilder: (context, index) {
+              ),
+            );
+          } else if (state is FoodLoaded) {
+            final foods = state.foods;
+            return
+              SliverList(delegate: SliverChildBuilderDelegate(
+                childCount: foods.length,
+                  (BuildContext context, int index) {
                     final food = foods[index];
                     return HomeMealCard(food: food, isShowStallName: true,);
-                  });
-            } else if (state is FoodError) {
-              return Text(state.message);
-            } else {
-              return const Text("Unexpected state");
-            }
+                  }
+              ),
+              );
+
+              // SizedBox(
+              //   height: MediaQuery.of(context).size.height,
+              //   child: ListView.builder(
+              //     padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              //     scrollDirection: Axis.vertical,
+              //     itemCount: foods.length,
+              //     itemBuilder: (context, index) {
+              //       final food = foods[index];
+              //       return HomeMealCard(food: food, isShowStallName: true,);
+              //     }),
+              // );
+          } else if (state is FoodError) {
+            return SliverToBoxAdapter(child: Text(state.message));
+          } else {
+            return const SliverToBoxAdapter(child: Text("Unexpected state"));
           }
-      ),
+        }
     );
   }
 }

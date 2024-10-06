@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:upang_eat/widgets/bottom_modal_food_information.dart';
 
 import '../models/food_model.dart';
@@ -18,7 +19,8 @@ class _HomeMealCardState extends State<HomeMealCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        bottomModalFoodInformation(context, widget.food);
+        showCupertinoModalBottomSheet(context: context, builder: (context) =>BottomModalFoodInformation(food: widget.food));
+
       },
       child: Card.filled(
         margin: const EdgeInsets.symmetric(vertical: 8.0),

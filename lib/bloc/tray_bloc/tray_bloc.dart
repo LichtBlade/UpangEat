@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:upang_eat/models/food_model.dart';
 import 'package:upang_eat/models/tray_model.dart';
 
 import '../../repositories/tray_repository.dart';
@@ -15,6 +16,21 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
       try{
         final trays = await _trayRepository.fetchTrayByUserId(event.id);
         emit(TrayLoaded(trays));
+      } catch (error) {
+        emit(TrayError(error.toString()));
+
+      }
+    });
+
+    on<CreateTray>((event, emit) async {
+      emit(TrayLoading());
+      try{
+        final newTray = TrayModel(
+            trayId: 0,
+            userId: 1, // TODO change to logged in user ID
+            itemId: event.foodItemId,
+            quantity: event.quantity);
+        await _trayRepository.addToTray(newTray);
       } catch (error) {
         emit(TrayError(error.toString()));
 
