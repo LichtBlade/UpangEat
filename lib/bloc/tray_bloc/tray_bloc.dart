@@ -36,5 +36,17 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
 
       }
     });
+
+    on<DeleteTray>((event, emit) async {
+      emit(TrayLoading());
+      try{
+        print("object2");
+        await _trayRepository.deleteTray(event.id);
+        print("object");
+        emit(TrayItemRemoved(event.id));
+      } catch (error) {
+        emit(TrayError(error.toString()));
+      }
+    });
   }
 }

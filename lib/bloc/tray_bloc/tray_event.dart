@@ -23,3 +23,11 @@ class CreateTray extends TrayEvent{
   @override
   List<Object> get props => [foodItemId, quantity];
 }
+
+class DeleteTray extends TrayEvent {
+  final int id;
+  const DeleteTray(this.id);
+
+  @override
+  List<Object> get props => [id];
+}

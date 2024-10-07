@@ -11,7 +11,9 @@ class FoodModel extends Equatable {
   final bool isBreakfast;
   final bool isLunch;
   final bool isMerienda;
-  final String? stallName;
+  final String? stallName; // For Showing meal list at home
+  final int? trayId; // For trays
+  final int? trayQuantity; // For Trays
 
   const FoodModel(
       {required this.foodItemId,
@@ -24,7 +26,10 @@ class FoodModel extends Equatable {
       required this.isBreakfast,
       required this.isLunch,
       required this.isMerienda,
-      this.stallName});
+      this.stallName,
+      this.trayId,
+        this.trayQuantity
+      });
 
   factory FoodModel.fromJson(Map<String, dynamic> json) {
     return FoodModel(
@@ -38,7 +43,9 @@ class FoodModel extends Equatable {
       isBreakfast: json['is_breakfast'] == 1,
       isLunch: json['is_lunch'] == 1,
       isMerienda: json['is_merienda'] == 1,
-        stallName: json['stall_name'] ?? ""
+        stallName: json['stall_name'] ?? "",
+        trayId: json['tray_id'],
+        trayQuantity: json['quantity']
     );
   }
 

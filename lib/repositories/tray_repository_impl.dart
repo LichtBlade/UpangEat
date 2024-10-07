@@ -27,4 +27,13 @@ class TrayRepositoryImpl extends TrayRepository {
       throw Exception('Failed to load trays');
     }
   }
+
+  @override
+  Future<void> deleteTray(int id) async {
+    final response = await http.delete(Uri.parse('$baseUrl/trays/$id'));
+
+    if (response.statusCode != 204) {
+      throw Exception('Failed to add trays');
+    }
+  }
 }

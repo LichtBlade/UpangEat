@@ -8,6 +8,14 @@ sealed class TrayState extends Equatable {
 
 final class TrayLoading extends TrayState {}
 
+final class TrayItemRemoved extends TrayState {
+  final int id;
+  const TrayItemRemoved(this.id);
+
+  @override
+  List<Object> get props => [id];
+}
+
 final class TrayLoaded extends TrayState {
   final List<TrayModel> trays;
   const TrayLoaded(this.trays);

@@ -252,12 +252,11 @@ class _AddToTrayButton extends StatelessWidget {
             dismissDirection: DismissDirection.vertical,
             duration: const Duration(seconds: 3),
             margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context).size.height - 200,
+                bottom: MediaQuery.of(context).size.height - 180,
                 right: 20,
                 left: 20),
             behavior: SnackBarBehavior.floating,
             content: AwesomeSnackbarContent(
-              inMaterialBanner: true,
               title: "Got it!",
               message: "${food.itemName} is waiting for you in your tray",
               contentType: ContentType.success,
