@@ -8,12 +8,14 @@ import 'package:http/http.dart' as http;
 class TrayRepositoryImpl extends TrayRepository {
   final String baseUrl = IpAddress.ipAddress;
   @override
-  Future<void> addToTray(TrayModel tray) async {
+  Future<dynamic> addToTray(TrayModel tray) async {
     final response = await http.post(Uri.parse('$baseUrl/trays'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(tray.toJson()));
     if (response.statusCode != 201) {
       throw Exception('Failed to add trays');
+    } else {
+      return response;
     }
   }
 

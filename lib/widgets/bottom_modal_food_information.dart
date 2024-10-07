@@ -3,15 +3,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:upang_eat/Pages/home.dart';
+import 'package:upang_eat/bloc/stall_bloc/stall_bloc.dart';
 import 'package:upang_eat/bloc/tray_bloc/tray_bloc.dart';
 import 'package:upang_eat/models/food_model.dart';
 import 'package:upang_eat/models/tray_model.dart';
+import 'package:upang_eat/repositories/stall_repository.dart';
+import 'package:upang_eat/repositories/stall_repository_impl.dart';
 
+import '../Pages/stall_information.dart';
 import '../bloc/food_bloc/food_bloc.dart';
 
 class BottomModalFoodInformation extends StatefulWidget {
   final FoodModel food;
-  const BottomModalFoodInformation({super.key, required this.food});
+  final bool isOnHome;
+  const BottomModalFoodInformation({super.key, required this.food, this.isOnHome = false});
 
   @override
   State<BottomModalFoodInformation> createState() =>
@@ -195,6 +201,7 @@ class _BottomModalFoodInformationState
                             quantity: _quantity,
                             isUpdate: _isUpdate,
                             existingTrayItem: _existingTrayItem,
+                            isOnHome: widget.isOnHome,
                           )
                         ],
                       )),
@@ -294,8 +301,9 @@ class _AddToTrayButton extends StatelessWidget {
   final int quantity;
   final bool isUpdate;
   final TrayModel existingTrayItem;
+  final bool isOnHome;
   const _AddToTrayButton(
-      {super.key, required this.food, required this.quantity, required this.isUpdate, required this.existingTrayItem});
+      {super.key, required this.food, required this.quantity, required this.isUpdate, required this.existingTrayItem, required this.isOnHome});
 
   @override
   Widget build(BuildContext context) {
@@ -316,18 +324,18 @@ class _AddToTrayButton extends StatelessWidget {
               const SizedBox(),
             const SizedBox(width: 8,),
             FilledButton(
-              onPressed: () {
+              onPressed: () async {
                 final snackBar = SnackBar(
                   dismissDirection: DismissDirection.vertical,
-                  duration: const Duration(seconds: 3),
+                  duration: const Duration(seconds: 4),
                   margin: EdgeInsets.only(
                       bottom: MediaQuery.of(context).size.height - 180,
                       right: 20,
                       left: 20),
                   behavior: SnackBarBehavior.floating,
                   content: AwesomeSnackbarContent(
-                    title: "Got it!",
-                    message: "${food.itemName} is waiting for you in your tray",
+                    title: "All set!",
+                    message: "We've updated the quantity of ${food.itemName} in your tray.",
                     contentType: ContentType.success,
                   ),
                   elevation: 0,
@@ -336,17 +344,20 @@ class _AddToTrayButton extends StatelessWidget {
         
                 if (isUpdate) {
                   context.read<TrayBloc>().add(UpdateTray(existingTrayItem.trayId, TrayModel(trayId: existingTrayItem.trayId, userId: existingTrayItem.userId, itemId: existingTrayItem.itemId, quantity: quantity)));
-                  context.read<FoodBloc>().add(const LoadFoodTray(1));//TODO Change to user ID
+
                 } else {
                   context.read<TrayBloc>().add(CreateTray(food.foodItemId, quantity));
+                  
                 }
                 Navigator.pop(context);
-        
+                if (isOnHome){
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) => StallInformation(stall: widget.stall)));
+                }
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
                   ..showSnackBar(snackBar);
               },
-              child: const Text("Add To Tray")),
+              child: isUpdate ? const Text("Update Quantity") : const Text("Add To Tray")),
           ],
         ),
       );

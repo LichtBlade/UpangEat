@@ -42,14 +42,7 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
       emit(TrayLoading());
       try{
         await _trayRepository.deleteTray(event.id);
-        // emit(TrayItemRemoved(event.id));
-
-        // // Add a delay of 1 second
-        // await Future.delayed(const Duration(seconds: 1));
-        //
-        // // Refresh the tray items
-        // final updatedTrayItems = await _trayRepository.fetchTrayByUserId(1); // TODO: Replace with actual user ID
-        // emit(TrayLoaded(updatedTrayItems));
+        emit(TrayItemRemoved(event.id));
       } catch (error) {
         emit(TrayError(error.toString()));
       }

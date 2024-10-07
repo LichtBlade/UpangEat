@@ -19,7 +19,7 @@ class _HomeMealCardState extends State<HomeMealCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showCupertinoModalBottomSheet(context: context, builder: (context) =>BottomModalFoodInformation(food: widget.food));
+        showCupertinoModalBottomSheet(context: context, builder: (context) => BottomModalFoodInformation(food: widget.food));
 
       },
       child: Card.filled(
