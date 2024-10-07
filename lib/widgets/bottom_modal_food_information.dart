@@ -7,6 +7,8 @@ import 'package:upang_eat/bloc/tray_bloc/tray_bloc.dart';
 import 'package:upang_eat/models/food_model.dart';
 import 'package:upang_eat/models/tray_model.dart';
 
+import '../bloc/food_bloc/food_bloc.dart';
+
 class BottomModalFoodInformation extends StatefulWidget {
   final FoodModel food;
   const BottomModalFoodInformation({super.key, required this.food});
@@ -19,11 +21,22 @@ class BottomModalFoodInformation extends StatefulWidget {
 class _BottomModalFoodInformationState
     extends State<BottomModalFoodInformation> {
   int _quantity = 1;
+  int _price = 0;
+  int id = 1; //TODO Change
+  bool _isUpdate = false;
+  TrayModel _existingTrayItem = const TrayModel(trayId: 0, userId: 0, itemId: 0, quantity: 0);
+  @override
+  void initState() {
+    _price = widget.food.price;
+    context.read<TrayBloc>().add(LoadTray(id));
+    super.initState();
+  }
 
   void _incrementQuantity() {
     if (_quantity < 99) {
       setState(() {
         _quantity++;
+        _price += widget.food.price;
       });
     }
   }
@@ -32,12 +45,33 @@ class _BottomModalFoodInformationState
     if (_quantity > 1) {
       setState(() {
         _quantity--;
+        _price -= widget.food.price;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    return BlocListener<TrayBloc, TrayState>(
+  listener: (context, state) {
+    if (state is TrayLoaded){
+      for (var trayItem in state.trays) {
+        if (trayItem.itemId == widget.food.foodItemId) {
+          // If a match is found, update the state
+          setState(() {
+            _isUpdate = true;
+            _quantity = trayItem.quantity;
+            _existingTrayItem = trayItem;
+            _price = widget.food.price * _quantity;
+
+          });
+          break; // Exit the loop after finding a match
+        }
+      }
+    }
+  },
+  child: BlocBuilder<TrayBloc, TrayState>(
+  builder: (context, state) {
     return SizedBox(
       height: 600,
       width: double.infinity,
@@ -82,13 +116,21 @@ class _BottomModalFoodInformationState
                           ),
                           Row(
                             children: [
-                              IconButton.outlined(
-                                  onPressed: _incrementQuantity,
-                                  icon: const Icon(Icons.add),
-                                  style: OutlinedButton.styleFrom(
-                                    side: const BorderSide(
-                                        color: Colors.redAccent),
-                                  )),
+                              IconButton(
+                                onPressed: _decrementQuantity,
+                                iconSize: 16,
+                                style: IconButton.styleFrom(
+                                  backgroundColor: const Color(0xFFF0F0F0),
+                                ),
+                                color: Colors.black,
+                                constraints: const BoxConstraints(
+                                  minWidth: 36,
+                                  minHeight: 36,
+                                ),
+                                icon: const Icon(
+                                  Icons.remove,
+                                ),
+                              ),
                               const SizedBox(
                                 width: 4,
                               ),
@@ -111,13 +153,22 @@ class _BottomModalFoodInformationState
                               const SizedBox(
                                 width: 4,
                               ),
-                              IconButton.outlined(
-                                  onPressed: _decrementQuantity,
-                                  icon: const Icon(Icons.remove),
-                                  style: OutlinedButton.styleFrom(
-                                    side: const BorderSide(
-                                        color: Colors.redAccent),
-                                  )),
+                              IconButton(
+                                onPressed: _incrementQuantity,
+                                icon: const Icon(Icons.add),
+                                color: Colors.black,
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Colors.redAccent,
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 36,
+                                  minHeight: 36,
+                                ),
+                                iconSize: 16,
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
                             ],
                           ),
                         ],
@@ -134,7 +185,7 @@ class _BottomModalFoodInformationState
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           _Price(
-                            price: widget.food.price,
+                            price: _price,
                           ),
                           const SizedBox(
                             width: 8,
@@ -142,6 +193,8 @@ class _BottomModalFoodInformationState
                           _AddToTrayButton(
                             food: widget.food,
                             quantity: _quantity,
+                            isUpdate: _isUpdate,
+                            existingTrayItem: _existingTrayItem,
                           )
                         ],
                       )),
@@ -157,6 +210,9 @@ class _BottomModalFoodInformationState
         ],
       ),
     );
+  },
+),
+);
   }
 }
 
@@ -236,43 +292,101 @@ class _Price extends StatelessWidget {
 class _AddToTrayButton extends StatelessWidget {
   final FoodModel food;
   final int quantity;
+  final bool isUpdate;
+  final TrayModel existingTrayItem;
   const _AddToTrayButton(
-      {super.key, required this.food, required this.quantity});
+      {super.key, required this.food, required this.quantity, required this.isUpdate, required this.existingTrayItem});
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-        style: ButtonStyle(
-          padding: WidgetStateProperty.all<EdgeInsets>(
-            const EdgeInsets.only(left: 30, right: 30, top: 18, bottom: 18),
-          ),
+    return
+      Expanded(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if(isUpdate)
+              OutlinedButton(onPressed: (){
+              showDialog(context: context, builder: (context) {
+                return _DeleteDialog(title: "Delete Item", message: "Are you sure you want to delete ${food.itemName}?", onDelete: () {
+                  context.read<TrayBloc>().add(DeleteTray(existingTrayItem.trayId));
+                });
+              });
+            }, child: const Text("Remove"))
+            else
+              const SizedBox(),
+            const SizedBox(width: 8,),
+            FilledButton(
+              onPressed: () {
+                final snackBar = SnackBar(
+                  dismissDirection: DismissDirection.vertical,
+                  duration: const Duration(seconds: 3),
+                  margin: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).size.height - 180,
+                      right: 20,
+                      left: 20),
+                  behavior: SnackBarBehavior.floating,
+                  content: AwesomeSnackbarContent(
+                    title: "Got it!",
+                    message: "${food.itemName} is waiting for you in your tray",
+                    contentType: ContentType.success,
+                  ),
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                );
+        
+                if (isUpdate) {
+                  context.read<TrayBloc>().add(UpdateTray(existingTrayItem.trayId, TrayModel(trayId: existingTrayItem.trayId, userId: existingTrayItem.userId, itemId: existingTrayItem.itemId, quantity: quantity)));
+                  context.read<FoodBloc>().add(const LoadFoodTray(1));//TODO Change to user ID
+                } else {
+                  context.read<TrayBloc>().add(CreateTray(food.foodItemId, quantity));
+                }
+                Navigator.pop(context);
+        
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(snackBar);
+              },
+              child: const Text("Add To Tray")),
+          ],
         ),
-        onPressed: () {
-          final snackBar = SnackBar(
-            dismissDirection: DismissDirection.vertical,
-            duration: const Duration(seconds: 3),
-            margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context).size.height - 180,
-                right: 20,
-                left: 20),
-            behavior: SnackBarBehavior.floating,
-            content: AwesomeSnackbarContent(
-              title: "Got it!",
-              message: "${food.itemName} is waiting for you in your tray",
-              contentType: ContentType.success,
-            ),
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-          );
+      );
+  }
+}
 
-          context.read<TrayBloc>().add(CreateTray(food.foodItemId, quantity));
+class _DeleteDialog extends StatelessWidget {
+  final String title;
+  final String message;
 
-          Navigator.pop(context);
+  final VoidCallback onDelete;
 
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(snackBar);
-        },
-        child: const Text("Add To Tray"));
+  const _DeleteDialog(
+      {super.key,
+        required this.title,
+        required this.message,
+        required this.onDelete});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(title),
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            onDelete();
+
+          },
+          child: const Text('Delete'),
+        ),
+      ],
+    );
   }
 }

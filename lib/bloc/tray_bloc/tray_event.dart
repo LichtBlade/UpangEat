@@ -31,3 +31,12 @@ class DeleteTray extends TrayEvent {
   @override
   List<Object> get props => [id];
 }
+
+class UpdateTray extends TrayEvent {
+  final TrayModel tray;
+  final int id;
+  const UpdateTray(this.id, this.tray);
+
+  @override
+  List<Object> get props => [id, tray];
+}

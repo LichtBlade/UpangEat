@@ -23,7 +23,7 @@ class _HomeMealCardState extends State<HomeMealCard> {
 
       },
       child: Card.filled(
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: SizedBox(
           width: 360,
           height: 100,
@@ -133,5 +133,4 @@ class _Contents extends StatelessWidget {
     );
   }
 }
-
 

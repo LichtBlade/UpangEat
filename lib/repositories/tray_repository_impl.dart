@@ -33,7 +33,22 @@ class TrayRepositoryImpl extends TrayRepository {
     final response = await http.delete(Uri.parse('$baseUrl/trays/$id'));
 
     if (response.statusCode != 204) {
-      throw Exception('Failed to add trays');
+      throw Exception('Failed to delete tray');
     }
   }
+
+  @override
+  Future<TrayModel> updateTray(TrayModel tray, int id) async {
+    final response = await http.put(Uri.parse('$baseUrl/trays/$id'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(tray.toJson()));
+
+    if (response.statusCode == 200) {
+      final dynamic trayCategoryData = json.decode(response.body);
+      return trayCategoryData.map((json) => TrayModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to update tray');
+    }
+  }
+
 }

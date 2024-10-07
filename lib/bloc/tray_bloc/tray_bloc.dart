@@ -25,6 +25,7 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
     on<CreateTray>((event, emit) async {
       emit(TrayLoading());
       try{
+
         final newTray = TrayModel(
             trayId: 0,
             userId: 1, // TODO change to logged in user ID
@@ -40,13 +41,30 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
     on<DeleteTray>((event, emit) async {
       emit(TrayLoading());
       try{
-        print("object2");
         await _trayRepository.deleteTray(event.id);
-        print("object");
-        emit(TrayItemRemoved(event.id));
+        // emit(TrayItemRemoved(event.id));
+
+        // // Add a delay of 1 second
+        // await Future.delayed(const Duration(seconds: 1));
+        //
+        // // Refresh the tray items
+        // final updatedTrayItems = await _trayRepository.fetchTrayByUserId(1); // TODO: Replace with actual user ID
+        // emit(TrayLoaded(updatedTrayItems));
       } catch (error) {
         emit(TrayError(error.toString()));
       }
     });
+
+    on<UpdateTray>((event, emit) async {
+      emit(TrayLoading());
+      try{
+        await _trayRepository.updateTray(event.tray,event.id);
+
+      } catch (error) {
+        emit(TrayError(error.toString()));
+      }
+    });
+
+
   }
 }

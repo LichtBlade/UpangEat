@@ -64,14 +64,17 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<TrayBloc>(
           create: (context) => TrayBloc(TrayRepositoryImpl()),
         ),
-
       ],
       child: MaterialApp(
-          title: "Upang Eat",
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFF8F8F8), cardTheme: const CardTheme(color: Colors.white), appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
-          home: const Home(),
-          ),
+        title: "Upang Eat",
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            scaffoldBackgroundColor: const Color(0xFFF8F8F8),
+            cardTheme: const CardTheme(color: Colors.white),
+            appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
+
+        home: const Home(),
+      ),
     );
   }
 }
