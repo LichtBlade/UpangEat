@@ -31,13 +31,14 @@ class _SellerCenterAppbarState extends State<SellerCenterAppbar> {
       title: Center(
         child: Text(
           widget.stallName,
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(
+            color: Colors.white,
+          ),
         ),
       ),
       actions: [
         PopupMenuButton(
-          iconColor: Colors.white,
-            
+            iconColor: Colors.white,
             itemBuilder: (context) => [
                   const PopupMenuItem(
                     child: Row(

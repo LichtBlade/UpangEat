@@ -4,6 +4,7 @@ import 'package:upang_eat/pages/seller_center/seller_center_products.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/orders_dashboard.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/products_card.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
+import 'package:upang_eat/widgets/seller_center_widgets/seller_center_btn.dart';
 
 import '../admin_pages/dashboard.dart';
 
@@ -23,6 +24,7 @@ class _SellerCenterState extends State<SellerCenter> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            const SellerCenterBtn(label: 'Products'),
             OrdersDashboard(
                 numToClaim: 2,
                 numToProcess: 2,
