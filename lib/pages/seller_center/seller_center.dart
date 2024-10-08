@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:upang_eat/pages/seller_center/seller_center_products.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/orders_dashboard.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/products_card.dart';
+import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
 
 import '../admin_pages/dashboard.dart';
 
@@ -17,14 +18,7 @@ class _SellerCenterState extends State<SellerCenter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const Dashboard())),
-            icon: const Icon(Icons.menu)),
-        title: const Text('Seller Center'),
-        backgroundColor: const Color.fromARGB(255, 255, 169, 186),
-      ),
+      appBar: const SellerCenterAppbar(stallName: 'Food'),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
