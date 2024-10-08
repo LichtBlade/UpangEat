@@ -24,6 +24,23 @@ final class TrayLoaded extends TrayState {
   List<Object> get props => [trays];
 }
 
+final class TrayAdded extends TrayState {
+  final Stall stall;
+  const TrayAdded(this.stall);
+
+  @override
+  List<Object> get props => [stall];
+}
+
+
+final class TrayStallConflict extends TrayState {
+  final List<int> trayIdsToDelete;
+  const TrayStallConflict(this.trayIdsToDelete);
+
+  @override
+  List<Object> get props => [trayIdsToDelete];
+}
+
 final class TrayError extends TrayState {
   final String message;
 

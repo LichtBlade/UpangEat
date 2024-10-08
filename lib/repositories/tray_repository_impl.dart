@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:upang_eat/main.dart';
+import 'package:upang_eat/models/stall_model.dart';
 import 'package:upang_eat/models/tray_model.dart';
 import 'package:upang_eat/repositories/tray_repository.dart';
 import 'package:http/http.dart' as http;
@@ -12,10 +14,20 @@ class TrayRepositoryImpl extends TrayRepository {
     final response = await http.post(Uri.parse('$baseUrl/trays'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(tray.toJson()));
-    if (response.statusCode != 201) {
-      throw Exception('Failed to add trays');
+    print(response.body);
+    if (response.statusCode == 201) {
+      print("201");
+      return Stall.fromJson(json.decode(response.body));
+      // return TrayModel.fromJson(json.decode(response.body));
+    } else if (response.statusCode == 409) {
+      final jsonResponse = json.decode(response.body);
+      final newStallId = jsonResponse['newStallId'];
+      final trayIdsToDelete = List<int>.from(jsonResponse['trayIdsToDelete']);
+      print("wow");
+      throw StallConflictException(newStallId, trayIdsToDelete);
     } else {
-      return response;
+      throw Exception('Failed to add trays');
+
     }
   }
 
@@ -53,4 +65,24 @@ class TrayRepositoryImpl extends TrayRepository {
     }
   }
 
+  @override
+  Future<void> deleteListOfTrays(List<int> trayIdsToDelete) async {
+    final response = await http.delete(Uri.parse('$baseUrl/trays'),
+    body: jsonEncode(trayIdsToDelete),
+        headers: {'Content-Type': 'application/json'});
+
+    if (response.statusCode != 204) {
+      throw Exception('Failed to delete tray items');
+    }
+  }
+
+}
+
+class StallConflictException implements Exception {
+  final int newStallId;
+  final List<int> trayIdsToDelete;
+  final String message; // Add a message property
+
+  StallConflictException(this.newStallId, this.trayIdsToDelete) :
+        message = 'Stall conflict detected. New stall ID: $newStallId, Tray IDs to delete: $trayIdsToDelete';
 }

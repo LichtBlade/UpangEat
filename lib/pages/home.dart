@@ -275,6 +275,7 @@ class _MealCardVerticalListState extends State<_MealCardVerticalList> {
             return HomeMealCard(
               food: food,
               isShowStallName: true,
+              isOnHome: true,
             );
           }),
         );
