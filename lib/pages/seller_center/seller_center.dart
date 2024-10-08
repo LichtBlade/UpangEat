@@ -1,12 +1,17 @@
-// TODO : Change segmented button into CupertinoSegmentedController
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:upang_eat/pages/seller_center/seller_center_products.dart';
-import 'package:upang_eat/widgets/seller_center_widgets/orders_dashboard.dart';
-import 'package:upang_eat/widgets/seller_center_widgets/products_card.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_btn.dart';
 
-import '../admin_pages/dashboard.dart';
+enum OrderState { pending, accepted, ready }
+
+Map<OrderState, String> valueString = <OrderState, String>{
+  OrderState.pending: 'Pending',
+  OrderState.accepted: 'Accepted',
+  OrderState.ready: 'Ready'
+};
 
 class SellerCenter extends StatefulWidget {
   const SellerCenter({super.key});
@@ -18,6 +23,7 @@ class SellerCenter extends StatefulWidget {
 class _SellerCenterState extends State<SellerCenter> {
   @override
   Widget build(BuildContext context) {
+    OrderState _selectedSegment = OrderState.pending;
     return Scaffold(
       appBar: const SellerCenterAppbar(stallName: 'Food'),
       body: Padding(
@@ -25,18 +31,28 @@ class _SellerCenterState extends State<SellerCenter> {
         child: Column(
           children: [
             const SellerCenterBtn(label: 'Products'),
-            OrdersDashboard(
-                numToClaim: 2,
-                numToProcess: 2,
-                numToReviwew: 1,
-                forwardBtnFunc: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => const SellerCenterProducts()))),
-            const Flexible(
-              flex: 1,
-              fit: FlexFit.loose,
-              child: ProductsCard(),
+            const Divider(
+              height: 14.0,
+              color: Colors.transparent,
             ),
+            Column(
+              children: [
+                CupertinoSegmentedControl(
+                  selectedColor: const Color.fromARGB(255, 222, 15, 57),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  groupValue: _selectedSegment,
+                  children: const {
+                    
+                  },
+                  onValueChanged: (OrderState value) {
+                    setState(() {
+                      _selectedSegment = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 12.0),
+              ],
+            )
           ],
         ),
       ),

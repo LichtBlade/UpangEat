@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class CustomSegmentedButton extends StatefulWidget {
   const CustomSegmentedButton({super.key});
@@ -8,45 +8,25 @@ class CustomSegmentedButton extends StatefulWidget {
 }
 
 class _CustomSegmentedButtonState extends State<CustomSegmentedButton> {
-  Set<String> _selected = {'Pending'};
-  void updateSelected(Set<String> newSelection) {
-    setState(() {
-      _selected = newSelection;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return SegmentedButton(
-      segments: const <ButtonSegment<String>>[
-        ButtonSegment<String>(
-          value: 'Pending',
-          label: Text(
-            'Pending',
-            style: TextStyle(fontSize: 12),
-          ),
-        ),
-        ButtonSegment<String>(
-          value: 'Accepted',
-          label: Text(
-            'Accepted',
-            style: TextStyle(fontSize: 12),
-          ),
-        ),
-        ButtonSegment<String>(
-          value: 'Ready',
-          label: Text(
-            'Ready',
-            style: TextStyle(fontSize: 12),
-          ),
+    String? _currentText;
+
+    return Column(
+      children: [
+        CupertinoSegmentedControl(
+          selectedColor: const Color.fromARGB(255, 222, 15, 57),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          onValueChanged: (String value) {
+            setState(() {
+             _currentText = value;
+            });
+          },
+          children: const <String, Widget>{
+
+          },
         ),
       ],
-      selected: _selected,
-      onSelectionChanged: (Set<String> newSelection) {
-        setState(() {
-          _selected = newSelection;
-        });
-      },
     );
   }
 }

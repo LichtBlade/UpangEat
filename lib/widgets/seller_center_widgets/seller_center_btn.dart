@@ -26,21 +26,25 @@ class _SellerCenterBtnState extends State<SellerCenterBtn> {
         // elevation: 4.0,
       ),
       onPressed: () {},
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            widget.label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
+      child: Padding(
+        padding: const EdgeInsets.only(
+            top: 10.0, bottom: 10.0, left: 8.0, right: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              widget.label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
             ),
-          ),
-          const Icon(
-            Icons.navigate_next_sharp,
-            color: Colors.white,
-          )
-        ],
+            const Icon(
+              Icons.navigate_next_sharp,
+              color: Colors.white,
+            )
+          ],
+        ),
       ),
     );
   }

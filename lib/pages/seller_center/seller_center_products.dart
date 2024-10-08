@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/custom_list_view_card.dart';
-import 'package:upang_eat/widgets/seller_center_widgets/custom_segmented_button.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
 
 import '../../widgets/seller_center_widgets/order_list.dart';
