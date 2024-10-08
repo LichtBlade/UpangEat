@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/custom_list_view_card.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/custom_segmented_button.dart';
+import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
 
 import '../../widgets/seller_center_widgets/order_list.dart';
 
@@ -14,26 +15,15 @@ class SellerCenterProducts extends StatefulWidget {
 class _SellerCenterProductsState extends State<SellerCenterProducts> {
   @override
   Widget build(BuildContext context) {
-    String popUpVal = 'Complete';
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Products'),
-        backgroundColor: const Color.fromARGB(255, 255, 169, 186),
-        actions: [
-          PopupMenuButton(
-              itemBuilder: (context) => [
-                    PopupMenuItem(child: Text(popUpVal)),
-                    const PopupMenuItem(child: Text('Canceled')),
-                  ]),
-        ],
-      ),
-      body: const Column(
+    return const Scaffold(
+      appBar: SellerCenterAppbar(stallName: 'Food'),
+      body: Column(
         children: [
           SizedBox(
             height: 80,
             child: Center(
-              child: CustomSegmentedButton(),
+              child: Icon(Icons.warning),
             ),
           ),
           Expanded(

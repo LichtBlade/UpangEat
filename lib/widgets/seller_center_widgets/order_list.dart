@@ -10,19 +10,19 @@ class OrderList extends StatefulWidget {
 class _OrderListState extends State<OrderList> {
   List<Map<String, dynamic>> orderItems = [
     {
-      'image': 'assets/meat.jpeg',
+      'image': 'assets/foods/1_1.jpg',
       'productName': 'Meant',
       'price': '400',
       'quantity': '2'
     },
     {
-      'image': 'assets/sisig.jpg',
+      'image': 'assets/foods/1_1.jpg',
       'productName': 'Sisid',
       'price': '400',
       'quantity': '3'
     },
     {
-      'image': 'assets/steak.jpg',
+      'image': 'assets/foods/1_1.jpg',
       'productName': 'Stick',
       'price': '400',
       'quantity': '1'
