@@ -26,7 +26,7 @@ class _OrderListDisplayState extends State<OrderListDisplay> {
     return Card(
       margin: const EdgeInsets.all(6.0),
       elevation: 2,
-      color: const Color.fromARGB(255, 209, 209, 209),
+      color: const Color.fromARGB(255, 237, 237, 237),
       child: Column(
         children: [
           // Top Label
@@ -37,7 +37,8 @@ class _OrderListDisplayState extends State<OrderListDisplay> {
                 child: Container(
                   color: Colors.white,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

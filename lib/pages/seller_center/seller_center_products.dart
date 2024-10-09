@@ -1,4 +1,7 @@
+// TODO: Create stall product list
+
 import 'package:flutter/material.dart';
+import 'package:upang_eat/pages/seller_center/seller_center_product_form.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
 
 class SellerCenterProducts extends StatefulWidget {
@@ -37,22 +40,23 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
                       side: BorderSide.none,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const SellerCenterProductForm())),
                   child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Icon(
                         Icons.add_box_rounded,
                         color: Colors.white,
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          'Add Product',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                      )
+                      Text(
+                        'Add Product',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
                     ],
                   ),
                 ),
