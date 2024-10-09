@@ -3,8 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:upang_eat/pages/seller_center/seller_center_products.dart';
-import 'package:upang_eat/widgets/seller_center_widgets/custom_list_view_card.dart';
-import 'package:upang_eat/widgets/seller_center_widgets/order_list.dart';
+import 'package:upang_eat/widgets/seller_center_widgets/order_list_display.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_btn.dart';
 
@@ -101,30 +100,49 @@ class _SellerCenterState extends State<SellerCenter> {
   }
 
   Widget _selectPage() {
+    //placeholder
+    List<Map<String, dynamic>> orderItems = [
+      {
+        'image': 'assets/foods/1_1.jpg',
+        'productName': 'Meant',
+        'price': 400,
+        'quantity': 2
+      },
+      {
+        'image': 'assets/foods/1_1.jpg',
+        'productName': 'Sisid',
+        'price': 400,
+        'quantity': 3
+      },
+      {
+        'image': 'assets/foods/1_1.jpg',
+        'productName': 'Stick',
+        'price': 400,
+        'quantity': 1
+      },
+    ];
+
     switch (_selectedValue) {
       case 'Pending':
-        return const Column(
-          children: [CustomListViewCard(itemCount: 3, item: OrderList())],
+        return OrderListDisplay(
+          items: orderItems,
+          minHeight: 250,
+          maxHeight: 575,
         );
 
       case 'Accepted':
-        return Container(
-          color: Colors.grey,
-          alignment: Alignment.center,
-          child: const Text(
-            'Accepted',
-            style: TextStyle(fontSize: 14),
-          ),
+        return OrderListDisplay(
+          items: orderItems,
+          minHeight: 250,
+          maxHeight: 575,
         );
       case 'Ready':
-        return Container(
-          color: Colors.grey,
-          alignment: Alignment.center,
-          child: const Text(
-            'Ready',
-            style: TextStyle(fontSize: 14),
-          ),
+        return OrderListDisplay(
+          items: orderItems,
+          minHeight: 250,
+          maxHeight: 575,
         );
+
       default:
         return Container(
           color: Colors.grey,

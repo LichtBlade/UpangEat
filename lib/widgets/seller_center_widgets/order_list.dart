@@ -1,3 +1,4 @@
+// TODO: Remake to take items from list
 import 'package:flutter/material.dart';
 
 class OrderList extends StatefulWidget {
@@ -33,77 +34,74 @@ class _OrderListState extends State<OrderList> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 8,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(14.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Flexible(
-                  flex: 2,
-                  fit: FlexFit.tight,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 16.0),
-                    child: Text(
-                      'Order #001',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 20.0),
-                    ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Flexible(
+                flex: 2,
+                fit: FlexFit.tight,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 16.0),
+                  child: Text(
+                    'Order #001',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  fit: FlexFit.tight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Row(
-                      children: [
-                        IconButton(
-                            onPressed: () {}, icon: const Icon(Icons.check)),
-                        IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.cancel,
-                              color: Color.fromARGB(255, 222, 15, 57),
-                            )),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: orderItems
-                    .map((item) => buildOrderItem(item['image'],
-                        item['productName'], item['quantity'], item['price']))
-                    .toList(),
               ),
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {}, icon: const Icon(Icons.check)),
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.cancel,
+                            color: Color.fromARGB(255, 222, 15, 57),
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: orderItems
+                  .map((item) => buildOrderItem(item['image'],
+                      item['productName'], item['quantity'], item['price']))
+                  .toList(),
             ),
-            const Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total',
+          ),
+          const Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Total',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text('₱200',
                     style: TextStyle(
                       fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text('₱200',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                      ))
-                ],
-              ),
+                    ))
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
