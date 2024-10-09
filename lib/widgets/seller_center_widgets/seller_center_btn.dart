@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class SellerCenterBtn extends StatefulWidget {
   final String label;
+  final VoidCallback onPressed;
 
-  const SellerCenterBtn({super.key, required this.label});
+  const SellerCenterBtn(
+      {super.key, required this.label, required this.onPressed});
 
   @override
   State<SellerCenterBtn> createState() => _SellerCenterBtnState();
@@ -25,7 +27,7 @@ class _SellerCenterBtnState extends State<SellerCenterBtn> {
         // shadowColor: Colors.black,
         // elevation: 4.0,
       ),
-      onPressed: () {},
+      onPressed: widget.onPressed,
       child: Padding(
         padding: const EdgeInsets.only(
             top: 10.0, bottom: 10.0, left: 8.0, right: 8.0),

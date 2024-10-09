@@ -2,6 +2,9 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:upang_eat/pages/seller_center/seller_center_products.dart';
+import 'package:upang_eat/widgets/seller_center_widgets/custom_list_view_card.dart';
+import 'package:upang_eat/widgets/seller_center_widgets/order_list.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_btn.dart';
 
@@ -30,7 +33,15 @@ class _SellerCenterState extends State<SellerCenter> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            const SellerCenterBtn(label: 'Products'),
+            SellerCenterBtn(
+              label: 'Products',
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SellerCenterProducts()));
+              },
+            ),
             const Divider(
               height: 14.0,
               color: Colors.transparent,
@@ -38,10 +49,39 @@ class _SellerCenterState extends State<SellerCenter> {
             Column(
               children: [
                 CupertinoSegmentedControl(
-                  children: const <String, Widget>{
-                    'Pending': Text('Pending'),
-                    'Accepted': Text('Accepted'),
-                    'Ready': Text('Ready')
+                  selectedColor: const Color.fromARGB(255, 222, 15, 57),
+                  borderColor: Colors.black,
+                  children: <String, Widget>{
+                    'Pending': Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'Pending',
+                        style: TextStyle(
+                            color: _selectedValue == 'Pending'
+                                ? Colors.white
+                                : Colors.black),
+                      ),
+                    ),
+                    'Accepted': Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'Accepted',
+                        style: TextStyle(
+                            color: _selectedValue == 'Accepted'
+                                ? Colors.white
+                                : Colors.black),
+                      ),
+                    ),
+                    'Ready': Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'Ready',
+                        style: TextStyle(
+                            color: _selectedValue == 'Ready'
+                                ? Colors.white
+                                : Colors.black),
+                      ),
+                    ),
                   },
                   onValueChanged: (String value) {
                     setState(() {
@@ -63,14 +103,10 @@ class _SellerCenterState extends State<SellerCenter> {
   Widget _selectPage() {
     switch (_selectedValue) {
       case 'Pending':
-        return Container(
-          color: Colors.grey,
-          alignment: Alignment.center,
-          child: const Text(
-            'Pending',
-            style: TextStyle(fontSize: 14),
-          ),
+        return const Column(
+          children: [CustomListViewCard(itemCount: 3, item: OrderList())],
         );
+
       case 'Accepted':
         return Container(
           color: Colors.grey,
