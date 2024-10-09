@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:upang_eat/widgets/seller_center_widgets/custom_list_view_card.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
-
-import '../../widgets/seller_center_widgets/order_list.dart';
 
 class SellerCenterProducts extends StatefulWidget {
   const SellerCenterProducts({super.key});
@@ -14,21 +11,52 @@ class SellerCenterProducts extends StatefulWidget {
 class _SellerCenterProductsState extends State<SellerCenterProducts> {
   @override
   Widget build(BuildContext context) {
-
-    return const Scaffold(
-      appBar: SellerCenterAppbar(stallName: 'Food'),
+    return Scaffold(
+      appBar: const SellerCenterAppbar(stallName: 'Food'),
       body: Column(
         children: [
-          SizedBox(
-            height: 80,
-            child: Center(
-              child: Icon(Icons.warning),
-            ),
-          ),
-          Expanded(
-            child: CustomListViewCard(
-              itemCount: 5,
-              item: OrderList(),
+          // Header label and button
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Products',
+                  style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w400),
+                ),
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 222, 15, 57),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12),
+                      ),
+                      // side: BorderSide(color: Colors.transparent, width: 0),
+                      side: BorderSide.none,
+                    ),
+                  ),
+                  onPressed: () {},
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(
+                        Icons.add_box_rounded,
+                        color: Colors.white,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          'Add Product',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
           )
         ],
