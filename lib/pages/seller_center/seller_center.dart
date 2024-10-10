@@ -28,7 +28,7 @@ class _SellerCenterState extends State<SellerCenter> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const SellerCenterAppbar(stallName: 'Food'),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
@@ -41,51 +41,58 @@ class _SellerCenterState extends State<SellerCenter> {
                         builder: (context) => const SellerCenterProducts()));
               },
             ),
-            const SizedBox(height: 16.0,),
-            CupertinoSegmentedControl(
-              selectedColor: const Color.fromARGB(255, 222, 15, 57),
-              borderColor: Colors.black,
-              children: <String, Widget>{
-                'Pending': Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    'Pending',
-                    style: TextStyle(
-                        color: _selectedValue == 'Pending'
-                            ? Colors.white
-                            : Colors.black),
-                  ),
-                ),
-                'Accepted': Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    'Accepted',
-                    style: TextStyle(
-                        color: _selectedValue == 'Accepted'
-                            ? Colors.white
-                            : Colors.black),
-                  ),
-                ),
-                'Ready': Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    'Ready',
-                    style: TextStyle(
-                        color: _selectedValue == 'Ready'
-                            ? Colors.white
-                            : Colors.black),
-                  ),
-                ),
-              },
-              onValueChanged: (String value) {
-                setState(() {
-                  _selectedValue = value;
-                });
-              },
-              groupValue: _selectedValue,
+            const Divider(
+              height: 14.0,
+              color: Colors.transparent,
             ),
-            const SizedBox(height: 16.0),
-            _selectPage()
+            Column(
+              children: [
+                CupertinoSegmentedControl(
+                  selectedColor: const Color.fromARGB(255, 222, 15, 57),
+                  borderColor: Colors.black,
+                  children: <String, Widget>{
+                    'Pending': Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'Pending',
+                        style: TextStyle(
+                            color: _selectedValue == 'Pending'
+                                ? Colors.white
+                                : Colors.black),
+                      ),
+                    ),
+                    'Accepted': Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'Accepted',
+                        style: TextStyle(
+                            color: _selectedValue == 'Accepted'
+                                ? Colors.white
+                                : Colors.black),
+                      ),
+                    ),
+                    'Ready': Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'Ready',
+                        style: TextStyle(
+                            color: _selectedValue == 'Ready'
+                                ? Colors.white
+                                : Colors.black),
+                      ),
+                    ),
+                  },
+                  onValueChanged: (String value) {
+                    setState(() {
+                      _selectedValue = value;
+                    });
+                  },
+                  groupValue: _selectedValue,
+                ),
+                const SizedBox(height: 12.0),
+                _selectPage()
+              ],
+            )
           ],
         ),
       ),

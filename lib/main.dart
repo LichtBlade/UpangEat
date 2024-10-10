@@ -28,7 +28,7 @@ void main() {
   runApp(const MyApp());
   // runApp(const MaterialApp(
   //   debugShowCheckedModeBanner: false,
-  //   home: MyApp(),
+  //   home: SellerCenter(),
   // ));
 }
 
@@ -54,6 +54,9 @@ class _MyAppState extends State<MyApp> {
               authRepository:
                   AuthRepositoryImpl(baseUrl: 'http://localhost:3000')),
         ),
+        BlocProvider<AdminBloc>(
+          create: (context) => AdminBloc(AdminRepositoryImpl()),
+        ),
         BlocProvider<StallBloc>(
           create: (context) => StallBloc(StallRepositoryImpl()),
         ),
@@ -77,7 +80,6 @@ class _MyAppState extends State<MyApp> {
             scaffoldBackgroundColor: const Color(0xFFF8F8F8),
             cardTheme: const CardTheme(color: Colors.white),
             appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
-        // home: const SellerCenter(),
         home: const Home(),
       ),
     );
