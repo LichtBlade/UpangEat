@@ -32,7 +32,12 @@ import 'pages/admin_pages/create_stall_form.dart';
 import 'pages/admin_pages/create_user_form.dart';
 
 void main() {
-  runApp(const MyApp());
+  //revert to runApp(const MyApp()) before merging with main
+  //runApp(const MyApp());
+  runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: SellerCenter(),
+  ));
 }
 
 class IpAddress {
@@ -83,6 +88,7 @@ class _MyAppState extends State<MyApp> {
             scaffoldBackgroundColor: const Color(0xFFF8F8F8),
             cardTheme: const CardTheme(color: Colors.white),
             appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
+
         //temporary for testing, uncomment if done
         // home: const Home(),
         
@@ -90,8 +96,11 @@ class _MyAppState extends State<MyApp> {
         // home: const Dashboard(),
 
         //test for login
-        home: LoginPage(),
+//         home: LoginPage(),
 
+
+
+        home: const Home(),
 
       ),
     );
