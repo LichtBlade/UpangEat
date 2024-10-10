@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:upang_eat/pages/admin_pages/create_stall_form.dart';
 import 'package:upang_eat/pages/admin_pages/create_user_form.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+class AdminDashboard extends StatefulWidget {
+  const AdminDashboard({super.key});
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  State<AdminDashboard> createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: const Text('Admin Dashboard'),
         backgroundColor: const Color.fromARGB(255, 255, 169, 186),
       ),
       body: Padding(

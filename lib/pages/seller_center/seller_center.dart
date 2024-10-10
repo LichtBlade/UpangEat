@@ -9,11 +9,15 @@ import 'package:upang_eat/widgets/seller_center_widgets/seller_center_btn.dart';
 
 enum OrderState { pending, accepted, ready }
 
+
+import '../admin_pages/admin_dashboard.dart';
+
 Map<OrderState, String> valueString = <OrderState, String>{
   OrderState.pending: 'Pending',
   OrderState.accepted: 'Accepted',
   OrderState.ready: 'Ready'
 };
+
 
 class SellerCenter extends StatefulWidget {
   const SellerCenter({super.key});
@@ -27,7 +31,18 @@ class _SellerCenterState extends State<SellerCenter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const SellerCenterAppbar(stallName: 'Food'),
+
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const AdminDashboard())),
+            icon: const Icon(Icons.menu)),
+        title: const Text('Seller Center'),
+        backgroundColor: const Color.fromARGB(255, 255, 169, 186),
+      ),
+
+//       appBar: const SellerCenterAppbar(stallName: 'Food'),
+
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
