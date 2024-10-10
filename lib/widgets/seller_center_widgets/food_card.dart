@@ -17,10 +17,11 @@ class _FoodCardState extends State<FoodCard> {
         child: SizedBox(
           height: 75,
           width: 75,
-          child: Image.asset('assets/image'),
+          child: Image.asset('assets/foods/1_1.jpg'),
         ),
       ),
       title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text('Food'),
           Switch(
@@ -31,8 +32,8 @@ class _FoodCardState extends State<FoodCard> {
                 });
               })
         ],
-        
       ),
+      subtitle: Text('Augh'),
       trailing: PopupMenuButton(
         itemBuilder: (context) => [
           const PopupMenuItem(

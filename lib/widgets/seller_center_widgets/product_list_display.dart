@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:upang_eat/widgets/seller_center_widgets/food_card.dart';
 
 class ProductListDisplay extends StatefulWidget {
   const ProductListDisplay({super.key});
@@ -19,14 +20,14 @@ class _ProductListDisplayState extends State<ProductListDisplay> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ConstrainedBox(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                 minHeight: 250,
                 maxHeight: 500,
               ),
               child: ListView.builder(
                 itemCount: 4,
                 itemBuilder: (context, index) {
-                  return;
+                  return const FoodCard();
                 },
               ),
             ),
