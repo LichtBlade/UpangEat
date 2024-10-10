@@ -7,8 +7,9 @@ import '../models/food_model.dart';
 class HomeMealCard extends StatefulWidget {
   final FoodModel food;
   final bool isShowStallName;
+  final bool isOnHome;
   const HomeMealCard(
-      {super.key, required this.food, required this.isShowStallName});
+      {super.key, required this.food, required this.isShowStallName, this.isOnHome = false});
 
   @override
   State<HomeMealCard> createState() => _HomeMealCardState();
@@ -19,7 +20,7 @@ class _HomeMealCardState extends State<HomeMealCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showCupertinoModalBottomSheet(context: context, builder: (context) =>BottomModalFoodInformation(food: widget.food));
+        showCupertinoModalBottomSheet(context: context, builder: (context) => BottomModalFoodInformation(food: widget.food, isOnHome: widget.isOnHome,));
 
       },
       child: Card.filled(

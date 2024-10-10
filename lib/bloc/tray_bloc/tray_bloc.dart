@@ -1,9 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:upang_eat/models/food_model.dart';
+import 'package:upang_eat/models/stall_model.dart';
 import 'package:upang_eat/models/tray_model.dart';
 
 import '../../repositories/tray_repository.dart';
+import '../../repositories/tray_repository_impl.dart';
 
 part 'tray_event.dart';
 part 'tray_state.dart';
@@ -31,8 +33,13 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
             userId: 1, // TODO change to logged in user ID
             itemId: event.foodItemId,
             quantity: event.quantity);
-        await _trayRepository.addToTray(newTray);
-      } catch (error) {
+        final stall = await _trayRepository.addToTray(newTray);
+        emit(TrayAdded(stall));
+      } on StallConflictException catch (e) {
+        print("eyo");
+        emit(TrayStallConflict(e.trayIdsToDelete));
+      }catch (error) {
+        print("error: $error");
         emit(TrayError(error.toString()));
 
       }
@@ -42,14 +49,16 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
       emit(TrayLoading());
       try{
         await _trayRepository.deleteTray(event.id);
-        // emit(TrayItemRemoved(event.id));
+        emit(TrayItemRemoved(event.id));
+      } catch (error) {
+        emit(TrayError(error.toString()));
+      }
+    });
 
-        // // Add a delay of 1 second
-        // await Future.delayed(const Duration(seconds: 1));
-        //
-        // // Refresh the tray items
-        // final updatedTrayItems = await _trayRepository.fetchTrayByUserId(1); // TODO: Replace with actual user ID
-        // emit(TrayLoaded(updatedTrayItems));
+    on<DeleteTrayIds>((event, emit) async {
+      emit(TrayLoading());
+      try{
+        await _trayRepository.deleteListOfTrays(event.id);
       } catch (error) {
         emit(TrayError(error.toString()));
       }

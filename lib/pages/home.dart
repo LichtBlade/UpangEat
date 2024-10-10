@@ -191,6 +191,7 @@ class _MealCardVerticalList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: BlocBuilder<FoodBloc, FoodState>(
@@ -209,6 +210,23 @@ class _MealCardVerticalList extends StatelessWidget {
                 final food = foods[index];
                 return HomeMealCard(food: food, isShowStallName: true);
               },
+
+//     return BlocBuilder<FoodBloc, FoodState>(builder: (context, state) {
+//       if (state is FoodLoading) {
+//         return const SliverToBoxAdapter(
+//           child: SkeletonHomeMealCard(),
+//         );
+//       } else if (state is FoodLoaded) {
+//         final foods = state.foods;
+//         return SliverList(
+//           delegate: SliverChildBuilderDelegate(childCount: foods.length,
+//               (BuildContext context, int index) {
+//             final food = foods[index];
+//             return HomeMealCard(
+//               food: food,
+//               isShowStallName: true,
+//               isOnHome: true,
+
             );
           } else if (state is FoodError) {
             return Text(state.message);

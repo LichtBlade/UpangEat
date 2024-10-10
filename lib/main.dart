@@ -15,7 +15,12 @@ import 'bloc/login_bloc/login_bloc.dart';
 import 'bloc/tray_bloc/tray_bloc.dart';
 
 void main() {
-  runApp(const MyApp());
+  //revert to runApp(const MyApp()) before merging with main
+  //runApp(const MyApp());
+  runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: SellerCenter(),
+  ));
 }
 
 class IpAddress {
@@ -58,10 +63,18 @@ class _MyAppState extends State<MyApp> {
       child: const CupertinoApp(
         title: "Upang Eat",
         debugShowCheckedModeBanner: false,
+
         theme: CupertinoThemeData(
           scaffoldBackgroundColor: Color(0xFFF8F8F8),
         ),
         home: Home(),
+
+//         theme: ThemeData(
+//             scaffoldBackgroundColor: const Color(0xFFF8F8F8),
+//             cardTheme: const CardTheme(color: Colors.white),
+//             appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
+//         home: const Home(),
+
       ),
     );
   }
