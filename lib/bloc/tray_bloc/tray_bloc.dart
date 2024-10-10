@@ -69,6 +69,12 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
       try{
         await _trayRepository.updateTray(event.tray,event.id);
 
+        // Re-fetch the updated tray items
+        final updatedTrayItems = await _trayRepository.fetchTrayByUserId(event.userId);
+        emit(TrayLoaded(updatedTrayItems));
+
+
+
       } catch (error) {
         emit(TrayError(error.toString()));
       }

@@ -56,10 +56,11 @@ class TrayRepositoryImpl extends TrayRepository {
     final response = await http.put(Uri.parse('$baseUrl/trays/$id'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(tray.toJson()));
-
+    print("tray: $tray");
     if (response.statusCode == 200) {
-      final dynamic trayCategoryData = json.decode(response.body);
-      return trayCategoryData.map((json) => TrayModel.fromJson(json)).toList();
+      final Map<String, dynamic> trayCategoryData = json.decode(response.body);
+      print(trayCategoryData);
+      return TrayModel.fromJson(trayCategoryData);
     } else {
       throw Exception('Failed to update tray');
     }

@@ -6,21 +6,21 @@ import 'order_item_model.dart';
 class OrderModel extends Equatable {
   final int orderId;
   final int userId;
-  final int stallId;
-  final String orderDate;
+  final int? stallId;
+  final String? orderDate;
   final int totalAmount;
   final List<OrderItemModel> items;
-  final String orderStatus;
+  final String? orderStatus;
   final String? customerName;
 
   const OrderModel({
     required this.orderId,
     required this.userId,
-    required this.stallId,
-    required this.orderDate,
+    this.stallId,
+    this.orderDate,
     required this.totalAmount,
     required this.items,
-    required this.orderStatus,
+    this.orderStatus,
     this.customerName
   });
 
@@ -47,7 +47,8 @@ class OrderModel extends Equatable {
       'order_date': orderDate,
       'total_amount': totalAmount,
       'items': items,
-      'order_status': orderStatus
+      'order_status': orderStatus,
+      'customer_name': customerName
     };
   }
 

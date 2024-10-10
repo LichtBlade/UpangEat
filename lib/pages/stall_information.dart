@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/models/stall_model.dart';
+import 'package:upang_eat/pages/tray.dart';
 import 'package:upang_eat/widgets/meal_card_square.dart';
 
 import '../bloc/food_bloc/food_bloc.dart';
@@ -122,9 +121,17 @@ class _StallInformationState extends State<StallInformation> {
   }
 }
 
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+class _AppBar extends StatefulWidget implements PreferredSizeWidget {
   const _AppBar({super.key});
 
+  @override
+  State<_AppBar> createState() => _AppBarState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _AppBarState extends State<_AppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -137,6 +144,19 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
           Navigator.pop(context);
         },
       ),
+      // actions: [
+      //   IconButton(
+      //       onPressed: () {
+      //         setState(() {
+      //           Navigator.push(context, MaterialPageRoute(builder: (context) => const Tray())).then((value) {
+      //             if (value == true) {
+      //               setState(() {});
+      //             }
+      //           });
+      //         });
+      //       },
+      //       icon: const Icon(Icons.fastfood_outlined, color: Colors.white,))
+      // ],
     );
   }
 

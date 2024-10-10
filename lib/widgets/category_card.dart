@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart'; // Changed from material.dart
+import 'package:flutter/material.dart'; // Changed from material.dart
 import 'package:upang_eat/models/category_model.dart';
 
 class CategoryCard extends StatelessWidget {

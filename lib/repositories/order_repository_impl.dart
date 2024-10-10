@@ -20,4 +20,18 @@ class OrderRepositoryImpl extends OrderRepository{
     }
   }
 
+  @override
+  Future<int> createOrders(OrderModel order) async {
+    final response = await http.post(Uri.parse('$baseUrl/orders'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(order.toJson()));
+    if (response.statusCode != 201) {
+      print("Not 201");
+      throw Exception('Failed to create order');
+    } else {
+      print("Order 201");
+      return response.statusCode;
+    }
+  }
+
 }

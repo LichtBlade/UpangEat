@@ -1,13 +1,17 @@
 import 'package:equatable/equatable.dart';
 
 class OrderItemModel extends Equatable {
-  final String itemName;
+  final int orderItemId;
+  final int itemId;
+  final String? itemName;
   final int quantity;
   final int subtotal;
   final String? imageUrl;
 
   const OrderItemModel({
-    required this.itemName,
+    required this.orderItemId,
+    required this.itemId,
+    this.itemName,
     required this.quantity,
     required this.subtotal,
     this.imageUrl,
@@ -15,6 +19,8 @@ class OrderItemModel extends Equatable {
 
   factory OrderItemModel.fromJson(Map<String, dynamic> json) {
     return OrderItemModel(
+      orderItemId: json['order_item_id'],
+      itemId: json['item_id'],
       itemName: json['item_name'],
       quantity: json['quantity'],
       subtotal: json['subtotal'],
@@ -22,16 +28,9 @@ class OrderItemModel extends Equatable {
     );
   }
   Map<String, dynamic> toJson() {
-    return {
-      'item_name': itemName,
-      'quantity': quantity,
-      'subtotal': subtotal,
-      'image_url': imageUrl
-    };
+    return {'order_item_id': orderItemId, 'item_id': itemId, 'item_name': itemName, 'quantity': quantity, 'subtotal': subtotal, 'image_url': imageUrl};
   }
 
   @override
-  List<Object?> get props => [itemName,quantity,
-    subtotal,
-    imageUrl];
+  List<Object?> get props => [orderItemId, itemId, itemName, quantity, subtotal, imageUrl];
 }
