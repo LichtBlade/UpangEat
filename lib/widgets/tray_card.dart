@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/models/food_model.dart';
 
@@ -19,7 +19,6 @@ class TrayCard extends StatefulWidget {
 class TrayCardState extends State<TrayCard> {
   int counter = 0;
   int subtotal = 0;
-
   @override
   void initState() {
     counter = widget.food.trayQuantity ?? 0;
@@ -28,22 +27,16 @@ class TrayCardState extends State<TrayCard> {
 
   @override
   Widget build(BuildContext context) {
+
     counter = widget.food.trayQuantity ?? -5;
     subtotal = widget.food.price * counter;
-
     void showDeleteDialog() {
-      showCupertinoDialog(
-        context: context,
-        builder: (context) {
-          return _DeleteDialog(
-            title: "Delete Item",
-            message: "Are you sure you want to delete ${widget.food.itemName}?",
-            onDelete: () {
-              context.read<TrayBloc>().add(DeleteTray(widget.food.trayId!));
-            },
-          );
-        },
-      );
+      showDialog(context: context, builder: (context) {
+        return _DeleteDialog(title: "Delete Item", message: "Are you sure you want to delete ${widget.food.itemName}?", onDelete: () {
+          context.read<TrayBloc>().add(DeleteTray(widget.food.trayId!));
+
+        });
+      });
     }
 
     void onIncrement() {
@@ -65,33 +58,31 @@ class TrayCardState extends State<TrayCard> {
         }
       });
     }
-
-    return Container(
+    return Card.outlined(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: CupertinoColors.systemGrey),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10.0),
-            child: Image.asset(
-              widget.food.imageUrl == ""
-                  ? "assets/stalls/profiles/1.jpg"
-                  : widget.food.imageUrl ?? "assets/stalls/profiles/1.jpg",
-              width: 90,
-              height: 90,
-              fit: BoxFit.cover,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+              child: Image.asset(
+                widget.food.imageUrl == ""
+                    ? "assets/stalls/profiles/1.jpg"
+                    : widget.food.imageUrl ?? "assets/stalls/profiles/1.jpg",
+                width: 90,
+                height: 90,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Expanded(
             child: SizedBox(
               width: 220,
               height: 90,
+              // color: Colors.red,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,17 +115,21 @@ class TrayCardState extends State<TrayCard> {
                       Row(
                         children: [
                           GestureDetector(
-                            child: CupertinoButton(
+                            child: IconButton(
                               onPressed: onDecrement,
-                              padding: EdgeInsets.zero,
-                              child: const Icon(
-                                CupertinoIcons.minus,
-                                size: 14,
+                              iconSize: 14,
+                              style: IconButton.styleFrom(
+                                backgroundColor: const Color(0xFFF0F0F0),
+                              ),
+                              constraints: const BoxConstraints(
+                                maxWidth: 30, // Set a maximum width
+                                maxHeight: 30, // Set a maximum height
+                              ),
+                              icon: const Icon(
+                                Icons.remove,
                               ),
                             ),
-                            onLongPress: () {
-                              showDeleteDialog();
-                            },
+                            onLongPress: () {showDeleteDialog();},
                           ),
                           const SizedBox(width: 8,),
                           Text(
@@ -145,12 +140,20 @@ class TrayCardState extends State<TrayCard> {
                             ),
                           ),
                           const SizedBox(width: 8,),
-                          CupertinoButton(
+                          IconButton(
                             onPressed: onIncrement,
-                            padding: EdgeInsets.zero,
-                            child: const Icon(CupertinoIcons.add, size: 14),
+                            icon: const Icon(Icons.add),
+                            style: IconButton.styleFrom(
+                              backgroundColor: Colors.redAccent,
+                            ),
+                            constraints: const BoxConstraints(
+                              maxWidth: 30, // Set a maximum width
+                              maxHeight: 30, // Set a maximum height
+                            ),
+                            iconSize: 14,
                           ),
                           const SizedBox(width: 12,)
+
                         ],
                       ),
                     ],
@@ -168,31 +171,32 @@ class TrayCardState extends State<TrayCard> {
 class _DeleteDialog extends StatelessWidget {
   final String title;
   final String message;
+
   final VoidCallback onDelete;
 
-  const _DeleteDialog({
-    super.key,
-    required this.title,
-    required this.message,
-    required this.onDelete,
-  });
+  const _DeleteDialog(
+      {super.key,
+        required this.title,
+        required this.message,
+        required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoAlertDialog(
+    return AlertDialog(
       title: Text(title),
       content: Text(message),
       actions: [
-        CupertinoDialogAction(
+        TextButton(
           onPressed: () {
             Navigator.of(context).pop(); // Close the dialog
           },
           child: const Text('Cancel'),
         ),
-        CupertinoDialogAction(
+        TextButton(
           onPressed: () {
             Navigator.of(context).pop(); // Close the dialog
             onDelete();
+
           },
           child: const Text('Delete'),
         ),

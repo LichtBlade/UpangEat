@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/Pages/home.dart';
 import 'package:upang_eat/Pages/notifications.dart';
 import 'package:upang_eat/Pages/stalls.dart';
 import 'package:upang_eat/Pages/tray.dart';
-import 'package:upang_eat/Pages/wallet.dart';
 import 'package:upang_eat/Widgets/custom_drawer.dart';
 import 'package:upang_eat/bloc/admin_bloc/admin_bloc.dart';
 import 'package:upang_eat/bloc/category_bloc/category_bloc.dart';
@@ -30,17 +30,15 @@ import 'pages/admin_pages/create_user_form.dart';
 
 void main() {
   //revert to runApp(const MyApp()) before merging with main
-  //runApp(const MyApp());
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: SellerCenter(),
-  ));
+  runApp(const MyApp());
+  // runApp(const MaterialApp(
+  //   debugShowCheckedModeBanner: false,
+  //   home: SellerCenter(),
+  // ));
 }
 
 class IpAddress {
-//   static String get ipAddress => "http://192.168.100.25:3000";
-
-  static String get ipAddress => "http://192.168.100.203:3000";
+  static String get ipAddress => "http://192.168.68.104:3000";
 
 }
 
@@ -82,20 +80,20 @@ class _MyAppState extends State<MyApp> {
           create: (context) => TrayBloc(TrayRepositoryImpl()),
         ),
       ],
-      child: const CupertinoApp(
+      child:
+      MaterialApp(
         title: "Upang Eat",
         debugShowCheckedModeBanner: false,
 
-        theme: CupertinoThemeData(
-          scaffoldBackgroundColor: Color(0xFFF8F8F8),
-        ),
-        home: Home(),
+        // theme: CupertinoThemeData(
+        //   scaffoldBackgroundColor: Color(0xFFF8F8F8),
+        // ),
+        home: const Home(),
 
-//         theme: ThemeData(
-//             scaffoldBackgroundColor: const Color(0xFFF8F8F8),
-//             cardTheme: const CardTheme(color: Colors.white),
-//             appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
-
+        theme: ThemeData(
+            scaffoldBackgroundColor: const Color(0xFFF8F8F8),
+            cardTheme: const CardTheme(color: Colors.white),
+            appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
 //         //temporary for testing, uncomment if done
 //         // home: const Home(),
         

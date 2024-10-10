@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:upang_eat/pages/wallet_pages/transaction_history.dart';
 import '../../widgets/wallet_widgets/send_dialog.dart';
@@ -18,7 +18,7 @@ class _WalletState extends State<Wallet> {
   final historyIcon = "assets/wallets/history.png";
 
   void _showSendDialog() {
-    showCupertinoDialog(
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         return SendDialog(
@@ -33,11 +33,11 @@ class _WalletState extends State<Wallet> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text("Wallet"),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Wallet"),
       ),
-      child: SafeArea(
+      body: SafeArea(
 
         child: SingleChildScrollView(
           child: Column(
@@ -46,11 +46,11 @@ class _WalletState extends State<Wallet> {
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
                 decoration: BoxDecoration(
-                  color: CupertinoColors.white,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: CupertinoColors.systemGrey.withOpacity(0.3),
+                      color: Colors.grey.withOpacity(0.3),
                       blurRadius: 10,
                       offset: const Offset(0, 6),
                     ),
@@ -86,8 +86,7 @@ class _WalletState extends State<Wallet> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                CupertinoButton(
-                                  padding: EdgeInsets.zero,
+                                TextButton(
                                   onPressed: () {
                                     Clipboard.setData(const ClipboardData(text: "87as46eg54a6cv1"));
                                   },
@@ -95,9 +94,9 @@ class _WalletState extends State<Wallet> {
                                     mainAxisSize: MainAxisSize.min, // To avoid unnecessary width
                                     children: [
                                       Icon(
-                                        CupertinoIcons.doc_on_clipboard,
+                                        Icons.copy,
                                         size: 18,
-                                        color: CupertinoColors.activeBlue,
+                                        color: Colors.lightBlueAccent,
                                       ),
                                       SizedBox(width: 5), // Space between icon and text
                                       Text('87as46eg54a6cv1'),
@@ -174,7 +173,7 @@ class _WalletState extends State<Wallet> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            CupertinoPageRoute(builder: (context) => const TransactionHistory()),
+                            MaterialPageRoute(builder: (context) => const TransactionHistory()),
                           );
                           print('History clicked');
                         },
@@ -242,11 +241,11 @@ class _WalletState extends State<Wallet> {
 }
 
 final buttonBoxDecoration = BoxDecoration(
-  color: CupertinoColors.white,
+  color: Colors.white,
   borderRadius: BorderRadius.circular(12),
   boxShadow: [
     BoxShadow(
-      color: CupertinoColors.systemGrey.withOpacity(0.2),
+      color: Colors.grey.withOpacity(0.2),
       blurRadius: 6,
       offset: const Offset(0, 3),
     ),
