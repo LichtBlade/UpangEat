@@ -44,34 +44,13 @@ class _OrderListState extends State<OrderList> {
                   .toList(),
             ),
           ),
-          const Padding(
-            padding:
-                EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Total',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text('₱200',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w500
-                    ))
-              ],
-            ),
-          ),
+          const _TotalPrice(),
         ],
       ),
     );
   }
 
-  Widget buildOrderItem(
-      String image, String productName, int quantity, int price) {
+  Widget buildOrderItem(String image, String productName, int quantity, int price) {
     return Card.outlined(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -155,3 +134,33 @@ class _Header extends StatelessWidget {
     );
   }
 }
+
+class _TotalPrice extends StatelessWidget {
+  const _TotalPrice({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding:
+      EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Total',
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Text('₱200',
+              style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w500
+              ))
+        ],
+      ),
+    );
+  }
+}
+
