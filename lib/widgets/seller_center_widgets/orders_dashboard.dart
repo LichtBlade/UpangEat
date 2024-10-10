@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
 
 class OrdersDashboard extends StatefulWidget {
-  final int numToProcess;
-  final int numToClaim;
-  final int numToReviwew;
-  final Function()? forwardBtnFunc;
-
   const OrdersDashboard({
     super.key,
-    required this.numToProcess,
-    required this.numToClaim,
-    required this.numToReviwew,
-    this.forwardBtnFunc,
   });
 
   @override
@@ -27,11 +18,6 @@ class _OrdersDashboardState extends State<OrdersDashboard> {
   @override
   void initState() {
     super.initState();
-
-    numClaim = widget.numToClaim;
-    numProcess = widget.numToProcess;
-    numReview = widget.numToReviwew;
-    onPressed = widget.forwardBtnFunc;
   }
 
   @override

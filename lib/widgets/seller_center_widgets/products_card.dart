@@ -25,17 +25,17 @@ class _ProductsCardState extends State<ProductsCard> {
 
   //Placeholder product data
   final List<Map<String, dynamic>> _productData = [
-    {'title': 'Steak', 'image': 'assets/steak.jpg', 'price': 32},
-    {'title': 'Steak', 'image': 'assets/steak.jpg', 'price': 32},
-    {'title': 'Sisig', 'image': 'assets/sisig.jpg', 'price': 50},
-    {'title': 'Meat', 'image': 'assets/meat.jpeg', 'price': 69},
-    {'title': 'Steak', 'image': 'assets/steak.jpg', 'price': 32},
-    {'title': 'Steak', 'image': 'assets/steak.jpg', 'price': 32},
-    {'title': 'Meat', 'image': 'assets/meat.jpeg', 'price': 69},
-    {'title': 'Steak', 'image': 'assets/steak.jpg', 'price': 32},
-    {'title': 'Meat', 'image': 'assets/meat.jpeg', 'price': 69},
-    {'title': 'Meat', 'image': 'assets/meat.jpeg', 'price': 69},
-    {'title': 'Sisig', 'image': 'assets/sisig.jpg', 'price': 50},
+    {'title': 'Steak', 'image': 'assets/foods/1_1.jpg', 'price': 32},
+    {'title': 'Steak', 'image': 'assets/foods/1_1.jpg', 'price': 32},
+    {'title': 'Sisig', 'image': 'assets/foods/1_1.jpg', 'price': 50},
+    {'title': 'Meat', 'image': 'assets/foods/1_1.jpg', 'price': 69},
+    {'title': 'Steak', 'image': 'assets/foods/1_1.jpg', 'price': 32},
+    {'title': 'Steak', 'image': 'assets/foods/1_1.jpg', 'price': 32},
+    {'title': 'Meat', 'image': 'assets/foods/1_1.jpg', 'price': 69},
+    {'title': 'Steak', 'image': 'assets/foods/1_1.jpg', 'price': 32},
+    {'title': 'Meat', 'image': 'assets/foods/1_1.jpg', 'price': 69},
+    {'title': 'Meat', 'image': 'assets/foods/1_1.jpg', 'price': 69},
+    {'title': 'Sisig', 'image': 'assets/foods/1_1.jpg', 'price': 50},
   ];
 
   @override

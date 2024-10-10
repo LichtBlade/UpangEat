@@ -16,7 +16,7 @@ class OrderItemCard extends StatefulWidget {
 }
 
 class _OrderItemCardState extends State<OrderItemCard> {
-  String image = 'assets/steak.jpg';
+  String image = 'assets/foods/1_1.jpg';
   String productName = 'Karne';
   String quantity = '2';
 
