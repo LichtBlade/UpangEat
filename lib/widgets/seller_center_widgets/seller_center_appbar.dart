@@ -21,6 +21,7 @@ class _SellerCenterAppbarState extends State<SellerCenterAppbar> {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: const Color.fromARGB(255, 222, 15, 57),
+      centerTitle: true,
       leading: IconButton(
         onPressed: () {},
         icon: const Icon(
@@ -28,12 +29,10 @@ class _SellerCenterAppbarState extends State<SellerCenterAppbar> {
           color: Colors.white,
         ),
       ),
-      title: Center(
-        child: Text(
-          widget.stallName,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
+      title: Text(
+        widget.stallName,
+        style: const TextStyle(
+          color: Colors.white,
         ),
       ),
       actions: [
@@ -41,26 +40,16 @@ class _SellerCenterAppbarState extends State<SellerCenterAppbar> {
             iconColor: Colors.white,
             itemBuilder: (context) => [
                   const PopupMenuItem(
-                    child: Row(
-                      children: [
-                        Icon(Icons.cancel),
-                        Divider(
-                          indent: 6,
-                        ),
-                        Text('Canceled'),
-                      ],
-                    ),
+                    child: ListTile(
+                      leading: Icon(Icons.cancel_outlined),
+                      title: Text('Canceled'),
+                    )
                   ),
                   const PopupMenuItem(
-                    child: Row(
-                      children: [
-                        Icon(Icons.check_circle_outline_outlined),
-                        Divider(
-                          indent: 6,
-                        ),
-                        Text('Completed'),
-                      ],
-                    ),
+                    child: ListTile(
+                      leading: Icon(Icons.check_circle_outline_outlined),
+                      title: Text('Completed'),
+                    )
                   ),
                 ])
       ],

@@ -16,13 +16,12 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 222, 15, 57),
-        title: const Center(
-          child: Text(
-            'Boss Sisig',
-            style: TextStyle(
-              color: Colors.white,
-            ),
+        title: const Text(
+          'Boss Sisig',
+          style: TextStyle(
+            color: Colors.white,
           ),
         ),
       ),

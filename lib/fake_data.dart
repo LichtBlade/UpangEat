@@ -30,4 +30,6 @@ class FakeData {
       categoryName: "Burigir",
       imageUrl: "assets/categories/Bread.png");
   static TrayModel get fakeTray => const TrayModel(trayId: 0, userId: 0, itemId: 0, quantity: 1);
+
+  // static
 }

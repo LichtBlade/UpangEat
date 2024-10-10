@@ -25,11 +25,11 @@ import 'bloc/tray_bloc/tray_bloc.dart';
 
 void main() {
   //revert to runApp(const MyApp()) before merging with main
-  //runApp(const MyApp());
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: SellerCenter(),
-  ));
+  runApp(const MyApp());
+  // runApp(const MaterialApp(
+  //   debugShowCheckedModeBanner: false,
+  //   home: MyApp(),
+  // ));
 }
 
 class IpAddress {
@@ -77,6 +77,7 @@ class _MyAppState extends State<MyApp> {
             scaffoldBackgroundColor: const Color(0xFFF8F8F8),
             cardTheme: const CardTheme(color: Colors.white),
             appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
+        // home: const SellerCenter(),
         home: const Home(),
       ),
     );

@@ -41,7 +41,7 @@ class _TrayState extends State<Tray> {
         child: Stack(children: [
           const Positioned(
             top: 0,
-            bottom: 0,
+            bottom: 200,
             right: 0,
             left: 0,
             child: _TrayBlocBuilder(),
@@ -56,7 +56,54 @@ class _TrayState extends State<Tray> {
                 elevation: WidgetStateProperty.all(8.0),
                 minimumSize: WidgetStateProperty.all(const Size(100, 50)),
               ),
-              child: const Text("Checkout"),
+              child: const Text("Proceed to Pay"),
+            ),
+          ),
+          const Positioned(
+            bottom: 64,
+            left: 24,
+            right: 24,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                Text("Order Summary", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),),
+                SizedBox(height: 4,),
+                Card.filled(
+                  margin: EdgeInsets.symmetric(horizontal: 0),
+                  color: Colors.black12,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Subtotal"),
+                            Text("₱123")
+                          ],
+                        ),
+                        SizedBox(height: 4,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Tax(0%)"),
+                            Text("₱123")
+                          ],
+                        ),
+                        Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Total", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),),
+                            Text("₱123", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),)
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           )
         ]),
