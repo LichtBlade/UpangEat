@@ -9,22 +9,25 @@ class AuthRepositoryImpl implements AuthRepository {
 
 @override
   Future<String> authenticate({required String email, required String password}) async {
-    final url = Uri.parse('$baseUrl/login');
-    print('Making API request to: $url'); // debugging API request
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
-    );
-    
-    print('API Response: ${response.statusCode} - ${response.body}'); // debugging API response
+    print('Authenticating with email: $email, password: $password');
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print('Parsed user type: ${data['user_type']}'); // debugging parsed data
-      return data['user_type']; 
-    } else {
-      throw Exception('Failed to authenticate: ${response.body}');
+        final response = await http.post(
+        Uri.parse('http://localhost:3000/login'),
+         headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+           },
+        body: jsonEncode({'email': email, 'password': password}), // Ensure correct encoding
+       );
+
+    print('API Response: ${response.statusCode} - ${response.body}');
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        print('Parsed response: ${jsonData['user_type']}');
+          return jsonData['user_type']; // Assuming the API returns `user_type`
+          } else {
+        throw Exception('Failed to authenticate');
+      }
     }
-  }
 }
