@@ -1,4 +1,3 @@
-// TODO: Remake to take items from list
 import 'package:flutter/material.dart';
 
 class OrderList extends StatefulWidget {
@@ -32,48 +31,12 @@ class _OrderListState extends State<OrderList> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 8,
+    return Card.filled(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Flexible(
-                flex: 2,
-                fit: FlexFit.tight,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 16.0),
-                  child: Text(
-                    'Order #001',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-                  ),
-                ),
-              ),
-              Flexible(
-                flex: 1,
-                fit: FlexFit.tight,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {}, icon: const Icon(Icons.check)),
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.cancel,
-                            color: Color.fromARGB(255, 222, 15, 57),
-                          )),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+          const _Header(),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(left: 16, right: 16 ),
             child: Column(
               children: orderItems
                   .map((item) => buildOrderItem(item['image'],
@@ -83,20 +46,21 @@ class _OrderListState extends State<OrderList> {
           ),
           const Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
+                EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Total',
                   style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text('₱200',
                     style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500
                     ))
               ],
             ),
@@ -108,58 +72,84 @@ class _OrderListState extends State<OrderList> {
 
   Widget buildOrderItem(
       String image, String productName, int quantity, int price) {
-    return Card(
+    return Card.outlined(
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(14.0),
             child: SizedBox(
-              height: 75,
-              width: 125,
+              height: 95,
+              width: 95,
               child: Image.asset(
                 image,
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
               ),
             ),
           ),
-          Flexible(
-            flex: 4,
-            fit: FlexFit.tight,
+          Expanded(
+            flex: 3,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        productName,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '₱$price',
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                        ),
-                      ),
-                    ],
-                  ),
                   Text(
-                    'x$quantity',
+                    productName,
                     style: const TextStyle(
                       fontSize: 20.0,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '₱$price',
+                    style: const TextStyle(
+                      fontSize: 14.0,
                     ),
                   ),
                 ],
               ),
             ),
+          ),
+          Expanded(
+            child: Text(
+              'x$quantity',
+              style: const TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.cancel,
+                size: 28,
+                color: Color.fromARGB(255, 222, 15, 57),
+              )),
+          const Text(
+            'Order #001',
+            style:
+            TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+          ),
+          IconButton(
+              onPressed: () {}, icon: const Icon(Icons.check_circle, color: Colors.green, size: 28,)),
         ],
       ),
     );

@@ -88,7 +88,7 @@ class _MyAppState extends State<MyApp> {
         // theme: CupertinoThemeData(
         //   scaffoldBackgroundColor: Color(0xFFF8F8F8),
         // ),
-        home: const Home(),
+        home: const SellerCenter(),
 
         theme: ThemeData(
             scaffoldBackgroundColor: const Color(0xFFF8F8F8),
