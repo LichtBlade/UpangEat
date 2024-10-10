@@ -70,11 +70,11 @@ class _OrderListDisplayState extends State<OrderListDisplay> {
                 maxHeight: widget.maxHeight == null ? 500 : widget.maxHeight!,
               ),
               child: ListView.builder(
-                itemCount: widget.items.length,
-                itemBuilder: (context, index) {
-                  return const OrderList();
-                },
-              ),
+            itemCount: widget.items.length,
+            itemBuilder: (context, index) {
+              return const OrderList();
+            },
+          ),
             ),
           )
         ],

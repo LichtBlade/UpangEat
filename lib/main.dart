@@ -30,16 +30,17 @@ import 'pages/admin_pages/create_user_form.dart';
 
 void main() {
   //revert to runApp(const MyApp()) before merging with main
-  runApp(const MyApp());
-  // runApp(const MaterialApp(
-  //   debugShowCheckedModeBanner: false,
-  //   home: SellerCenter(),
-  // ));
+  //runApp(const MyApp());
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SellerCenter(),
+    ),
+  );
 }
 
 class IpAddress {
   static String get ipAddress => "http://192.168.68.104:3000";
-
 }
 
 class MyApp extends StatefulWidget {
@@ -57,12 +58,11 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(
               authRepository:
-              AuthRepositoryImpl(baseUrl: 'http://localhost:3000')),
+                  AuthRepositoryImpl(baseUrl: 'http://localhost:3000')),
         ),
-      // admin_bloc
+        // admin_bloc
         BlocProvider<AdminBloc>(
           create: (context) => AdminBloc(AdminRepositoryImpl()),
-
         ),
         BlocProvider<StallBloc>(
           create: (context) => StallBloc(StallRepositoryImpl()),
@@ -80,8 +80,7 @@ class _MyAppState extends State<MyApp> {
           create: (context) => TrayBloc(TrayRepositoryImpl()),
         ),
       ],
-      child:
-      MaterialApp(
+      child: MaterialApp(
         title: "Upang Eat",
         debugShowCheckedModeBanner: false,
 
@@ -96,18 +95,14 @@ class _MyAppState extends State<MyApp> {
             appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
 //         //temporary for testing, uncomment if done
 //         // home: const Home(),
-        
+
 //         //test for admin
 //         // home: const Dashboard(),
 
 //         //test for login
 // //         home: LoginPage(),
 
-
-
 //         home: const Home(),
-
-
       ),
     );
   }

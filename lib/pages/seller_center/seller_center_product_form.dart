@@ -1,6 +1,5 @@
-// TODO: Fix all input fields, fix radio button, implement image input
+// TODO: implement image input
 import 'package:flutter/material.dart';
-import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
 
 class SellerCenterProductForm extends StatefulWidget {
   const SellerCenterProductForm({super.key});
