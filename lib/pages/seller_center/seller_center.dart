@@ -4,7 +4,7 @@ import 'package:upang_eat/pages/seller_center/seller_center_products.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/orders_dashboard.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/products_card.dart';
 
-import '../admin_pages/dashboard.dart';
+import '../admin_pages/admin_dashboard.dart';
 
 class SellerCenter extends StatefulWidget {
   const SellerCenter({super.key});
@@ -20,7 +20,7 @@ class _SellerCenterState extends State<SellerCenter> {
       appBar: AppBar(
         leading: IconButton(
             onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const Dashboard())),
+                MaterialPageRoute(builder: (context) => const AdminDashboard())),
             icon: const Icon(Icons.menu)),
         title: const Text('Seller Center'),
         backgroundColor: const Color.fromARGB(255, 255, 169, 186),
