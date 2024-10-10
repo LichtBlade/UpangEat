@@ -41,7 +41,7 @@ class _TrayState extends State<Tray> {
         child: Stack(children: [
           const Positioned(
             top: 0,
-            bottom: 200,
+            bottom: 312,
             right: 0,
             left: 0,
             child: _TrayBlocBuilder(),
@@ -59,17 +59,53 @@ class _TrayState extends State<Tray> {
               child: const Text("Proceed to Pay"),
             ),
           ),
-          const Positioned(
+          Positioned(
             bottom: 64,
             left: 24,
             right: 24,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-                Text("Order Summary", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),),
-                SizedBox(height: 4,),
                 Card.filled(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Image.asset(
+                          "assets/FlameCoin.png",
+                          width: 100,
+                          height: 100,
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            const Text(
+                              '123456.789',
+                              style: TextStyle(
+                                color: Color(0xFF202020),
+                                fontSize: 30,
+                              ),
+                            ),
+                            TextButton.icon(
+                              label: const Text('87as46eg54a6cv1'),
+                              icon: const Icon(
+                                Icons.copy,
+                                size: 20,
+                              ),
+                              onPressed: () {},
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Text("Order Summary", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),),
+                const SizedBox(height: 4,),
+                const Card.filled(
                   margin: EdgeInsets.symmetric(horizontal: 0),
                   color: Colors.black12,
                   child: Padding(
