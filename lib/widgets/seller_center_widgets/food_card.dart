@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class FoodCard extends StatefulWidget {
-  const FoodCard({super.key});
+  final String foodName;
+  final int foodPrice;
+
+  const FoodCard({super.key, required this.foodName, required this.foodPrice});
 
   @override
   State<FoodCard> createState() => _FoodCardState();
@@ -23,7 +26,7 @@ class _FoodCardState extends State<FoodCard> {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('Food'),
+          Text(widget.foodName),
           Switch(
               value: _isActive,
               onChanged: (bool value) {
@@ -33,7 +36,7 @@ class _FoodCardState extends State<FoodCard> {
               })
         ],
       ),
-      subtitle: Text('Augh'),
+      subtitle: Text('${widget.foodPrice}'),
       trailing: PopupMenuButton(
         itemBuilder: (context) => [
           const PopupMenuItem(

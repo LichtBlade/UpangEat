@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/food_card.dart';
 
 class ProductListDisplay extends StatefulWidget {
+  // insert map of food
+  // turn each map item into food card
+
   const ProductListDisplay({super.key});
 
   @override
@@ -27,7 +30,10 @@ class _ProductListDisplayState extends State<ProductListDisplay> {
               child: ListView.builder(
                 itemCount: 4,
                 itemBuilder: (context, index) {
-                  return const FoodCard();
+                  return const FoodCard(
+                    foodName: '213',
+                    foodPrice: 32,
+                  );
                 },
               ),
             ),

@@ -30,13 +30,7 @@ import 'pages/admin_pages/create_user_form.dart';
 
 void main() {
   //revert to runApp(const MyApp()) before merging with main
-  //runApp(const MyApp());
-  runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SellerCenter(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class IpAddress {
