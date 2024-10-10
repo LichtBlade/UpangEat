@@ -36,6 +36,7 @@ class SellerCenterBtn extends StatelessWidget {
             const Icon(
               Icons.navigate_next_sharp,
               color: Colors.white,
+              size: 28,
             )
           ],
         ),

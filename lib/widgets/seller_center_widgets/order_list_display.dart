@@ -6,14 +6,10 @@ class OrderListDisplay extends StatefulWidget {
   // The idea here is to just shove a list and the widget builds itself.
 
   final List<Map<dynamic, dynamic>> items;
-  final double? minHeight;
-  final double? maxHeight;
 
   const OrderListDisplay({
     super.key,
     required this.items,
-    this.minHeight,
-    this.maxHeight,
   });
 
   @override
@@ -23,62 +19,68 @@ class OrderListDisplay extends StatefulWidget {
 class _OrderListDisplayState extends State<OrderListDisplay> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(6.0),
-      elevation: 2,
+    return Card.filled(
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
       color: const Color.fromARGB(255, 237, 237, 237),
-      child: Column(
-        children: [
-          // Top Label
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(6.0)),
-                child: Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Orders:',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          '${widget.items.length}',
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                )),
-          ),
-          // List
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: widget.minHeight == null ? 250 : widget.minHeight!,
-                maxHeight: widget.maxHeight == null ? 500 : widget.maxHeight!,
-              ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // Top Label
+            _OrderCount(length: widget.items.length),
+            // List
+            Expanded(
               child: ListView.builder(
-            itemCount: widget.items.length,
-            itemBuilder: (context, index) {
-              return const OrderList();
-            },
-          ),
-            ),
-          )
-        ],
+                itemCount: widget.items.length,
+                itemBuilder: (context, index) {
+                  return const OrderList();
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 }
+
+class _OrderCount extends StatelessWidget {
+  final int length;
+  const _OrderCount({super.key, required this.length});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+        child: Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(
+              vertical: 8.0, horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Orders:',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                '$length',
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
