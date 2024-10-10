@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:upang_eat/pages/seller_center/seller_center_product_form.dart';
-import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
+import 'package:upang_eat/widgets/seller_center_widgets/product_list_display.dart';
 
 class SellerCenterProducts extends StatefulWidget {
   const SellerCenterProducts({super.key});
@@ -15,7 +15,17 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const SellerCenterAppbar(stallName: 'Food'),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 222, 15, 57),
+        title: const Center(
+          child: Text(
+            'Boss Sisig',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
       body: Column(
         children: [
           // Header label and button
@@ -62,7 +72,9 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
                 ),
               ],
             ),
-          )
+          ),
+          // List
+          const ProductListDisplay()
         ],
       ),
     );

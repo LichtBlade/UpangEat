@@ -24,6 +24,7 @@ import 'bloc/login_bloc/login_bloc.dart';
 import 'bloc/tray_bloc/tray_bloc.dart';
 
 void main() {
+  //revert to runApp(const MyApp()) before merging with main
   //runApp(const MyApp());
   runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,

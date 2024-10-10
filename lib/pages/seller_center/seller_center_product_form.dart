@@ -11,10 +11,22 @@ class SellerCenterProductForm extends StatefulWidget {
 }
 
 class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
+  String _selectedType = 'Breakfast';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const SellerCenterAppbar(stallName: 'BossSisig'),
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 222, 15, 57),
+          title: const Center(
+            child: Text(
+              'Boss Sisig',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
         body: SingleChildScrollView(
           child: Form(
             child: Card(
@@ -44,7 +56,9 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                       child: TextFormField(
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                         ),
+                        textAlignVertical: TextAlignVertical.center,
                       ),
                     ),
 
@@ -55,7 +69,9 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                       child: TextFormField(
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                         ),
+                        textAlignVertical: TextAlignVertical.center,
                       ),
                     ),
 
@@ -63,36 +79,9 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                     _titleText('Type'),
                     Row(
                       children: [
-                        Row(
-                          children: [
-                            Radio(
-                              value: 1,
-                              groupValue: null,
-                              onChanged: (index) {},
-                            ),
-                            Text('Breakfast')
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Radio(
-                              value: 1,
-                              groupValue: null,
-                              onChanged: (index) {},
-                            ),
-                            Text('Lunch')
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Radio(
-                              value: 1,
-                              groupValue: null,
-                              onChanged: (index) {},
-                            ),
-                            Text('Merienda')
-                          ],
-                        ),
+                        _buildRadioButton('Breakfast'),
+                        _buildRadioButton('Lunch'),
+                        _buildRadioButton('Merienda')
                       ],
                     ),
 
@@ -103,7 +92,9 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                       child: TextFormField(
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                         ),
+                        textAlignVertical: TextAlignVertical.center,
                       ),
                     ),
 
@@ -115,8 +106,12 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                         maxLines: null, // Set this
                         expands: true, // and this
                         keyboardType: TextInputType.multiline,
-                        decoration:
-                            InputDecoration(border: OutlineInputBorder()),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 8.0),
+                        ),
+                        textAlignVertical: TextAlignVertical.top,
                       ),
                     ),
 
@@ -147,7 +142,9 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                         children: [
                           OutlinedButton(
                             style: OutlinedButton.styleFrom(),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
                             child: const Text(
                               'Cancel',
                               style: TextStyle(color: Colors.black),
@@ -175,14 +172,31 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
           ),
         ));
   }
-}
 
-Widget _titleText(String title) {
-  return Padding(
-    padding: const EdgeInsets.only(top: 8.0),
-    child: Text(
-      title,
-      style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
-    ),
-  );
+  Widget _titleText(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+
+  Widget _buildRadioButton(String meal) {
+    return Row(
+      children: [
+        Radio<String>(
+          value: meal,
+          groupValue: _selectedType,
+          onChanged: (String? value) {
+            setState(() {
+              _selectedType = value!;
+            });
+          },
+        ),
+        Text(meal),
+      ],
+    );
+  }
 }
