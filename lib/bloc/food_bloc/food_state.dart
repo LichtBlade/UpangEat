@@ -27,10 +27,4 @@ final class FoodError extends FoodState {
   List<Object> get props => [message];
 }
 
-final class FoodAdded extends FoodState {
-  final FoodModel food;
-  const FoodAdded(this.food);
-
-  @override
-  List<Object> get props => [food];
-}
+final class FoodAdded extends FoodState {}

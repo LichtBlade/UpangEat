@@ -55,11 +55,30 @@ class FoodRepositoryImpl extends FoodRepository {
   }
 
   @override
-  Future<void> createFood(FoodModel food) async {
+  Future<void> createFood(
+      {required int stallId,
+      required String itemName,
+      String? description,
+      required int price,
+      String? imageURL,
+      required bool isAvailable,
+      required bool isBreakfast,
+      required bool isLunch,
+      required bool isMerienda}) async {
     final response = await http.post(
       Uri.parse('$baseUrl/foods'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({food.toJson()}),
+      body: jsonEncode({
+        "stall_id": stallId,
+        "item_name": itemName,
+        "description": description ?? '',
+        "price": price,
+        "image_url": imageURL ?? '',
+        "is_available": isAvailable ? 1 : 0,
+        "is_breakfast": isBreakfast ? 1 : 0,
+        "is_lunch": isLunch ? 1 : 0,
+        "is_merienda": isMerienda ? 1 : 0
+      }),
     );
     if (response.statusCode != 200) {
       throw Exception('Failed to create Food');
@@ -67,11 +86,31 @@ class FoodRepositoryImpl extends FoodRepository {
   }
 
   @override
-  Future<void> updateFood(FoodModel food, int id) async {
+  Future<void> updateFood(
+      int id,
+      int stallId,
+      String itemName,
+      String? description,
+      int price,
+      String? imageURL,
+      bool isAvailable,
+      bool isBreakfast,
+      bool isLunch,
+      bool isMerienda) async {
     final response = await http.put(
       Uri.parse('$baseUrl/foods/$id'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({food.toJson()}),
+      body: jsonEncode({
+        "stall_id": stallId,
+        "item_name": itemName,
+        "description": description ?? '',
+        "price": price,
+        "image_url": imageURL ?? '',
+        "is_available": isAvailable ? 1 : 0,
+        "is_breakfast": isBreakfast ? 1 : 0,
+        "is_lunch": isLunch ? 1 : 0,
+        "is_merienda": isMerienda ? 1 : 0
+      }),
     );
     if (response.statusCode != 200) {
       throw Exception('Failed to update food: $id');

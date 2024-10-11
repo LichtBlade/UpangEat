@@ -53,8 +53,17 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
     on<CreateFood>((event, emit) async {
       emit(FoodLoading());
       try {
-        final food = await _foodRepository.createFood(event.food);
-        emit(FoodAdded(food));
+        await _foodRepository.createFood(
+            stallId: event.stallId,
+            itemName: event.itemName,
+            description: event.description,
+            price: event.price,
+            imageURL: event.imageURL,
+            isAvailable: event.isAvailable,
+            isBreakfast: event.isBreakfast,
+            isLunch: event.isLunch,
+            isMerienda: event.isMerienda);
+        emit(FoodAdded());
       } catch (error) {
         emit(FoodError(error.toString()));
       }
@@ -63,7 +72,17 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
     on<UpdateFood>((event, emit) async {
       emit(FoodLoading());
       try {
-        await _foodRepository.updateFood(event.food, event.id);
+        await _foodRepository.updateFood(
+            event.id,
+            event.stallId,
+            event.itemName,
+            event.description,
+            event.price,
+            event.imageURL,
+            event.isAvailable,
+            event.isBreakfast,
+            event.isLunch,
+            event.isMerienda);
       } catch (error) {
         emit(FoodError(error.toString()));
       }
