@@ -1,8 +1,14 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // TODO: implement image input
 import 'package:flutter/material.dart';
 
 class SellerCenterProductForm extends StatefulWidget {
-  const SellerCenterProductForm({super.key});
+  final int stallId;
+
+  const SellerCenterProductForm({
+    super.key,
+    required this.stallId,
+  });
 
   @override
   State<SellerCenterProductForm> createState() =>

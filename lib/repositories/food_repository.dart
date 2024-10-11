@@ -5,4 +5,7 @@ abstract class FoodRepository {
   Future<List<FoodModel>> fetchFoodByCategory(int id);
   Future<List<FoodModel>> fetchTrayFood(int id);
   Future<List<FoodModel>> fetchFoodByStallId(int id);
+  Future<void> createFood(FoodModel food);
+  Future<void> updateFood(FoodModel food, int id);
+  Future<void> deleteFood(int id);
 }

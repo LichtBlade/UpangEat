@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-// TODO: Create stall product list
 
 // Food displayed here
 import 'package:flutter/material.dart';
@@ -22,7 +21,6 @@ class SellerCenterProducts extends StatefulWidget {
 }
 
 class _SellerCenterProductsState extends State<SellerCenterProducts> {
-  
   @override
   void initState() {
     super.initState();
@@ -69,8 +67,9 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              const SellerCenterProductForm())),
+                          builder: (context) => SellerCenterProductForm(
+                                stallId: widget.stallId,
+                              ))),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

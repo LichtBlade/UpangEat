@@ -39,7 +39,7 @@ class _SellerCenterState extends State<SellerCenter> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SellerCenterProducts(stallId: 3,)));
+                      builder: (context) => const SellerCenterProducts(stallId: 1,)));
             },
           ),
         ),
