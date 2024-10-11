@@ -17,6 +17,20 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         final newOrder = OrderModel(orderId: 0, userId: event.order.userId, stallId: event.order.stallId, totalAmount: event.order.totalAmount, items: event.order.items, orderStatus: event.order.orderStatus);
         await _orderRepository.createOrders(newOrder);
         emit (OrderAdded());
+
+
+        final orders = await _orderRepository.fetchOrdersByUserId(event.id);
+        emit (OrderLoaded(orders));
+      } catch (error) {
+        emit(OrderError(error.toString()));
+      }
+    });
+
+    on<UserFetchOrder>((event, emit) async {
+      emit(OrderLoading());
+      try {
+        final orders = await _orderRepository.fetchOrdersByUserId(event.id);
+        emit (OrderLoaded(orders));
       } catch (error) {
         emit(OrderError(error.toString()));
       }

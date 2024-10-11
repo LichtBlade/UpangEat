@@ -18,11 +18,19 @@ class _PaymentProcessingState extends State<PaymentProcessing> {
       body: BlocListener<OrderBloc, OrderState>(
         listener: (context, state) {
           if (state is OrderAdded){
-            Future.delayed(const Duration(milliseconds: 1000), () {
+            Future.delayed(const Duration(milliseconds: 2000), () {
               Navigator.pop(context);
               Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const OrderStatus()));
-            });
+
+            }
+            );
+          }else if (state is OrderLoaded){
+            print("ORDERS ${state.order} ORDERS");
+            Future.delayed(const Duration(milliseconds: 2000), () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: state.order,)));
+
+            }
+            );
           }
         },
         child: Center(
@@ -38,12 +46,12 @@ class _PaymentProcessingState extends State<PaymentProcessing> {
                       Text("Processing payment please wait.")
                     ],),
                   );
-                } else if (state is OrderAdded) {
+                } else if (state is OrderAdded || state is OrderLoaded) {
                   return const Center(child: Text("Woohoo! Payment confirmed. You're one step closer to deliciousness!"));
                 } else if (state is OrderError) {
                   return Text("Error: ${state.message}");
                 } else {
-                  return const Text("Unexpected state");
+                  return const Text("Unexpected statesss");
                 }
               },
             ),

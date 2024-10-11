@@ -7,10 +7,20 @@ sealed class OrderEvent extends Equatable {
 }
 
 class CreateOrder extends OrderEvent {
+  final int id;
   final OrderModel order;
-  const CreateOrder(this.order);
+  const CreateOrder(this.order,this.id);
 
 
   @override
-  List<Object> get props => [order];
+  List<Object> get props => [order,id];
+}
+
+class UserFetchOrder extends OrderEvent {
+  final int id;
+  const UserFetchOrder(this.id);
+
+
+  @override
+  List<Object> get props => [id];
 }

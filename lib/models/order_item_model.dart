@@ -20,7 +20,7 @@ class OrderItemModel extends Equatable {
   factory OrderItemModel.fromJson(Map<String, dynamic> json) {
     return OrderItemModel(
       orderItemId: json['order_item_id'],
-      itemId: json['item_id'],
+      itemId: json['item_id'] ,
       itemName: json['item_name'],
       quantity: json['quantity'],
       subtotal: json['subtotal'],

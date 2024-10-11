@@ -4,6 +4,7 @@ import 'package:upang_eat/Pages/stalls.dart';
 import 'package:upang_eat/Widgets/custom_drawer.dart';
 import 'package:upang_eat/fake_data.dart';
 import 'package:upang_eat/pages/category_more.dart';
+import 'package:upang_eat/pages/order_status.dart';
 import 'package:upang_eat/pages/tray.dart';
 import 'package:upang_eat/repositories/food_repository.dart';
 import 'package:upang_eat/repositories/order_repository.dart';
@@ -11,7 +12,9 @@ import 'package:upang_eat/repositories/order_repository_impl.dart';
 import 'package:upang_eat/widgets/carousel.dart';
 import '../bloc/category_bloc/category_bloc.dart';
 import '../bloc/food_bloc/food_bloc.dart';
+import '../bloc/order_bloc/order_bloc.dart';
 import '../bloc/stall_bloc/stall_bloc.dart';
+import '../models/order_model.dart';
 import '../repositories/food_repository_impl.dart';
 import '../widgets/category_card.dart';
 import '../widgets/home_meal_card.dart';
@@ -32,6 +35,8 @@ class _HomeState extends State<Home> {
     context.read<StallBloc>().add(LoadStalls());
     context.read<FoodBloc>().add(LoadFood());
     context.read<CategoryBloc>().add(LoadCategory());
+    context.read<OrderBloc>().add(const UserFetchOrder(1)); //TODO Change to real user id
+
     super.initState();
   }
 
@@ -42,6 +47,8 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         appBar: _HomeAppBar(),
         drawer: const CustomDrawer(),
+        floatingActionButton: const _FloatingActionBar(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: RefreshIndicator(
           onRefresh: () async {
             context.read<StallBloc>().add(LoadStalls());
@@ -239,6 +246,45 @@ class _StallCardHorizontalList extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+}
+
+class _FloatingActionBar extends StatefulWidget {
+  const _FloatingActionBar({super.key});
+
+  @override
+  State<_FloatingActionBar> createState() => _FloatingActionBarState();
+}
+
+class _FloatingActionBarState extends State<_FloatingActionBar> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<OrderBloc, OrderState>(
+      builder: (context, state) {
+        if (state is OrderLoading) {
+          print("Order is loading");
+        } else if (state is OrderLoaded) {
+          print("Order is loaded");
+          final List<OrderModel> orders = state.order;
+          return SizedBox(
+            width: 250,
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: orders,)));
+              },
+              extendedIconLabelSpacing: 16.0,
+              icon: const Icon(Icons.my_library_books),
+              label: const Text("Check Order Status", style: TextStyle(fontSize: 16),),
+            ),
+          );
+        } else if (state is OrderError) {
+          print("error: ${state.message}");
+        } else {
+          print("Unexpected state");
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 }
