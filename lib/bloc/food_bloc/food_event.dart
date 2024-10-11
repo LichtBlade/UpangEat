@@ -71,22 +71,22 @@ class UpdateFood extends FoodEvent {
   final bool isMerienda;
 
   const UpdateFood(
-      this.stallId,
-      this.itemName,
-      this.description,
-      this.price,
-      this.imageURL,
-      this.isAvailable,
-      this.isBreakfast,
-      this.isLunch,
-      this.isMerienda,
-      {required this.id});
+      {required this.id,required this.stallId,
+        required this.itemName,
+        required this.description,
+        required this.price,
+        required this.imageURL,
+        required this.isAvailable,
+        required this.isBreakfast,
+        required this.isLunch,
+        required this.isMerienda,});
 }
 
 class DeleteFood extends FoodEvent {
   final int id;
-  const DeleteFood(this.id);
+  final int stallId;
+  const DeleteFood(this.id, this.stallId);
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [id, stallId];
 }

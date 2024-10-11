@@ -116,6 +116,8 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
                     : const Center(
                         child: Text('No data'),
                       );
+              } else if (state is FoodError){
+                print(state.message);
               }
               return const Text('Unexpected Data');
             },

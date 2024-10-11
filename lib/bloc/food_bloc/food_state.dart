@@ -9,6 +9,9 @@ sealed class FoodState extends Equatable {
 
 final class FoodLoading extends FoodState {}
 
+final class FoodUpdated extends FoodState {}
+
+
 final class FoodLoaded extends FoodState {
   final List<FoodModel> foods;
   int get totalPrice => foods.fold<int>(0, (sum, food) => sum + food.price * (food.trayQuantity ?? 1)); // Add this getter

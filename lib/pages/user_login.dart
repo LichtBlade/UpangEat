@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upang_eat/Pages/home.dart';
 import 'package:upang_eat/pages/admin_pages/admin_dashboard.dart';
 import 'package:upang_eat/pages/seller_center/seller_center.dart';
+import 'package:upang_eat/user_data.dart';
 import '../bloc/login_bloc/login_bloc.dart';
 class UserLogin extends StatefulWidget {
 
@@ -21,7 +22,6 @@ class _UserLoginState extends State<UserLogin> {
 
   @override
   void initState() {
-    context.read<LoginBloc>().add(RemoveUserData());
     context.read<LoginBloc>().add(LoadUserData());
     super.initState();
   }
@@ -37,7 +37,8 @@ class _UserLoginState extends State<UserLogin> {
               print("UserLoading");
             } else if (state is UserLoaded){
               print("Loaded");
-              print(state.user);
+              globalUserData = state.user;
+              print(globalUserData);
             }
             if (state is LoginLoading) {
               isLoading = true;

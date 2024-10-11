@@ -6,6 +6,7 @@ import 'package:upang_eat/models/tray_model.dart';
 
 import '../../repositories/tray_repository.dart';
 import '../../repositories/tray_repository_impl.dart';
+import '../../user_data.dart';
 
 part 'tray_event.dart';
 part 'tray_state.dart';
@@ -30,7 +31,7 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
 
         final newTray = TrayModel(
             trayId: 0,
-            userId: 1, // TODO change to logged in user ID
+            userId: globalUserData!.userId,
             itemId: event.foodItemId,
             quantity: event.quantity);
         final stall = await _trayRepository.addToTray(newTray);

@@ -10,6 +10,7 @@ import 'package:upang_eat/models/food_model.dart';
 import 'package:upang_eat/models/tray_model.dart';
 import 'package:upang_eat/repositories/stall_repository.dart';
 import 'package:upang_eat/repositories/stall_repository_impl.dart';
+import 'package:upang_eat/user_data.dart';
 
 import '../Pages/stall_information.dart';
 import '../bloc/food_bloc/food_bloc.dart';
@@ -31,7 +32,7 @@ class _BottomModalFoodInformationState
     extends State<BottomModalFoodInformation> {
   int _quantity = 1;
   int _price = 0;
-  int id = 1; //TODO Change
+  int id = globalUserData!.userId;
   bool _isUpdate = false;
   TrayModel _existingTrayItem =
       const TrayModel(trayId: 0, userId: 0, itemId: 0, quantity: 0);
@@ -381,7 +382,7 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
                       TextButton(
                         onPressed: () {
                           context.read<TrayBloc>().add(DeleteTrayIds(state.trayIdsToDelete));
-                          context.read<TrayBloc>().add(CreateTray(widget.food.foodItemId, widget.quantity));
+                          context.read<TrayBloc>().add(CreateTray(widget.food.foodItemId, widget.quantity,globalUserData!.userId));
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()
@@ -415,7 +416,7 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
                             userId: widget.existingTrayItem.userId,
                             itemId: widget.existingTrayItem.itemId,
                             quantity: widget.quantity),
-                      1 // TODO Replace with actual ID
+                        globalUserData!.userId
                     )
                     );
                     ScaffoldMessenger.of(context)
@@ -427,9 +428,10 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
                       context.read<FoodBloc>().add(const LoadFoodTray(1));
                     }
                   } else {
+                    print("Food ${widget.food}");
                     context
                         .read<TrayBloc>()
-                        .add(CreateTray(widget.food.foodItemId, widget.quantity));
+                        .add(CreateTray(globalUserData!.userId, widget.food.foodItemId, widget.quantity));
                   }
                   Navigator.pop(context);
 

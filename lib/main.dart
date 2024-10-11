@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         title: "Upang Eat",
         debugShowCheckedModeBanner: false,
-        home: const UserLogin(),
+        home: const SellerCenter(),
         theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFF8F8F8), cardTheme: const CardTheme(color: Colors.white), appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
       ),
     );

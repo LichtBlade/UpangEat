@@ -45,8 +45,8 @@ class _SellerCenterState extends State<SellerCenter> {
         ),
         Positioned(
           top: 68,
-          right: 16,
-          left: 16,
+          right: 8,
+          left: 8,
           child: CupertinoSegmentedControl(
             selectedColor: const Color.fromARGB(255, 222, 15, 57),
             borderColor: Colors.black,

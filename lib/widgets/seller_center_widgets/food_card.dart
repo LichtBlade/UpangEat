@@ -1,5 +1,10 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/models/food_model.dart';
+
+import '../../bloc/food_bloc/food_bloc.dart';
+import '../../pages/seller_center/seller_center_product_form.dart';
 
 class FoodCard extends StatefulWidget {
   final FoodModel food;
@@ -63,14 +68,23 @@ class _FoodCardState extends State<FoodCard> {
                   ),
                   PopupMenuButton(
                     itemBuilder: (context) => [
-                      const PopupMenuItem(
-                        child: ListTile(
+                      PopupMenuItem(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SellerCenterProductForm(
+                              stallId: widget.food.stallId, isUpdate: true, food: widget.food,
+                            ),
+                          ),
+                        ),
+                        child: const ListTile(
                           leading: Icon(Icons.edit),
                           title: Text('Edit'),
                         ),
                       ),
-                      const PopupMenuItem(
-                        child: ListTile(
+                      PopupMenuItem(
+                        onTap: () => context.read<FoodBloc>().add(DeleteFood(widget.food.foodItemId, widget.food.stallId)),
+                        child: const ListTile(
                           leading: Icon(
                             Icons.delete,
                             color: Colors.red,

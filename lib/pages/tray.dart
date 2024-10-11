@@ -15,8 +15,8 @@ import "../models/order_item_model.dart";
 import "../widgets/tray_card.dart";
 
 class Tray extends StatefulWidget {
-  final int id = 1; // TODO Change to logged in user id
-  const Tray({super.key});
+  final int id;
+  const Tray({super.key, required this.id});
 
   @override
   State<Tray> createState() => _TrayState();
@@ -50,7 +50,7 @@ class _TrayState extends State<Tray> {
             child: _FoodBlocBuilder(),
           ),
           const Positioned(
-            bottom: 64,
+            bottom: 80,
             left: 24,
             right: 24,
             child: _OrderSummaryAndWallet(),
@@ -104,7 +104,7 @@ class _TrayState extends State<Tray> {
                                   items: orderItems,
                                 );
                                 print(order);
-                                context.read<OrderBloc>().add(CreateOrder(order, widget.id));// TODO Change to real user ID
+                                context.read<OrderBloc>().add(CreateOrder(order, widget.id));
 
                                 Navigator.of(context).pop();
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentProcessing()));

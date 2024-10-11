@@ -9,9 +9,11 @@ import 'package:upang_eat/pages/tray.dart';
 import 'package:upang_eat/repositories/food_repository.dart';
 import 'package:upang_eat/repositories/order_repository.dart';
 import 'package:upang_eat/repositories/order_repository_impl.dart';
+import 'package:upang_eat/user_data.dart';
 import 'package:upang_eat/widgets/carousel.dart';
 import '../bloc/category_bloc/category_bloc.dart';
 import '../bloc/food_bloc/food_bloc.dart';
+import '../bloc/login_bloc/login_bloc.dart';
 import '../bloc/order_bloc/order_bloc.dart';
 import '../bloc/stall_bloc/stall_bloc.dart';
 import '../models/order_model.dart';
@@ -32,17 +34,28 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   void initState() {
+
+    context.read<LoginBloc>().add(LoadUserData());
+    print(globalUserData);
     context.read<StallBloc>().add(LoadStalls());
     context.read<FoodBloc>().add(LoadFood());
     context.read<CategoryBloc>().add(LoadCategory());
-    context.read<OrderBloc>().add(const UserFetchOrder(1)); //TODO Change to real user id
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocListener<LoginBloc, LoginState>(
+  listener: (context, state) {
+    if (state is UserLoaded){
+      globalUserData = state.user;
+      print(globalUserData);
+
+      context.read<OrderBloc>().add(UserFetchOrder(state.user.userId));
+    }
+  },
+  child: BlocProvider(
       create: (context) => FoodBloc(FoodRepositoryImpl())..add(LoadFood()),
       child: Scaffold(
         appBar: _HomeAppBar(),
@@ -56,11 +69,11 @@ class _HomeState extends State<Home> {
           },
           child: CustomScrollView(
             slivers: [
+              // const SliverToBoxAdapter(
+              //   child: _HomeSearchBar(),
+              // ),
               const SliverToBoxAdapter(
-                child: _HomeSearchBar(),
-              ),
-              const SliverToBoxAdapter(
-                child: _Header(title: "Categories", isHaveMore: true),
+                child: _Header(title: "Categories"),
               ),
               SliverToBoxAdapter(
                 child: _CategoriesHorizontalList(),
@@ -86,7 +99,8 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-    );
+    ),
+);
   }
 }
 
@@ -110,7 +124,7 @@ class _HomeAppBarState extends State<_HomeAppBar> {
               IconButton(
                   onPressed: () {
                     setState(() {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Tray())).then((value) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Tray(id: globalUserData!.userId,))).then((value) {
                         if (value == true) {
                           setState(() {});
                         }
@@ -162,6 +176,7 @@ class _Header extends StatelessWidget {
           if (isHaveMore)
             GestureDetector(
               onTap: () {
+                print(globalUserData);
                 final route = switch (title) { 'Category' => const CategoryMore(), 'Stalls' => const Stalls(), _ => const CategoryMore() };
                 Navigator.push(context, MaterialPageRoute(builder: (context) => route));
               },
