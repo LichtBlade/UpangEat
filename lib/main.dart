@@ -24,8 +24,7 @@ void main() {
 }
 
 class IpAddress {
-  static String get ipAddress => "http://192.168.68.104:3000";
-
+  static String get ipAddress => "http://192.168.68.101:3000"; // change ip before running
 }
 
 class MyApp extends StatefulWidget {
@@ -43,8 +42,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(
               authRepository:
-              AuthRepositoryImpl(baseUrl: 'http://localhost:3000')),
+                  AuthRepositoryImpl(baseUrl: 'http://localhost:3000')),
         ),
+
         BlocProvider<AdminBloc>(
           create: (context) => AdminBloc(AdminRepositoryImpl()),
         ),
@@ -67,8 +67,7 @@ class _MyAppState extends State<MyApp> {
           create: (context) => OrderBloc(OrderRepositoryImpl()),
         ),
       ],
-      child:
-      MaterialApp(
+      child: MaterialApp(
         title: "Upang Eat",
         debugShowCheckedModeBanner: false,
         home: const Home(),

@@ -27,3 +27,5 @@ final class FoodError extends FoodState {
   @override
   List<Object> get props => [message];
 }
+
+final class FoodAdded extends FoodState {}
