@@ -50,6 +50,7 @@ dependencies:
 
   # WebSocket channel for live connection to blockchain
   web_socket_channel: ^2.1.0
+  shared_preferences: ^2.3.2
 
 dev_dependencies:
   flutter_test:

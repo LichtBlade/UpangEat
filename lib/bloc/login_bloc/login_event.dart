@@ -15,3 +15,14 @@ class LoginButtonPressed extends LoginEvent {
   @override
   List<Object> get props => [email,password];
 }
+
+class LoadUserData extends LoginEvent {
+  // final UserModel user;
+  //
+  // const LoadUserData(this.user);
+  //
+  // @override
+  // List<Object> get props => [user];
+}
+
+class RemoveUserData extends LoginEvent{}
