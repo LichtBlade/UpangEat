@@ -34,7 +34,7 @@ void main() {
 }
 
 class IpAddress {
-  static String get ipAddress => "http://192.168.68.101:3000";
+  static String get ipAddress => "http://192.168.68.101:3000"; // change ip before running
 }
 
 class MyApp extends StatefulWidget {
@@ -81,7 +81,7 @@ class _MyAppState extends State<MyApp> {
         // theme: CupertinoThemeData(
         //   scaffoldBackgroundColor: Color(0xFFF8F8F8),
         // ),
-        home: const SellerCenter(),
+        //home: const SellerCenter(),
 
         theme: ThemeData(
             scaffoldBackgroundColor: const Color(0xFFF8F8F8),
@@ -96,7 +96,7 @@ class _MyAppState extends State<MyApp> {
 //         //test for login
 // //         home: LoginPage(),
 
-//         home: const Home(),
+        home: const Home(),
       ),
     );
   }
