@@ -8,6 +8,8 @@ import 'package:upang_eat/bloc/food_bloc/food_bloc.dart';
 import 'package:upang_eat/pages/seller_center/seller_center_product_form.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/product_list_display.dart';
 
+import '../../widgets/seller_center_widgets/food_card.dart';
+
 class SellerCenterProducts extends StatefulWidget {
   final int stallId;
 
@@ -44,8 +46,7 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
         children: [
           // Header label and button
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -81,8 +82,7 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
                       ),
                       Text(
                         'Add Product',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ],
                   ),
@@ -97,14 +97,22 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
               } else if (state is FoodLoaded) {
                 final foods = state.foods;
                 return foods.isNotEmpty
-                    ? Column(
-                        children: [
-                          // List
-                          ProductListDisplay(
-                            foods: foods,
-                          )
-                        ],
-                      )
+                    ? Expanded(
+                      child: SizedBox(
+                                        width: double.infinity,
+
+                        child: ListView.builder(
+                            itemCount: foods.length,
+                            padding: EdgeInsets.zero,
+                            itemBuilder: (context, index) {
+                              final food = foods[index];
+                              return FoodCard(
+                                food: food,
+                              );
+                            },
+                          ),
+                      ),
+                    )
                     : const Center(
                         child: Text('No data'),
                       );

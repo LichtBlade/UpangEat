@@ -21,15 +21,98 @@ class _FoodCardState extends State<FoodCard> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: ClipRRect(
-        child: SizedBox(
-          height: 75,
-          width: 75,
-          child: Image.asset(widget.food.imageUrl != null
-              ? 'assets/foods/1_1.jpg'
-              : '${widget.food.imageUrl}'),
+    return Card.outlined(
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      child: Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(14.0),
+              child: SizedBox(
+                height: 70,
+                width: 70,
+                child: Image.asset(widget.food.imageUrl != null
+                    ? 'assets/foods/1_1.jpg'
+                    : '${widget.food.imageUrl}', fit: BoxFit.cover,),
+              ),
+            ),
+            const SizedBox(width: 8,),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment:  CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.food.itemName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      Text(
+                        '₱${widget.food.price}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                      )
+                    ],
+                  ),
+                  PopupMenuButton(
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        child: ListTile(
+                          leading: Icon(Icons.edit),
+                          title: Text('Edit'),
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                          title: Text('Delete'),
+                        ),
+                      ),
+                    ],
+                  )
+                  // Column( // Wrap the Switch in a Row
+                  //   children: [
+                  //     Text(
+                  //       _isActive ? 'Available' : 'Unavailable', // Indicate the state
+                  //       style: TextStyle(
+                  //         color: _isActive ? Colors.green : Colors.red, // Optional: Color-code the text
+                  //       ),
+                  //     ),
+                  //     Switch(
+                  //       value: _isActive,
+                  //       onChanged: (bool value) {
+                  //         setState(() {
+                  //           _isActive = value;
+                  //         });
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
+                ],
+              ),
+            )
+          ],
         ),
+      ),
+    );
+
+      return ListTile(
+      leading: SizedBox(
+        height: 75,
+        width: 75,
+        child: Image.asset(widget.food.imageUrl != null
+            ? 'assets/foods/1_1.jpg'
+            : '${widget.food.imageUrl}'),
       ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
