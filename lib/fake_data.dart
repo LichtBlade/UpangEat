@@ -38,9 +38,9 @@ class FakeData {
       orderDate: "9/21/24 18:15",
       totalAmount: 440,
       items: [
-        OrderItemModel(itemName: "Burger", quantity: 2, subtotal: 240, imageUrl: "assets/stalls/profiles/1.jpg"),
-        OrderItemModel(itemName: "Pancit Canton", quantity: 1, subtotal: 50, imageUrl: "assets/stalls/profiles/1.jpg"),
-        OrderItemModel(itemName: "BJ", quantity: 1, subtotal: 150, imageUrl: "assets/stalls/profiles/1.jpg"),
+        OrderItemModel(orderItemId: 0, itemId: 0, itemName: "Burger", quantity: 2, subtotal: 240, imageUrl: "assets/stalls/profiles/1.jpg"),
+        OrderItemModel(orderItemId: 0, itemId: 0, itemName: "Pancit Canton", quantity: 1, subtotal: 50, imageUrl: "assets/stalls/profiles/1.jpg"),
+        OrderItemModel(orderItemId: 0, itemId: 0, itemName: "BJ", quantity: 1, subtotal: 150, imageUrl: "assets/stalls/profiles/1.jpg"),
       ],
       orderStatus: "pending"),
     OrderModel(
@@ -49,9 +49,9 @@ class FakeData {
         orderDate: "9/22/24 06:15",
         totalAmount: 560,
         items: [
-          OrderItemModel(itemName: "Tapsilog", quantity: 1, subtotal: 110, imageUrl: "assets/stalls/profiles/1.jpg"),
-          OrderItemModel(itemName: "Iced Tea", quantity: 1, subtotal: 50, imageUrl: "assets/stalls/profiles/1.jpg"),
-          OrderItemModel(itemName: "Durex: Fetherlite 3s", quantity: 1, subtotal: 160, imageUrl: "assets/stalls/profiles/1.jpg"),
+          OrderItemModel(orderItemId: 0, itemId: 0, itemName: "Tapsilog", quantity: 1, subtotal: 110, imageUrl: "assets/stalls/profiles/1.jpg"),
+          OrderItemModel(orderItemId: 0, itemId: 0, itemName: "Iced Tea", quantity: 1, subtotal: 50, imageUrl: "assets/stalls/profiles/1.jpg"),
+          OrderItemModel(orderItemId: 0, itemId: 0, itemName: "Durex: Fetherlite 3s", quantity: 1, subtotal: 160, imageUrl: "assets/stalls/profiles/1.jpg"),
         ],
         orderStatus: "pending"),
   ];
