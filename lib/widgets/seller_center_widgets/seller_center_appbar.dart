@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
+import '../../Pages/wallet_pages/wallet.dart';
+
 class SellerCenterAppbar extends StatefulWidget implements PreferredSizeWidget {
   final String stallName;
 
@@ -23,7 +25,14 @@ class _SellerCenterAppbarState extends State<SellerCenterAppbar> {
       backgroundColor: const Color.fromARGB(255, 222, 15, 57),
       centerTitle: true,
       leading: IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Wallet(),
+            ),
+          );
+        },
         icon: const Icon(
           Icons.menu,
           color: Colors.white,
