@@ -1,4 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:web3dart/web3dart.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:http/http.dart' as http;
 
 class SendDialog extends StatelessWidget {
   final Function(String) onSend;
@@ -24,17 +27,18 @@ class SendDialog extends StatelessWidget {
           CupertinoTextField(
             controller: accountIDController,
             placeholder: "Account ID",
-            keyboardType: TextInputType.number,
+            keyboardType: TextInputType.text,
           ),
           const SizedBox(height: 20),
         ],
       ),
       actions: [
         CupertinoDialogAction(
-          onPressed: () {
+          onPressed: () async {
             String amount = amountController.text.trim();
-            if (amount.isNotEmpty) {
-              onSend(amount);
+            String accountID = accountIDController.text.trim();
+            if (amount.isNotEmpty && accountID.isNotEmpty) {
+              await sendEther(double.parse(amount), accountID);
               Navigator.of(context).pop();
             }
           },
@@ -46,5 +50,58 @@ class SendDialog extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Future<void> sendEther(double ethAmount, String accountID) async {
+    String rpcUrl = "http://10.0.2.2:7545"; // For Android emulator
+    String wsUrl = "ws://10.0.2.2:7545/";
+
+    try {
+      // Create Web3 client
+      Web3Client client = Web3Client(
+        rpcUrl,
+        http.Client(),
+        socketConnector: () {
+          return IOWebSocketChannel.connect(wsUrl).cast<String>();
+        },
+      );
+
+      // Private key (use a test key for Ganache or testnets)
+      String privateKey =
+          "0xb92508c3bb483e1f2d48b49f419594fc6d3b8a0f6ee0aa2657a9497d8edc5796";
+
+      // Obtain credentials from private key
+      Credentials credentials =
+          await client.credentialsFromPrivateKey(privateKey);
+
+      // Convert accountID to EthereumAddress
+      EthereumAddress receiver = EthereumAddress.fromHex(accountID);
+      EthereumAddress ownAddress = await credentials.extractAddress();
+      print("Own Address: $ownAddress");
+
+      // Convert ethAmount (ETH) to Wei
+      BigInt weiAmount =
+          BigInt.from(ethAmount * 1e18); // Multiply ETH by 10^18 to get Wei
+
+      // Send Ether transaction
+      var result = await client.sendTransaction(
+        credentials,
+        Transaction(
+          from: ownAddress,
+          to: receiver,
+          value: EtherAmount.inWei(weiAmount), // Use the Wei amount
+          gasPrice:
+              EtherAmount.inWei(BigInt.from(1000000000)), // Set a gas price
+          maxGas: 21000, // Set gas limit
+        ),
+        chainId: 1337, // Ganache default chain ID
+      );
+
+      print("Transaction Hash: $result \n\n Successful Transaction");
+
+      // After sending ETH, fetch the updated balance (optional)
+    } catch (e) {
+      print("Transaction failed: $e");
+    }
   }
 }

@@ -45,6 +45,11 @@ dependencies:
   awesome_snackbar_content: ^0.1.1
   flutter_svg: ^2.0.10+1
   step_progress_indicator: ^1.0.2
+  # Web3dart for blockchain interaction
+  web3dart: ^2.5.1
+
+  # WebSocket channel for live connection to blockchain
+  web_socket_channel: ^2.1.0
 
 dev_dependencies:
   flutter_test:
