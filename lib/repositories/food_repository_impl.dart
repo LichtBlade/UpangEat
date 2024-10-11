@@ -73,7 +73,7 @@ class FoodRepositoryImpl extends FoodRepository {
         "item_name": itemName,
         "description": description ?? '',
         "price": price,
-        "image_url": imageURL ?? '',
+        "image_url": imageURL ?? 'assets/foods/1_1.jpg',
         "is_available": isAvailable ? 1 : 0,
         "is_breakfast": isBreakfast ? 1 : 0,
         "is_lunch": isLunch ? 1 : 0,

@@ -65,11 +65,13 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
                     ),
                   ),
                   onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SellerCenterProductForm(
-                                stallId: widget.stallId,
-                              ))),
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SellerCenterProductForm(
+                        stallId: widget.stallId,
+                      ),
+                    ),
+                  ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

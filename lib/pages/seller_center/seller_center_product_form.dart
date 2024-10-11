@@ -209,33 +209,33 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
-                          BlocListener<FoodBloc, FoodState>(
-                            listener: (context, state) {
-                              if (state is FoodLoading) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Creating Product'),
-                                  ),
-                                );
-                              } else if (state is FoodAdded) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text('Product Created Successfully!'),
-                                  ),
-                                );
-                              } else if (state is FoodError) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Error in making product'),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
                         ],
                       ),
-                    )
+                    ),
+                    BlocListener<FoodBloc, FoodState>(
+                      listener: (context, state) {
+                        if (state is FoodLoading) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Creating Product'),
+                            ),
+                          );
+                        } else if (state is FoodAdded) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Product Created Successfully!'),
+                            ),
+                          );
+                        } else if (state is FoodError) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Error in making product'),
+                            ),
+                          );
+                        }
+                      },
+                      child: Container(),
+                    ),
                   ],
                 ),
               ),
