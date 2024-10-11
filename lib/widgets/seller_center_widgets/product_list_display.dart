@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:upang_eat/models/food_model.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/food_card.dart';
 
 class ProductListDisplay extends StatefulWidget {
-  // insert map of food
-  // turn each map item into food card
 
-  const ProductListDisplay({super.key});
+  final List<FoodModel> foods;
+
+  const ProductListDisplay({super.key, required this.foods});
 
   @override
   State<ProductListDisplay> createState() => _ProductListDisplayState();
@@ -28,11 +29,11 @@ class _ProductListDisplayState extends State<ProductListDisplay> {
                 maxHeight: 500,
               ),
               child: ListView.builder(
-                itemCount: 4,
+                itemCount: widget.foods.length,
                 itemBuilder: (context, index) {
-                  return const FoodCard(
-                    foodName: '213',
-                    foodPrice: 32,
+                  final food = widget.foods[index];
+                  return FoodCard(
+                    food: food,
                   );
                 },
               ),
