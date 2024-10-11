@@ -33,3 +33,30 @@ class LoadFoodByStallId extends FoodEvent {
 }
 
 class ResetFoodState extends FoodEvent {}
+
+class CreateFood extends FoodEvent {
+  final FoodModel food;
+
+  const CreateFood({required this.food});
+
+  @override
+  List<Object?> get props => [food];
+}
+
+class UpdateFood extends FoodEvent {
+  final int id;
+  final FoodModel food;
+
+  const UpdateFood({required this.id, required this.food});
+
+  @override
+  List<Object?> get props => [id, food];
+}
+
+class DeleteFood extends FoodEvent {
+  final int id;
+  const DeleteFood(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}

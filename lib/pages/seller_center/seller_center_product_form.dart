@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 // TODO: implement image input
 import 'package:flutter/material.dart';
+import 'package:upang_eat/models/food_model.dart';
 
 class SellerCenterProductForm extends StatefulWidget {
   final int stallId;
