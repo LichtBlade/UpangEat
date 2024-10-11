@@ -1,18 +1,18 @@
+import '../main.dart';
 import 'auth_repository.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class AuthRepositoryImpl implements AuthRepository {
-  final String baseUrl;
+class AuthRepositoryImpl extends AuthRepository {
+  final String baseUrl = IpAddress.ipAddress;
 
-  AuthRepositoryImpl({required this.baseUrl});
 
 @override
   Future<String> authenticate({required String email, required String password}) async {
     print('Authenticating with email: $email, password: $password');
 
         final response = await http.post(
-        Uri.parse('http://localhost:3000/login'),
+        Uri.parse('$baseUrl/login'),
          headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

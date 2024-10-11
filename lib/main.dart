@@ -15,6 +15,7 @@ import 'package:upang_eat/repositories/order_repository_impl.dart';
 import 'package:upang_eat/repositories/stall_repository_impl.dart';
 import 'package:upang_eat/repositories/transaction_repository_impl.dart';
 import 'package:upang_eat/repositories/tray_repository_impl.dart';
+import 'package:upang_eat/pages/user_login.dart';
 import 'Pages/home.dart';
 import 'bloc/login_bloc/login_bloc.dart';
 import 'bloc/tray_bloc/tray_bloc.dart';
@@ -40,11 +41,8 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<LoginBloc>(
-          create: (context) => LoginBloc(
-              authRepository:
-                  AuthRepositoryImpl(baseUrl: 'http://localhost:3000')),
+          create: (context) => LoginBloc(AuthRepositoryImpl()),
         ),
-
         BlocProvider<AdminBloc>(
           create: (context) => AdminBloc(AdminRepositoryImpl()),
         ),
@@ -70,11 +68,8 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         title: "Upang Eat",
         debugShowCheckedModeBanner: false,
-        home: const SellerCenter(),
-        theme: ThemeData(
-            scaffoldBackgroundColor: const Color(0xFFF8F8F8),
-            cardTheme: const CardTheme(color: Colors.white),
-            appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
+        home: const UserLogin(),
+        theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFF8F8F8), cardTheme: const CardTheme(color: Colors.white), appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
       ),
     );
   }

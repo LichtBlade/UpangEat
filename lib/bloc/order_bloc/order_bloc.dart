@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:upang_eat/bloc/tray_bloc/tray_bloc.dart';
 
 import '../../models/order_model.dart';
 import '../../repositories/order_repository.dart';
