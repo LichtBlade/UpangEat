@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:upang_eat/bloc/create_user/create_user_bloc.dart';
+import 'package:upang_eat/repositories/user_repository_impl.dart';
 import 'package:upang_eat/widgets/form_widgets/create_form_input_field.dart';
+
+class IpAddress {
+  static String get ipAddress => "http://192.168.100.203:3000";
+}
 
 class UserFormCard extends StatefulWidget {
   const UserFormCard({super.key});
@@ -11,116 +18,186 @@ class UserFormCard extends StatefulWidget {
 class _UserFormCardState extends State<UserFormCard> {
   final _formKey = GlobalKey<FormState>();
 
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _studentIdController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _mobileController = TextEditingController();
+
+  String? _selectedUserType;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        child: Card(
-          margin: const EdgeInsets.all(8.0),
-          elevation: 4,
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 18.0),
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Flexible(
-                flex: 1,
-                fit: FlexFit.tight,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                  child: Column(
-                    children: [
-                      const CreateFormInputField(
-                        title: 'First name',
-                      ),
-                      const CreateFormInputField(
-                        title: 'Last Name',
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8.0, left: 16.0, right: 16.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(14.0)),
-                            labelText: 'Student ID',
-                            hintStyle: const TextStyle(fontWeight: FontWeight.w300),
-                            hintText: '03-2223-******',
-                          ),
-                        ),
-                      ),
-                    ],
+    return BlocProvider(
+      create: (context) => CreateUserBloc(
+        UserRepositoryImpl(baseUrl: IpAddress.ipAddress),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 10.0, bottom: 18.0),
+                  child: Text(
+                    'Create User',
+                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                   ),
                 ),
-              ),
-              Flexible(
-                flex: 1,
-                fit: FlexFit.tight,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8.0, left: 16.0, right: 16.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14.0)),
-                              labelText: 'Email',
-                              prefixIcon: const Icon(Icons.email),
-                              hintStyle: const TextStyle(fontWeight: FontWeight.w300),
-                              hintText: 'joan.collins.up@phinmaed.com'),
-                        ),
+                CreateFormInputField(
+                  title: 'First name',
+                  controller: _firstNameController,
+                ),
+                CreateFormInputField(
+                  title: 'Last Name',
+                  controller: _lastNameController,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextFormField(
+                    controller: _studentIdController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14.0),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8.0, left: 16.0, right: 16.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14.0)),
-                              labelText: 'Password',
-                              suffixIcon: const Icon(Icons.visibility),
-                              hintStyle:
-                                  const TextStyle(fontWeight: FontWeight.w300)),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8.0, left: 16.0, right: 16.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14.0)),
-                              labelText: 'Mobile #',
-                              prefixIcon: const Icon(Icons.phone),
-                              hintStyle: const TextStyle(fontWeight: FontWeight.w300),
-                              hintText: '+63 9**-***-****'),
-                        ),
-                      ),
-                    ],
+                      labelText: 'Student ID',
+                      hintStyle: const TextStyle(fontWeight: FontWeight.w300),
+                      hintText: '03-2223-******',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a valid Student ID';
+                      }
+                      return null;
+                    },
                   ),
                 ),
-              ),
-              Flexible(
-                flex: 1,
-                fit: FlexFit.loose,
-                child: Row(
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14.0),
+                      ),
+                      labelText: 'Email',
+                      prefixIcon: const Icon(Icons.email),
+                      hintStyle: const TextStyle(fontWeight: FontWeight.w300),
+                      hintText: 'john.doe@example.com',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty || !value.contains('@')) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14.0),
+                      ),
+                      labelText: 'Password',
+                      suffixIcon: const Icon(Icons.visibility),
+                      hintStyle: const TextStyle(fontWeight: FontWeight.w300),
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty || value.length < 6) {
+                        return 'Password must be at least 6 characters';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextFormField(
+                    controller: _mobileController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14.0),
+                      ),
+                      labelText: 'Mobile #',
+                      prefixIcon: const Icon(Icons.phone),
+                      hintStyle: const TextStyle(fontWeight: FontWeight.w300),
+                      hintText: '+63 9**-***-****',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty || value.length < 10) {
+                        return 'Please enter a valid mobile number';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: DropdownButtonFormField<String>(
+                    value: _selectedUserType,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14.0),
+                      ),
+                      labelText: 'User Type',
+                    ),
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'admin',
+                        child: Text('Admin'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'user',
+                        child: Text('User'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'stall_owner',
+                        child: Text('Stall Owner'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedUserType = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a user type';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(22.0),
                       child: FilledButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<CreateUserBloc>().add(
+                              SubmitUserFormEvent(
+                                firstName: _firstNameController.text.trim(),
+                                lastName: _lastNameController.text.trim(),
+                                studentId: _studentIdController.text.trim(),
+                                email: _emailController.text.trim(),
+                                password: _passwordController.text.trim(),
+                                mobile: _mobileController.text.trim(),
+                                userType: _selectedUserType!,
+                              ),
+                            );
+                          }
+                        },
                         style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
+                          backgroundColor: MaterialStatePropertyAll(
                             Color.fromARGB(255, 255, 169, 186),
                           ),
                         ),
@@ -129,8 +206,8 @@ class _UserFormCardState extends State<UserFormCard> {
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

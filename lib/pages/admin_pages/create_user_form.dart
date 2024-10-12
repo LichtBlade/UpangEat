@@ -30,7 +30,7 @@ class _CreateUserFormState extends State<CreateUserForm> {
   Widget labelText(String title) {
     return Text(
       title,
-      style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+      style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
     );
   }
 }

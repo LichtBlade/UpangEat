@@ -19,6 +19,8 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
       await adminRepository.createStall(
         stallName: event.stallName,
         description: event.description,
+        ownerId: event.ownerId, 
+        contactNo: event.contactNo, 
       );
       emit(AdminSuccess());
     } catch (e) {
