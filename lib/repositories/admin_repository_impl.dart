@@ -32,13 +32,15 @@ class AdminRepositoryImpl implements AdminRepository {
   }
 
   @override
-  Future<void> createStall({required stallName, String? description}) async {
+  Future<void> createStall({required stallName, String? description, required String ownerId, required String contactNo,}) async {
     final response = await http.post(
       Uri.parse('$baseUrl/stalls'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'stall_name': stallName,
         'description': description ?? '',
+        'owner_id': ownerId,
+        'contact_number': contactNo 
       }),
     );
 

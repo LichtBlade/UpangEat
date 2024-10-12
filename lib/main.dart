@@ -8,6 +8,7 @@ import 'package:upang_eat/Pages/wallet.dart';
 import 'package:upang_eat/Widgets/custom_drawer.dart';
 import 'package:upang_eat/bloc/admin_bloc/admin_bloc.dart';
 import 'package:upang_eat/bloc/category_bloc/category_bloc.dart';
+import 'package:upang_eat/bloc/create_user/create_user_bloc.dart';
 import 'package:upang_eat/bloc/food_bloc/food_bloc.dart';
 import 'package:upang_eat/bloc/stall_bloc/stall_bloc.dart';
 import 'package:upang_eat/bloc/transaction_bloc/transaction_bloc.dart';
@@ -20,6 +21,7 @@ import 'package:upang_eat/repositories/food_repository_impl.dart';
 import 'package:upang_eat/repositories/stall_repository_impl.dart';
 import 'package:upang_eat/repositories/transaction_repository_impl.dart';
 import 'package:upang_eat/repositories/tray_repository_impl.dart';
+import 'package:upang_eat/repositories/user_repository_impl.dart';
 import 'package:upang_eat/widgets/custom_app_bar.dart';
 import 'package:upang_eat/widgets/user_login.dart';
 
@@ -32,12 +34,7 @@ import 'pages/admin_pages/create_stall_form.dart';
 import 'pages/admin_pages/create_user_form.dart';
 
 void main() {
-  //revert to runApp(const MyApp()) before merging with main
-  //runApp(const MyApp());
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: SellerCenter(),
-  ));
+  runApp(const MyApp());
 }
 
 class IpAddress {
@@ -65,6 +62,12 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<AdminBloc>(
           create: (context) => AdminBloc(AdminRepositoryImpl()),
         ),
+      //create_user
+        BlocProvider<CreateUserBloc>(
+          create: (context) => CreateUserBloc(
+            UserRepositoryImpl(baseUrl: IpAddress.ipAddress),
+          ),
+        ),
         BlocProvider<StallBloc>(
           create: (context) => StallBloc(StallRepositoryImpl()),
         ),
@@ -88,19 +91,15 @@ class _MyAppState extends State<MyApp> {
             scaffoldBackgroundColor: const Color(0xFFF8F8F8),
             cardTheme: const CardTheme(color: Colors.white),
             appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
-
         //temporary for testing, uncomment if done
         // home: const Home(),
         
         //test for admin
-        // home: const Dashboard(),
+        home: const AdminDashboard(),
 
         //test for login
-//         home: LoginPage(),
+        // home: LoginPage(),
 
-
-
-        home: const Home(),
 
       ),
     );
