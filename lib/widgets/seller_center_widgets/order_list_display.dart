@@ -34,7 +34,7 @@ class _OrderListDisplayState extends State<OrderListDisplay> {
               child: ListView.builder(
                 itemCount: widget.items.length,
                 itemBuilder: (context, index) {
-                  return const OrderList();
+                  return const Center();
                 },
               ),
             )

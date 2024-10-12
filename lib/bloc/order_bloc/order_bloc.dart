@@ -34,5 +34,27 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         emit(OrderError(error.toString()));
       }
     });
+
+    on<StallFetchOrder>((event, emit) async {
+      emit(OrderLoading());
+      try {
+        final orders = await _orderRepository.fetchOrdersByStallId(event.id);
+        emit (OrderLoaded(orders));
+      } catch (error) {
+        emit(OrderError(error.toString()));
+      }
+    });
+
+    on<UpdateOrder>((event, emit) async {
+      emit(OrderLoading());
+      try {
+        await _orderRepository.updateOrders(event.orderId, event.status);
+
+        final orders = await _orderRepository.fetchOrdersByStallId(event.stallId);
+        emit (OrderLoaded(orders));
+      } catch (error) {
+        emit(OrderError(error.toString()));
+      }
+    });
   }
 }

@@ -13,8 +13,9 @@ class SellerCenterProductForm extends StatefulWidget {
 
   const SellerCenterProductForm({
     super.key,
-    required this.stallId, this.isUpdate = false, this.food,
+    required this.stallId, this.isUpdate = false, this.food = const FoodModel(foodItemId: 0, stallId: 0, itemName: "", price: 0, isAvailable: true, isBreakfast: false, isLunch: false, isMerienda: true, imageUrl: "", description: "", stallName: "", trayId: 0, trayQuantity: 0),
   });
+
 
   @override
   State<SellerCenterProductForm> createState() =>
@@ -33,9 +34,15 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
   bool _isActive = false;
 
   @override
+  void initState() {
+    _isActive = widget.food?.isAvailable ?? true;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print(widget.food);
-    print(widget.isUpdate);
+    print("Food: ${widget.food}");
+    print("IsUpdate: ${widget.isUpdate}");
     _itemName.text = widget.food!.itemName;
     _description.text = widget.food!.description!;
     _price.text = widget.food!.price.toString();

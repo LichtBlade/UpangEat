@@ -16,12 +16,10 @@ class FoodCard extends StatefulWidget {
 }
 
 class _FoodCardState extends State<FoodCard> {
-  late bool _isActive;
 
   @override
   void initState() {
     super.initState();
-    _isActive = widget.food.isAvailable;
   }
 
   @override
@@ -35,8 +33,8 @@ class _FoodCardState extends State<FoodCard> {
             ClipRRect(
               borderRadius: BorderRadius.circular(14.0),
               child: SizedBox(
-                height: 70,
-                width: 70,
+                height: 80,
+                width: 80,
                 child: Image.asset(widget.food.imageUrl != null
                     ? 'assets/foods/1_1.jpg'
                     : '${widget.food.imageUrl}', fit: BoxFit.cover,),
@@ -50,13 +48,16 @@ class _FoodCardState extends State<FoodCard> {
                   Column(
                     crossAxisAlignment:  CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.food.itemName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
+                      SizedBox(
+                        width: 100,
+                        child: Text(
+                          widget.food.itemName,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700),
+                        ),
                       ),
                       Text(
                         '₱${widget.food.price}',
@@ -66,31 +67,36 @@ class _FoodCardState extends State<FoodCard> {
                       )
                     ],
                   ),
-                  PopupMenuButton(
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SellerCenterProductForm(
-                              stallId: widget.food.stallId, isUpdate: true, food: widget.food,
+                  Row(
+                    children: [
+                      Text(widget.food.isAvailable ? "Available" : "Unavailable", style: TextStyle(color: widget.food.isAvailable ? Colors.green : Colors.black26), overflow: TextOverflow.ellipsis, maxLines: 1,),
+                      PopupMenuButton(
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SellerCenterProductForm(
+                                  stallId: widget.food.stallId, isUpdate: true, food: widget.food,
+                                ),
+                              ),
+                            ),
+                            child: const ListTile(
+                              leading: Icon(Icons.edit),
+                              title: Text('Edit'),
                             ),
                           ),
-                        ),
-                        child: const ListTile(
-                          leading: Icon(Icons.edit),
-                          title: Text('Edit'),
-                        ),
-                      ),
-                      PopupMenuItem(
-                        onTap: () => context.read<FoodBloc>().add(DeleteFood(widget.food.foodItemId, widget.food.stallId)),
-                        child: const ListTile(
-                          leading: Icon(
-                            Icons.delete,
-                            color: Colors.red,
+                          PopupMenuItem(
+                            onTap: () => context.read<FoodBloc>().add(DeleteFood(widget.food.foodItemId, widget.food.stallId)),
+                            child: const ListTile(
+                              leading: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              title: Text('Delete'),
+                            ),
                           ),
-                          title: Text('Delete'),
-                        ),
+                        ],
                       ),
                     ],
                   )
@@ -120,55 +126,5 @@ class _FoodCardState extends State<FoodCard> {
       ),
     );
 
-      return ListTile(
-      leading: SizedBox(
-        height: 75,
-        width: 75,
-        child: Image.asset(widget.food.imageUrl != null
-            ? 'assets/foods/1_1.jpg'
-            : '${widget.food.imageUrl}'),
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            widget.food.itemName,
-            style: TextStyle(
-                fontSize: widget.food.itemName.length <= 16 ? 16 : 10, // resize based on text length
-                fontWeight: FontWeight.bold),
-          ),
-          Switch(
-              value: _isActive,
-              onChanged: (bool value) {
-                setState(() {
-                  _isActive = value;
-                });
-              })
-        ],
-      ),
-      subtitle: Text(
-        '₱${widget.food.price}',
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-      ),
-      trailing: PopupMenuButton(
-        itemBuilder: (context) => [
-          const PopupMenuItem(
-            child: ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Edit'),
-            ),
-          ),
-          const PopupMenuItem(
-            child: ListTile(
-              leading: Icon(
-                Icons.delete,
-                color: Colors.red,
-              ),
-              title: Text('Delete'),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

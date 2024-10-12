@@ -35,8 +35,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
 
-    context.read<LoginBloc>().add(LoadUserData());
-    print(globalUserData);
+    context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
     context.read<StallBloc>().add(LoadStalls());
     context.read<FoodBloc>().add(LoadFood());
     context.read<CategoryBloc>().add(LoadCategory());
@@ -46,61 +45,51 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginBloc, LoginState>(
-  listener: (context, state) {
-    if (state is UserLoaded){
-      globalUserData = state.user;
-      print(globalUserData);
-
-      context.read<OrderBloc>().add(UserFetchOrder(state.user.userId));
-    }
-  },
-  child: BlocProvider(
-      create: (context) => FoodBloc(FoodRepositoryImpl())..add(LoadFood()),
-      child: Scaffold(
-        appBar: _HomeAppBar(),
-        drawer: const CustomDrawer(),
-        floatingActionButton: const _FloatingActionBar(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        body: RefreshIndicator(
-          onRefresh: () async {
-            context.read<StallBloc>().add(LoadStalls());
-            context.read<CategoryBloc>().add(LoadCategory());
-          },
-          child: CustomScrollView(
-            slivers: [
-              // const SliverToBoxAdapter(
-              //   child: _HomeSearchBar(),
-              // ),
-              const SliverToBoxAdapter(
-                child: _Header(title: "Categories"),
-              ),
-              SliverToBoxAdapter(
-                child: _CategoriesHorizontalList(),
-              ),
-              const SliverToBoxAdapter(
-                child: _Header(
-                  title: "Stalls",
-                  isHaveMore: true,
-                  bottomPadding: 0,
+    return BlocProvider(
+        create: (context) => FoodBloc(FoodRepositoryImpl())..add(LoadFood()),
+        child: Scaffold(
+          appBar: _HomeAppBar(),
+          drawer: const CustomDrawer(),
+          floatingActionButton: const _FloatingActionBar(),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          body: RefreshIndicator(
+            onRefresh: () async {
+              context.read<StallBloc>().add(LoadStalls());
+              context.read<CategoryBloc>().add(LoadCategory());
+            },
+            child: CustomScrollView(
+              slivers: [
+                // const SliverToBoxAdapter(
+                //   child: _HomeSearchBar(),
+                // ),
+                const SliverToBoxAdapter(
+                  child: _Header(title: "Categories"),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: _StallCardHorizontalList(),
-              ),
-              const SliverToBoxAdapter(
-                child: Carousel(),
-              ),
-              const SliverToBoxAdapter(
-                child: _Header(title: "Meals"),
-              ),
-              const _MealCardVerticalList()
-            ],
+                SliverToBoxAdapter(
+                  child: _CategoriesHorizontalList(),
+                ),
+                const SliverToBoxAdapter(
+                  child: _Header(
+                    title: "Stalls",
+                    isHaveMore: true,
+                    bottomPadding: 0,
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: _StallCardHorizontalList(),
+                ),
+                const SliverToBoxAdapter(
+                  child: Carousel(),
+                ),
+                const SliverToBoxAdapter(
+                  child: _Header(title: "Meals"),
+                ),
+                const _MealCardVerticalList()
+              ],
+            ),
           ),
         ),
-      ),
-    ),
-);
+      );
   }
 }
 

@@ -46,4 +46,27 @@ class OrderRepositoryImpl extends OrderRepository{
     }
   }
 
+  @override
+  Future<List<OrderModel>> fetchOrdersByStallId(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl/stalls/$id/orders'));
+    if (response.statusCode == 200) {
+      final List<dynamic> orderData = json.decode(response.body);
+      return orderData.map((json) => OrderModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load orders');
+    }
+  }
+
+  @override
+  Future<void> updateOrders(int orderId, String status) async {
+    final response = await http.put(Uri.parse('$baseUrl/orders/$orderId'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({"order_status": status}));
+    print(response.body);
+    print(response.statusCode);
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update orders');
+    }
+  }
+
 }

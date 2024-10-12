@@ -65,14 +65,18 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
                       side: BorderSide.none,
                     ),
                   ),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SellerCenterProductForm(
-                        stallId: widget.stallId,
+                  onPressed: () {
+                    print("StallId: ${widget.stallId}");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            SellerCenterProductForm(
+                              stallId: widget.stallId,
+                            ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

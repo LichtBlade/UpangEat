@@ -2,20 +2,17 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:upang_eat/models/user_model.dart';
 import 'package:upang_eat/pages/seller_center/seller_center_products.dart';
+import 'package:upang_eat/user_data.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/order_list_display.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_btn.dart';
-import '../admin_pages/admin_dashboard.dart';
+import '../../bloc/login_bloc/login_bloc.dart';
+import '../../bloc/order_bloc/order_bloc.dart';
+import '../../widgets/seller_center_widgets/order_list.dart';
 
-enum OrderState { pending, accepted, ready }
-
-
-Map<OrderState, String> valueString = <OrderState, String>{
-  OrderState.pending: 'Pending',
-  OrderState.accepted: 'Accepted',
-  OrderState.ready: 'Ready'
-};
 
 class SellerCenter extends StatefulWidget {
   const SellerCenter({super.key});
@@ -25,133 +22,117 @@ class SellerCenter extends StatefulWidget {
 }
 
 class _SellerCenterState extends State<SellerCenter> {
-  String _selectedValue = 'Pending';
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const SellerCenterAppbar(stallName: 'Food'),
-      body: Stack(children:[
-        Positioned(
-          top: 8,
-          right: 16,
-          left: 16,
-          child: SellerCenterBtn(
-            label: 'Products',
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SellerCenterProducts(stallId: 1,)));
-            },
-          ),
-        ),
-        Positioned(
-          top: 68,
-          right: 8,
-          left: 8,
-          child: CupertinoSegmentedControl(
-            selectedColor: const Color.fromARGB(255, 222, 15, 57),
-            borderColor: Colors.black,
-            children: <String, Widget>{
-              'Pending': Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  'Pending',
-                  style: TextStyle(
-                      color: _selectedValue == 'Pending'
-                          ? Colors.white
-                          : Colors.black),
-                ),
-              ),
-              'Accepted': Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  'Accepted',
-                  style: TextStyle(
-                      color: _selectedValue == 'Accepted'
-                          ? Colors.white
-                          : Colors.black),
-                ),
-              ),
-              'Ready': Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  'Ready',
-                  style: TextStyle(
-                      color: _selectedValue == 'Ready'
-                          ? Colors.white
-                          : Colors.black),
-                ),
-              ),
-            },
-            onValueChanged: (String value) {
-              setState(() {
-                _selectedValue = value;
-              });
-            },
-            groupValue: _selectedValue,
-          ),
-        ),
-        Positioned(top: 128,
-            right: 0,
-            left: 0,
-            bottom:0,
-            child: _selectPage()),
+  UserModel? userData = const UserModel(userId: 0, firstName: "firstName", lastName: "lastName", email: "email");
+  String _selectedValue = 'pending';
 
-      ]),
-    );
+
+  @override
+  void initState() {
+    context.read<LoginBloc>().add(LoadUserData());
+    print("Stall IDD: ${globalUserData?.stallId}");
+    super.initState();
   }
 
-  Widget _selectPage() {
-    //placeholder
-    List<Map<String, dynamic>> orderItems = [
-      {
-        'image': 'assets/foods/1_1.jpg',
-        'productName': 'Meant',
-        'price': 400,
-        'quantity': 2
-      },
-      {
-        'image': 'assets/foods/1_1.jpg',
-        'productName': 'Sisid',
-        'price': 400,
-        'quantity': 3
-      },
-      {
-        'image': 'assets/foods/1_1.jpg',
-        'productName': 'Stick',
-        'price': 400,
-        'quantity': 1
-      },
-    ];
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<LoginBloc, LoginState>(
+      listener: (context, state) {
+        if (state is UserLoaded) {
+          print("UserLoaded");
+          print(globalUserData);
+          userData = globalUserData;
+          context.read<OrderBloc>().add(StallFetchOrder(globalUserData?.stallId ?? 0));
 
-    switch (_selectedValue) {
-      case 'Pending':
-        // return const Text('data');
-        return OrderListDisplay(
-          items: orderItems,
-        );
-
-      case 'Accepted':
-        // return const Text('data');
-        return OrderListDisplay(
-          items: orderItems,
-        );
-      case 'Ready':
-        // return const Text('data');
-        return OrderListDisplay(
-          items: orderItems,
-        );
-
-      default:
-        return Container(
-          color: Colors.grey,
-          alignment: Alignment.center,
-          child: const Text(
-            'How?',
-            style: TextStyle(fontSize: 14),
+        }
+      },
+      child: Scaffold(
+        appBar: SellerCenterAppbar(stallName: globalUserData?.stallName ?? ""),
+        body: Stack(children: [
+          Positioned(
+            top: 8,
+            right: 16,
+            left: 16,
+            child: SellerCenterBtn(
+              label: 'Products',
+              onPressed: () {
+                print("User Data: $userData");
+                print("Stall ID: ${userData?.stallId}");
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SellerCenterProducts(stallId: userData?.stallId ?? 0,)));
+              },
+            ),
           ),
-        );
-    }
+          Positioned(
+            top: 68,
+            right: 8,
+            left: 8,
+            child: CupertinoSegmentedControl(
+              children: const {
+                "pending": Text("Pending"),
+                "accepted": Text("Accepted"),
+                "ready": Text("Ready"),
+              },
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              borderColor: const Color.fromARGB(255, 222, 25, 67),
+              selectedColor: const Color.fromARGB(255, 222, 25, 67),
+              onValueChanged: (value) {
+                setState(() {
+                  _selectedValue = value;
+                });
+              },
+              groupValue: _selectedValue,
+            ),
+          ),
+          Positioned(top: 128,
+              right: 0,
+              left: 0,
+              bottom: 0,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: BlocBuilder<OrderBloc, OrderState>(
+                  builder: (context, state) {
+                                
+                    if (state is OrderLoading){
+                      print("Order Loading");
+                      return const Center(child: CircularProgressIndicator(),);
+                    } else if (state is OrderLoaded){
+                      final orders = state.order;
+                                
+                      final filteredOrders = orders.where((order) => order.orderStatus == _selectedValue).toList();
+                      print("Order Loaded: $orders");
+                      return Column(
+                        children: [
+                          Card.filled(child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text("Orders:", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),), Text("${filteredOrders.length}", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),)],),
+                          ),),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: filteredOrders.length,
+                              itemBuilder: (context, index) {
+                                final order = filteredOrders[index];
+                                return OrderList(order: order,);
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    } else if (state is OrderError){
+                      return Text("Error: ${state.message}");
+                    } else {
+                      return const Text("Unexpected state}");
+                                
+                    }
+                                
+                                
+                  },
+                ),
+              )),
+
+        ]),
+      ),
+    );
   }
 }

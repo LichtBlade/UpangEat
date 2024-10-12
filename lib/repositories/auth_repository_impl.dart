@@ -17,11 +17,12 @@ class AuthRepositoryImpl extends AuthRepository {
          headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}), // Ensure correct encoding
        );
-
+    print(response);
     print('API Response: ${response.statusCode} - ${response.body}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> userData = json.decode(response.body);
+        print(userData);
         return UserModel.fromJson(userData);
           } else {
         throw Exception('Failed to authenticate');

@@ -18,8 +18,6 @@ import 'package:upang_eat/repositories/transaction_repository_impl.dart';
 import 'package:upang_eat/repositories/tray_repository_impl.dart';
 
 import 'package:upang_eat/repositories/user_repository_impl.dart';
-import 'package:upang_eat/widgets/custom_app_bar.dart';
-import 'package:upang_eat/widgets/user_login.dart';
 
 
 import 'package:upang_eat/pages/user_login.dart';
@@ -44,6 +42,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -91,7 +93,7 @@ class _MyAppState extends State<MyApp> {
         // home: const Home(),
         
         //test for admin
-        home: const AdminDashboard(),
+        home: const Home(),
 
         //test for login
         // home: LoginPage(),

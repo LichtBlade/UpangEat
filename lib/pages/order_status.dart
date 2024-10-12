@@ -26,10 +26,10 @@ class _OrderStatusState extends State<OrderStatus> {
             final Color color = switch(order.orderStatus){
               "pending" => Colors.grey,
             "accepted" => Colors.blue,
-            "ready" => Colors.lightGreenAccent,
+            "ready" => Colors.green,
             "completed" => Colors.green,
             "refunded" => Colors.red,
-              _ => Colors.green
+              _ => Colors.black
             };
 
             return Card.filled(
@@ -47,22 +47,19 @@ class _OrderStatusState extends State<OrderStatus> {
                     ]),
                     Column(
                       children: [
-                        SizedBox(
-                          height: 120,
-                          child: ListView.builder(
-                              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                              scrollDirection: Axis.vertical,
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: order.items.length,
-                              itemBuilder: (context, index) {
-                                final item = order.items[index];
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Text("${item.quantity}x ${item.itemName}"), Text("₱ ${item.subtotal}")],
-                                );
-                              }),
-                        ),
+                        ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                            scrollDirection: Axis.vertical,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: order.items.length,
+                            itemBuilder: (context, index) {
+                              final item = order.items[index];
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [Text("${item.quantity}x ${item.itemName}"), Text("₱ ${item.subtotal}")],
+                              );
+                            }),
                         const SizedBox(
                           height: 18,
                         ),

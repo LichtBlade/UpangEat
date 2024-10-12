@@ -24,3 +24,26 @@ class UserFetchOrder extends OrderEvent {
   @override
   List<Object> get props => [id];
 }
+
+class StallFetchOrder extends OrderEvent {
+  final int id;
+  const StallFetchOrder(this.id);
+
+
+  @override
+  List<Object> get props => [id];
+}
+
+class UpdateOrder extends OrderEvent {
+  final int orderId;
+  final int stallId;
+  final String status;
+  const UpdateOrder(this.orderId, this.stallId, this.status);
+
+
+  @override
+  List<Object> get props => [orderId ,stallId,status];
+}
+
+
+

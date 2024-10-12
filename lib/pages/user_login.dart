@@ -22,7 +22,9 @@ class _UserLoginState extends State<UserLogin> {
 
   @override
   void initState() {
-    context.read<LoginBloc>().add(LoadUserData());
+    context.read<LoginBloc>().add(RemoveUserData());
+
+
     super.initState();
   }
 
@@ -41,8 +43,10 @@ class _UserLoginState extends State<UserLogin> {
               print(globalUserData);
             }
             if (state is LoginLoading) {
+              print("Loading");
               isLoading = true;
             } else if (state is LoginSuccess) {
+              print("Success");
               isLoading = false;
               if (state.userType == 'admin') {
                 Navigator.of(context).pushReplacement(
@@ -58,16 +62,15 @@ class _UserLoginState extends State<UserLogin> {
                 );
               }
             } else if (state is LoginFailed) {
+              print(state.error);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Login Failed: ${state.error}')),
               );
             }
 
           },
-          child: SizedBox(
-            // width: double.infinity,
-            // height: double.infinity,
-            child: Column(
+          child: Stack(
+            children: [Column(
               children: [
                 const Image(
                   image: AssetImage("assets/slazzer-edit-image.png"),
@@ -131,19 +134,21 @@ class _UserLoginState extends State<UserLogin> {
                     ],
                   ),
                 ),
-                isLoading ? Positioned(
-                  bottom: 0,
-                  right: 0,
-                  left: 0,
-                  top: 0,
-                  child: Container(
-                      color: Colors.black54,
-                      child: const Center(child: CircularProgressIndicator())
-                  ),
-                ): const SizedBox.shrink(),
+
 
               ],
             ),
+              isLoading ? Positioned(
+                bottom: 0,
+                right: 0,
+                left: 0,
+                top: 0,
+                child: Container(
+                    color: Colors.black54,
+                    child: const Center(child: CircularProgressIndicator())
+                ),
+              ): const SizedBox.shrink(),
+            ],
           ),
         ),
       ),
