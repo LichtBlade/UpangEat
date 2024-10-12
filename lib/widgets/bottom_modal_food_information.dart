@@ -10,15 +10,18 @@ import 'package:upang_eat/models/food_model.dart';
 import 'package:upang_eat/models/tray_model.dart';
 import 'package:upang_eat/repositories/stall_repository.dart';
 import 'package:upang_eat/repositories/stall_repository_impl.dart';
+import 'package:upang_eat/user_data.dart';
 
 import '../Pages/stall_information.dart';
 import '../bloc/food_bloc/food_bloc.dart';
+import '../pages/tray.dart';
 
 class BottomModalFoodInformation extends StatefulWidget {
   final FoodModel food;
   final bool isOnHome;
+  final bool? isOnTray;
   const BottomModalFoodInformation(
-      {super.key, required this.food, this.isOnHome = false});
+      {super.key, required this.food, this.isOnHome = false, this.isOnTray = false});
 
   @override
   State<BottomModalFoodInformation> createState() =>
@@ -29,7 +32,7 @@ class _BottomModalFoodInformationState
     extends State<BottomModalFoodInformation> {
   int _quantity = 1;
   int _price = 0;
-  int id = 1; //TODO Change
+  int id = globalUserData!.userId;
   bool _isUpdate = false;
   TrayModel _existingTrayItem =
       const TrayModel(trayId: 0, userId: 0, itemId: 0, quantity: 0);
@@ -205,6 +208,7 @@ class _BottomModalFoodInformationState
                                   isUpdate: _isUpdate,
                                   existingTrayItem: _existingTrayItem,
                                   isOnHome: widget.isOnHome,
+                                  isOnTray: widget.isOnTray!,
                                 )
                               ],
                             )),
@@ -299,10 +303,11 @@ class _Price extends StatelessWidget {
   }
 }
 
-class _AddToTrayButton extends StatelessWidget {
+class _AddToTrayButton extends StatefulWidget {
   final FoodModel food;
   final int quantity;
   final bool isUpdate;
+  final bool isOnTray;
   final TrayModel existingTrayItem;
   final bool isOnHome;
   const _AddToTrayButton(
@@ -311,8 +316,13 @@ class _AddToTrayButton extends StatelessWidget {
       required this.quantity,
       required this.isUpdate,
       required this.existingTrayItem,
-      required this.isOnHome});
+      required this.isOnHome, required this.isOnTray});
 
+  @override
+  State<_AddToTrayButton> createState() => _AddToTrayButtonState();
+}
+
+class _AddToTrayButtonState extends State<_AddToTrayButton> {
   @override
   Widget build(BuildContext context) {
     final snackBar = SnackBar(
@@ -324,9 +334,9 @@ class _AddToTrayButton extends StatelessWidget {
           left: 20),
       behavior: SnackBarBehavior.floating,
       content: AwesomeSnackbarContent(
-        title: isUpdate ?"All set!" : "Got It!",
+        title: widget.isUpdate ?"All set!" : "Got It!",
         message:
-        isUpdate ? "We've updated the quantity of ${food.itemName} in your tray." : "Your ${food.itemName} has been added to your tray. Bon appétit!",
+        widget.isUpdate ? "We've updated the quantity of ${widget.food.itemName} in your tray." : "Your ${widget.food.itemName} has been added to your tray. Bon appétit!",
         contentType: ContentType.success,
       ),
       elevation: 0,
@@ -336,7 +346,7 @@ class _AddToTrayButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          if (isUpdate)
+          if (widget.isUpdate)
             OutlinedButton(
                 onPressed: () {
                   showDialog(
@@ -345,11 +355,11 @@ class _AddToTrayButton extends StatelessWidget {
                         return _DeleteDialog(
                             title: "Delete Item",
                             message:
-                                "Are you sure you want to delete ${food.itemName}?",
+                                "Are you sure you want to delete ${widget.food.itemName}?",
                             onDelete: () {
                               context
                                   .read<TrayBloc>()
-                                  .add(DeleteTray(existingTrayItem.trayId));
+                                  .add(DeleteTray(widget.existingTrayItem.trayId));
                             });
                       });
                 },
@@ -372,7 +382,7 @@ class _AddToTrayButton extends StatelessWidget {
                       TextButton(
                         onPressed: () {
                           context.read<TrayBloc>().add(DeleteTrayIds(state.trayIdsToDelete));
-                          context.read<TrayBloc>().add(CreateTray(food.foodItemId, quantity));
+                          context.read<TrayBloc>().add(CreateTray(widget.food.foodItemId, widget.quantity,globalUserData!.userId));
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()
@@ -391,31 +401,42 @@ class _AddToTrayButton extends StatelessWidget {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
                   ..showSnackBar(snackBar);
-                print(isOnHome);
-                isOnHome ? Navigator.push(context, MaterialPageRoute(builder: (context) => StallInformation(stall: state.stall))) : null;
+                print(widget.isOnHome);
+                widget.isOnHome ? Navigator.push(context, MaterialPageRoute(builder: (context) => StallInformation(stall: state.stall))) : null;
               }
             },
             child: FilledButton(
                 onPressed: () async {
-                  if (isUpdate) {
+
+                  if (widget.isUpdate) {
                     context.read<TrayBloc>().add(UpdateTray(
-                        existingTrayItem.trayId,
+                        widget.existingTrayItem.trayId,
                         TrayModel(
-                            trayId: existingTrayItem.trayId,
-                            userId: existingTrayItem.userId,
-                            itemId: existingTrayItem.itemId,
-                            quantity: quantity)));
+                            trayId: widget.existingTrayItem.trayId,
+                            userId: widget.existingTrayItem.userId,
+                            itemId: widget.existingTrayItem.itemId,
+                            quantity: widget.quantity),
+                        globalUserData!.userId
+                    )
+                    );
                     ScaffoldMessenger.of(context)
                       ..hideCurrentSnackBar()
                       ..showSnackBar(snackBar);
+                    if(widget.isOnTray){
+
+                      await Future.delayed(const Duration(milliseconds: 300));
+                      context.read<FoodBloc>().add(const LoadFoodTray(1));
+                    }
                   } else {
+                    print("Food ${widget.food}");
                     context
                         .read<TrayBloc>()
-                        .add(CreateTray(food.foodItemId, quantity));
+                        .add(CreateTray(globalUserData!.userId, widget.food.foodItemId, widget.quantity));
                   }
                   Navigator.pop(context);
+
                 },
-                child: isUpdate
+                child: widget.isUpdate
                     ? const Text("Update Quantity")
                     : const Text("Add To Tray")),
           ),

@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
+import '../../Pages/wallet_pages/wallet.dart';
+
 class SellerCenterAppbar extends StatefulWidget implements PreferredSizeWidget {
   final String stallName;
 
@@ -21,19 +23,25 @@ class _SellerCenterAppbarState extends State<SellerCenterAppbar> {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: const Color.fromARGB(255, 222, 15, 57),
+      centerTitle: true,
       leading: IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Wallet(),
+            ),
+          );
+        },
         icon: const Icon(
           Icons.menu,
           color: Colors.white,
         ),
       ),
-      title: Center(
-        child: Text(
-          widget.stallName,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
+      title: Text(
+        widget.stallName,
+        style: const TextStyle(
+          color: Colors.white,
         ),
       ),
       actions: [
@@ -41,26 +49,16 @@ class _SellerCenterAppbarState extends State<SellerCenterAppbar> {
             iconColor: Colors.white,
             itemBuilder: (context) => [
                   const PopupMenuItem(
-                    child: Row(
-                      children: [
-                        Icon(Icons.cancel),
-                        Divider(
-                          indent: 6,
-                        ),
-                        Text('Canceled'),
-                      ],
-                    ),
+                    child: ListTile(
+                      leading: Icon(Icons.cancel_outlined),
+                      title: Text('Canceled'),
+                    )
                   ),
                   const PopupMenuItem(
-                    child: Row(
-                      children: [
-                        Icon(Icons.check_circle_outline_outlined),
-                        Divider(
-                          indent: 6,
-                        ),
-                        Text('Completed'),
-                      ],
-                    ),
+                    child: ListTile(
+                      leading: Icon(Icons.check_circle_outline_outlined),
+                      title: Text('Completed'),
+                    )
                   ),
                 ])
       ],

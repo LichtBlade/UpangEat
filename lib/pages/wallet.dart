@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:upang_eat/widgets/transaction_card.dart';
+// import 'package:upang_eat/widgets/transaction_card.dart';
 import '../bloc/transaction_bloc/transaction_bloc.dart';
 import 'package:upang_eat/repositories/transaction_repository.dart';
 
@@ -14,8 +14,6 @@ class Wallet extends StatefulWidget {
 
 class _WalletState extends State<Wallet> {
   final coin = "assets/FlameCoin.png";
-
- 
 
   @override
   void initState() {
@@ -72,8 +70,8 @@ class _WalletState extends State<Wallet> {
                                   size: 20,
                                 ),
                                 onPressed: () {
-                                  Clipboard.setData(const ClipboardData(text: "87as46eg54a6cv1"));
-
+                                  Clipboard.setData(const ClipboardData(
+                                      text: "87as46eg54a6cv1"));
                                 },
                               )
                             ],
@@ -97,7 +95,9 @@ class _WalletState extends State<Wallet> {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 12,),
+                          const SizedBox(
+                            width: 12,
+                          ),
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {},
@@ -135,9 +135,9 @@ class _WalletState extends State<Wallet> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       final transaction = state.transactions[index];
-                      return TransactionCard(
-                        transaction: transaction,
-                      );
+                      // return TransactionCard(
+                      //   transaction: transaction,
+                      // );
                     },
                   );
                 } else if (state is TransactionError) {
@@ -154,11 +154,8 @@ class _WalletState extends State<Wallet> {
   }
 }
 
-
 class _Buttons extends StatelessWidget {
   const _Buttons({super.key});
-  
-  
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +173,9 @@ class _Buttons extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 12,),
+          const SizedBox(
+            width: 12,
+          ),
           Expanded(
             child: ElevatedButton(
               onPressed: () {},

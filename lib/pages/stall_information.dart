@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/models/stall_model.dart';
+import 'package:upang_eat/pages/tray.dart';
 import 'package:upang_eat/widgets/meal_card_square.dart';
 
 import '../bloc/food_bloc/food_bloc.dart';
@@ -38,7 +37,7 @@ class _StallInformationState extends State<StallInformation> {
               left: 0,
               right: 0,
               child: Card.outlined(
-                color:  const Color(0xFFF8F8F8),
+                  color:  const Color(0xFFF8F8F8),
                   margin: EdgeInsets.zero,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
@@ -62,12 +61,12 @@ class _StallInformationState extends State<StallInformation> {
                               } else if (state is FoodLoaded) {
                                 final foods = state.foods;
                                 return GridView.builder(
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 8.0,
-                                      mainAxisSpacing: 8.0,
-                                    childAspectRatio: 1/1
-                                  ),
+                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        crossAxisSpacing: 8.0,
+                                        mainAxisSpacing: 8.0,
+                                        childAspectRatio: 1/1
+                                    ),
                                     padding:const EdgeInsets.symmetric(horizontal: 8.0),
                                     physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
@@ -90,31 +89,31 @@ class _StallInformationState extends State<StallInformation> {
                         const SizedBox(height: 4,),
                         BlocBuilder<FoodBloc, FoodState>(
                             builder: (context, state) {
-                          if (state is FoodLoading) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (state is FoodLoaded) {
-                            final foods = state.foods;
-                            return ListView.builder(
-                                padding:
+                              if (state is FoodLoading) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (state is FoodLoaded) {
+                                final foods = state.foods;
+                                return ListView.builder(
+                                    padding:
                                     const EdgeInsets.symmetric(horizontal: 8.0),
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                itemCount: foods.length,
-                                itemBuilder: (context, index) {
-                                  final food = foods[index];
-                                  return HomeMealCard(
-                                    food: food,
-                                    isShowStallName: false,
-                                  );
-                                });
-                          } else if (state is FoodError) {
-                            return Text(state.message);
-                          } else {
-                            return const Text("Unexpected state");
-                          }
-                        }),
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: foods.length,
+                                    itemBuilder: (context, index) {
+                                      final food = foods[index];
+                                      return HomeMealCard(
+                                        food: food,
+                                        isShowStallName: false,
+                                      );
+                                    });
+                              } else if (state is FoodError) {
+                                return Text(state.message);
+                              } else {
+                                return const Text("Unexpected state");
+                              }
+                            }),
                       ],
                     ),
                   ))),
@@ -122,9 +121,17 @@ class _StallInformationState extends State<StallInformation> {
   }
 }
 
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+class _AppBar extends StatefulWidget implements PreferredSizeWidget {
   const _AppBar({super.key});
 
+  @override
+  State<_AppBar> createState() => _AppBarState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _AppBarState extends State<_AppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -137,6 +144,19 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
           Navigator.pop(context);
         },
       ),
+      // actions: [
+      //   IconButton(
+      //       onPressed: () {
+      //         setState(() {
+      //           Navigator.push(context, MaterialPageRoute(builder: (context) => const Tray())).then((value) {
+      //             if (value == true) {
+      //               setState(() {});
+      //             }
+      //           });
+      //         });
+      //       },
+      //       icon: const Icon(Icons.fastfood_outlined, color: Colors.white,))
+      // ],
     );
   }
 
@@ -248,22 +268,22 @@ class _Header extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                  // shadows: [
-                  //   Shadow(
-                  //     offset: Offset(2.0, 2.0),
-                  //     blurRadius: 6.0,
-                  //     color: Colors.grey,
-                  //   ),
-                  // ],
+                // shadows: [
+                //   Shadow(
+                //     offset: Offset(2.0, 2.0),
+                //     blurRadius: 6.0,
+                //     color: Colors.grey,
+                //   ),
+                // ],
                   fontWeight: FontWeight.w500,
                   fontSize: 22),
             )
           ],
         ),
         if (isSubtitle)
-        const Text(
-          "Most ordered right now",
-          style: TextStyle(
+          const Text(
+            "Most ordered right now",
+            style: TextStyle(
               // shadows: [
               //   Shadow(
               //     offset: Offset(2.0, 2.0),
@@ -271,14 +291,11 @@ class _Header extends StatelessWidget {
               //     color: Colors.grey,
               //   ),
               // ],
-              fontWeight: FontWeight.w600,
-              fontSize: 12,
-              color: Color.fromARGB(255, 121, 116, 126)),
-        )
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+                color: Color.fromARGB(255, 121, 116, 126)),
+          )
       ],
     );
   }
 }
-
-
-

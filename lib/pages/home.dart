@@ -4,12 +4,19 @@ import 'package:upang_eat/Pages/stalls.dart';
 import 'package:upang_eat/Widgets/custom_drawer.dart';
 import 'package:upang_eat/fake_data.dart';
 import 'package:upang_eat/pages/category_more.dart';
+import 'package:upang_eat/pages/order_status.dart';
 import 'package:upang_eat/pages/tray.dart';
 import 'package:upang_eat/repositories/food_repository.dart';
+import 'package:upang_eat/repositories/order_repository.dart';
+import 'package:upang_eat/repositories/order_repository_impl.dart';
+import 'package:upang_eat/user_data.dart';
 import 'package:upang_eat/widgets/carousel.dart';
 import '../bloc/category_bloc/category_bloc.dart';
 import '../bloc/food_bloc/food_bloc.dart';
+import '../bloc/login_bloc/login_bloc.dart';
+import '../bloc/order_bloc/order_bloc.dart';
 import '../bloc/stall_bloc/stall_bloc.dart';
+import '../models/order_model.dart';
 import '../repositories/food_repository_impl.dart';
 import '../widgets/category_card.dart';
 import '../widgets/home_meal_card.dart';
@@ -27,19 +34,34 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   void initState() {
+
+    context.read<LoginBloc>().add(LoadUserData());
+    print(globalUserData);
     context.read<StallBloc>().add(LoadStalls());
     context.read<FoodBloc>().add(LoadFood());
     context.read<CategoryBloc>().add(LoadCategory());
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocListener<LoginBloc, LoginState>(
+  listener: (context, state) {
+    if (state is UserLoaded){
+      globalUserData = state.user;
+      print(globalUserData);
+
+      context.read<OrderBloc>().add(UserFetchOrder(state.user.userId));
+    }
+  },
+  child: BlocProvider(
       create: (context) => FoodBloc(FoodRepositoryImpl())..add(LoadFood()),
       child: Scaffold(
         appBar: _HomeAppBar(),
         drawer: const CustomDrawer(),
+        floatingActionButton: const _FloatingActionBar(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: RefreshIndicator(
           onRefresh: () async {
             context.read<StallBloc>().add(LoadStalls());
@@ -47,11 +69,11 @@ class _HomeState extends State<Home> {
           },
           child: CustomScrollView(
             slivers: [
+              // const SliverToBoxAdapter(
+              //   child: _HomeSearchBar(),
+              // ),
               const SliverToBoxAdapter(
-                child: _HomeSearchBar(),
-              ),
-              const SliverToBoxAdapter(
-                child: _Header(title: "Categories", isHaveMore: true),
+                child: _Header(title: "Categories"),
               ),
               SliverToBoxAdapter(
                 child: _CategoriesHorizontalList(),
@@ -77,7 +99,8 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-    );
+    ),
+);
   }
 }
 
@@ -101,12 +124,11 @@ class _HomeAppBarState extends State<_HomeAppBar> {
               IconButton(
                   onPressed: () {
                     setState(() {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Tray())).then((value) {if (value == true) {setState(() {
-
-                              });}});
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Tray(id: globalUserData!.userId,))).then((value) {
+                        if (value == true) {
+                          setState(() {});
+                        }
+                      });
                     });
                   },
                   icon: const Icon(Icons.fastfood_outlined)),
@@ -134,11 +156,7 @@ class _Header extends StatelessWidget {
   final double topPadding;
   final double bottomPadding;
 
-  const _Header(
-      {required this.title,
-      this.isHaveMore = false,
-      this.topPadding = 8,
-      this.bottomPadding = 8});
+  const _Header({required this.title, this.isHaveMore = false, this.topPadding = 8, this.bottomPadding = 8});
 
   @override
   Widget build(BuildContext context) {
@@ -158,13 +176,9 @@ class _Header extends StatelessWidget {
           if (isHaveMore)
             GestureDetector(
               onTap: () {
-                final route = switch (title) {
-                  'Category' => const CategoryMore(),
-                  'Stalls' => const Stalls(),
-                  _ => const CategoryMore()
-                };
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => route));
+                print(globalUserData);
+                final route = switch (title) { 'Category' => const CategoryMore(), 'Stalls' => const Stalls(), _ => const CategoryMore() };
+                Navigator.push(context, MaterialPageRoute(builder: (context) => route));
               },
               child: const Padding(
                 padding: EdgeInsets.only(right: 24.0),
@@ -251,6 +265,45 @@ class _StallCardHorizontalList extends StatelessWidget {
   }
 }
 
+class _FloatingActionBar extends StatefulWidget {
+  const _FloatingActionBar({super.key});
+
+  @override
+  State<_FloatingActionBar> createState() => _FloatingActionBarState();
+}
+
+class _FloatingActionBarState extends State<_FloatingActionBar> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<OrderBloc, OrderState>(
+      builder: (context, state) {
+        if (state is OrderLoading) {
+          print("Order is loading");
+        } else if (state is OrderLoaded) {
+          print("Order is loaded");
+          final List<OrderModel> orders = state.order;
+          return SizedBox(
+            width: 250,
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: orders,)));
+              },
+              extendedIconLabelSpacing: 16.0,
+              icon: const Icon(Icons.my_library_books),
+              label: const Text("Check Order Status", style: TextStyle(fontSize: 16),),
+            ),
+          );
+        } else if (state is OrderError) {
+          print("error: ${state.message}");
+        } else {
+          print("Unexpected state");
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+}
+
 class _MealCardVerticalList extends StatefulWidget {
   const _MealCardVerticalList({super.key});
 
@@ -269,8 +322,7 @@ class _MealCardVerticalListState extends State<_MealCardVerticalList> {
       } else if (state is FoodLoaded) {
         final foods = state.foods;
         return SliverList(
-          delegate: SliverChildBuilderDelegate(childCount: foods.length,
-              (BuildContext context, int index) {
+          delegate: SliverChildBuilderDelegate(childCount: foods.length, (BuildContext context, int index) {
             final food = foods[index];
             return HomeMealCard(
               food: food,
@@ -290,8 +342,7 @@ class _MealCardVerticalListState extends State<_MealCardVerticalList> {
 
 class _CategoriesHorizontalList extends StatefulWidget {
   @override
-  State<_CategoriesHorizontalList> createState() =>
-      _CategoriesHorizontalListState();
+  State<_CategoriesHorizontalList> createState() => _CategoriesHorizontalListState();
 }
 
 class _CategoriesHorizontalListState extends State<_CategoriesHorizontalList> {
@@ -299,8 +350,7 @@ class _CategoriesHorizontalListState extends State<_CategoriesHorizontalList> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 100,
-      child:
-          BlocBuilder<CategoryBloc, CategoryState>(builder: (context, state) {
+      child: BlocBuilder<CategoryBloc, CategoryState>(builder: (context, state) {
         if (state is CategoryLoading) {
           return const SkeletonCategoryCard();
         } else if (state is CategoryLoaded) {
@@ -347,8 +397,7 @@ class SkeletonHomeMealCard extends StatelessWidget {
         child: ListView.builder(
             itemCount: 4,
             itemBuilder: (context, index) {
-              return HomeMealCard(
-                  food: FakeData.fakeFood, isShowStallName: true);
+              return HomeMealCard(food: FakeData.fakeFood, isShowStallName: true);
             }),
       ),
     );

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/Pages/stalls.dart';
-import 'package:upang_eat/Pages/wallet.dart';
 import 'package:upang_eat/bloc/transaction_bloc/transaction_bloc.dart';
 import 'package:upang_eat/repositories/transaction_repository_impl.dart';
+
+import '../Pages/wallet_pages/wallet.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});

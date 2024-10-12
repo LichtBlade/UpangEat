@@ -1,3 +1,5 @@
+import 'package:upang_eat/models/user_model.dart';
+
 abstract class AuthRepository {
-  Future<String> authenticate({required String email, required String password});
+  Future<UserModel> authenticate(String email, String password);
 }

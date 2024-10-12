@@ -11,14 +11,11 @@ import '../admin_pages/admin_dashboard.dart';
 enum OrderState { pending, accepted, ready }
 
 
-
-
 Map<OrderState, String> valueString = <OrderState, String>{
   OrderState.pending: 'Pending',
   OrderState.accepted: 'Accepted',
   OrderState.ready: 'Ready'
 };
-
 
 class SellerCenter extends StatefulWidget {
   const SellerCenter({super.key});
@@ -32,86 +29,76 @@ class _SellerCenterState extends State<SellerCenter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const AdminDashboard())),
-            icon: const Icon(Icons.menu)),
-        title: const Text('Seller Center'),
-        backgroundColor: const Color.fromARGB(255, 255, 169, 186),
-      ),
-
-//       appBar: const SellerCenterAppbar(stallName: 'Food'),
-
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            SellerCenterBtn(
-              label: 'Products',
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SellerCenterProducts()));
-              },
-            ),
-            const Divider(
-              height: 14.0,
-              color: Colors.transparent,
-            ),
-            Column(
-              children: [
-                CupertinoSegmentedControl(
-                  selectedColor: const Color.fromARGB(255, 222, 15, 57),
-                  borderColor: Colors.black,
-                  children: <String, Widget>{
-                    'Pending': Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Pending',
-                        style: TextStyle(
-                            color: _selectedValue == 'Pending'
-                                ? Colors.white
-                                : Colors.black),
-                      ),
-                    ),
-                    'Accepted': Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Accepted',
-                        style: TextStyle(
-                            color: _selectedValue == 'Accepted'
-                                ? Colors.white
-                                : Colors.black),
-                      ),
-                    ),
-                    'Ready': Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Ready',
-                        style: TextStyle(
-                            color: _selectedValue == 'Ready'
-                                ? Colors.white
-                                : Colors.black),
-                      ),
-                    ),
-                  },
-                  onValueChanged: (String value) {
-                    setState(() {
-                      _selectedValue = value;
-                    });
-                  },
-                  groupValue: _selectedValue,
-                ),
-                const SizedBox(height: 12.0),
-                _selectPage()
-              ],
-            )
-          ],
+      appBar: const SellerCenterAppbar(stallName: 'Food'),
+      body: Stack(children:[
+        Positioned(
+          top: 8,
+          right: 16,
+          left: 16,
+          child: SellerCenterBtn(
+            label: 'Products',
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SellerCenterProducts(stallId: 1,)));
+            },
+          ),
         ),
-      ),
+        Positioned(
+          top: 68,
+          right: 8,
+          left: 8,
+          child: CupertinoSegmentedControl(
+            selectedColor: const Color.fromARGB(255, 222, 15, 57),
+            borderColor: Colors.black,
+            children: <String, Widget>{
+              'Pending': Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Pending',
+                  style: TextStyle(
+                      color: _selectedValue == 'Pending'
+                          ? Colors.white
+                          : Colors.black),
+                ),
+              ),
+              'Accepted': Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Accepted',
+                  style: TextStyle(
+                      color: _selectedValue == 'Accepted'
+                          ? Colors.white
+                          : Colors.black),
+                ),
+              ),
+              'Ready': Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Ready',
+                  style: TextStyle(
+                      color: _selectedValue == 'Ready'
+                          ? Colors.white
+                          : Colors.black),
+                ),
+              ),
+            },
+            onValueChanged: (String value) {
+              setState(() {
+                _selectedValue = value;
+              });
+            },
+            groupValue: _selectedValue,
+          ),
+        ),
+        Positioned(top: 128,
+            right: 0,
+            left: 0,
+            bottom:0,
+            child: _selectPage()),
+
+      ]),
     );
   }
 
@@ -140,23 +127,20 @@ class _SellerCenterState extends State<SellerCenter> {
 
     switch (_selectedValue) {
       case 'Pending':
+        // return const Text('data');
         return OrderListDisplay(
           items: orderItems,
-          minHeight: 250,
-          maxHeight: 575,
         );
 
       case 'Accepted':
+        // return const Text('data');
         return OrderListDisplay(
           items: orderItems,
-          minHeight: 250,
-          maxHeight: 575,
         );
       case 'Ready':
+        // return const Text('data');
         return OrderListDisplay(
           items: orderItems,
-          minHeight: 250,
-          maxHeight: 575,
         );
 
       default:

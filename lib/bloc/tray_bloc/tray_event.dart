@@ -16,12 +16,13 @@ class LoadTray extends TrayEvent {
 }
 
 class CreateTray extends TrayEvent{
+  final int userId;
   final int foodItemId;
   final int quantity;
-  const CreateTray(this.foodItemId, this.quantity);
+  const CreateTray(this.userId,this.foodItemId, this.quantity);
 
   @override
-  List<Object> get props => [foodItemId, quantity];
+  List<Object> get props => [userId, foodItemId, quantity];
 }
 
 class DeleteTray extends TrayEvent {
@@ -43,7 +44,8 @@ class DeleteTrayIds extends TrayEvent {
 class UpdateTray extends TrayEvent {
   final TrayModel tray;
   final int id;
-  const UpdateTray(this.id, this.tray);
+  final int userId;
+  const UpdateTray(this.id, this.tray, this.userId);
 
   @override
   List<Object> get props => [id, tray];

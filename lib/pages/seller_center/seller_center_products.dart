@@ -1,11 +1,22 @@
-// TODO: Create stall product list
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 
+// Food displayed here
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:upang_eat/bloc/food_bloc/food_bloc.dart';
 import 'package:upang_eat/pages/seller_center/seller_center_product_form.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/product_list_display.dart';
 
+import '../../widgets/seller_center_widgets/food_card.dart';
+
 class SellerCenterProducts extends StatefulWidget {
-  const SellerCenterProducts({super.key});
+  final int stallId;
+
+  const SellerCenterProducts({
+    super.key,
+    required this.stallId,
+  });
 
   @override
   State<SellerCenterProducts> createState() => _SellerCenterProductsState();
@@ -13,16 +24,21 @@ class SellerCenterProducts extends StatefulWidget {
 
 class _SellerCenterProductsState extends State<SellerCenterProducts> {
   @override
+  void initState() {
+    super.initState();
+    context.read<FoodBloc>().add(LoadFoodByStallId(widget.stallId));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 222, 15, 57),
-        title: const Center(
-          child: Text(
-            'Boss Sisig',
-            style: TextStyle(
-              color: Colors.white,
-            ),
+        title: const Text(
+          'Boss Sisig',
+          style: TextStyle(
+            color: Colors.white,
           ),
         ),
       ),
@@ -30,8 +46,7 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
         children: [
           // Header label and button
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -51,10 +66,13 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
                     ),
                   ),
                   onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const SellerCenterProductForm())),
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SellerCenterProductForm(
+                        stallId: widget.stallId,
+                      ),
+                    ),
+                  ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -64,8 +82,7 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
                       ),
                       Text(
                         'Add Product',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ],
                   ),
@@ -73,8 +90,38 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
               ],
             ),
           ),
-          // List
-          const ProductListDisplay()
+          BlocBuilder<FoodBloc, FoodState>(
+            builder: (context, state) {
+              if (state is FoodLoading) {
+                return const CircularProgressIndicator();
+              } else if (state is FoodLoaded) {
+                final foods = state.foods;
+                return foods.isNotEmpty
+                    ? Expanded(
+                      child: SizedBox(
+                                        width: double.infinity,
+
+                        child: ListView.builder(
+                            itemCount: foods.length,
+                            padding: EdgeInsets.zero,
+                            itemBuilder: (context, index) {
+                              final food = foods[index];
+                              return FoodCard(
+                                food: food,
+                              );
+                            },
+                          ),
+                      ),
+                    )
+                    : const Center(
+                        child: Text('No data'),
+                      );
+              } else if (state is FoodError){
+                print(state.message);
+              }
+              return const Text('Unexpected Data');
+            },
+          ),
         ],
       ),
     );

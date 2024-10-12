@@ -1,17 +1,48 @@
-abstract class LoginState {}
+part of 'login_bloc.dart';
 
-class LoginInitial extends LoginState {}
+sealed class LoginState extends Equatable {
+  const LoginState();
+  @override
+  List<Object> get props => [];
+}
 
-class LoginLoading extends LoginState {}
+final class LoginLoading extends LoginState {}
 
-class LoginSuccess extends LoginState {
+final class LoginSuccess extends LoginState {
   final String userType;
 
-  LoginSuccess({required this.userType});
+  const LoginSuccess(this.userType);
+
+  @override
+  List<Object> get props => [userType];
 }
 
-class LoginFailure extends LoginState {
+final class LoginFailed extends LoginState {
   final String error;
 
-  LoginFailure({required this.error});
+  const LoginFailed(this.error);
+
+  @override
+  List<Object> get props => [error];
 }
+
+final class UserLoading extends LoginState {}
+
+final class UserLoaded extends LoginState {
+  final UserModel user;
+
+  const UserLoaded(this.user);
+
+  @override
+  List<Object> get props => [user];
+}
+
+final class UserFailed extends LoginState {
+  final String error;
+
+  const UserFailed(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
+
