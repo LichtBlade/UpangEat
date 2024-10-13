@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:upang_eat/user_data.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:http/http.dart' as http;
@@ -67,8 +68,7 @@ class SendDialog extends StatelessWidget {
       );
 
       // Private key (use a test key for Ganache or testnets)
-      String privateKey =
-          "0xb92508c3bb483e1f2d48b49f419594fc6d3b8a0f6ee0aa2657a9497d8edc5796";
+      String privateKey = globalPrivateKey;
 
       // Obtain credentials from private key
       Credentials credentials =
