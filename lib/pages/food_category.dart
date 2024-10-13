@@ -42,7 +42,7 @@ class _FoodCategoryState extends State<FoodCategory> {
                   return HomeMealCard(food: food, isShowStallName: true,);
                 })
                 :
-                const Center(child: Text("Wow. So Empty"),);
+                Center(child: Image.asset("assets/mingming.png", ),);
           } else if (state is FoodError) {
 
           } else {
@@ -51,7 +51,6 @@ class _FoodCategoryState extends State<FoodCategory> {
           return const Text("Unexpected state}");
         },
       ),
-      drawer: const CustomDrawer(),
     );
   }
 }

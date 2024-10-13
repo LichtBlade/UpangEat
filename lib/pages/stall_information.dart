@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:upang_eat/bloc/stall_bloc/stall_bloc.dart';
 import 'package:upang_eat/models/stall_model.dart';
 import 'package:upang_eat/pages/tray.dart';
 import 'package:upang_eat/widgets/meal_card_square.dart';
@@ -9,7 +10,8 @@ import '../widgets/home_meal_card.dart';
 
 class StallInformation extends StatefulWidget {
   final Stall stall;
-  const StallInformation({super.key, required this.stall});
+  final bool isFromFoodInfo;
+  const StallInformation({super.key, required this.stall, this.isFromFoodInfo = false});
 
   @override
   State<StallInformation> createState() => _StallInformationState();
@@ -21,6 +23,7 @@ class _StallInformationState extends State<StallInformation> {
     context.read<FoodBloc>().add(LoadFoodByStallId(widget.stall.stallId));
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {

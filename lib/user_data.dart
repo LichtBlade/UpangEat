@@ -1,3 +1,4 @@
+import 'package:upang_eat/models/order_model.dart';
 import 'package:upang_eat/models/user_model.dart';
 
 UserModel? globalUserData;

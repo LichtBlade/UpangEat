@@ -387,7 +387,7 @@ class _FoodBlocBuilder extends StatelessWidget {
                     final food = foods[index];
                     return TrayCard(food: food);
                   })
-              : const Text("Empty");
+              : Center(child: Image.asset("assets/mingming.png", ),);
         } else if (state is FoodError) {
           return Text(state.message);
         } else {

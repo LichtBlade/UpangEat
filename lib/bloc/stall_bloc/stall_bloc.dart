@@ -19,5 +19,15 @@ class StallBloc extends Bloc<StallEvent, StallState> {
         emit (StallError(e.toString()));
       }
     });
+
+    on<LoadSingleStall>((event, emit) async {
+      emit(StallLoading());
+      try{
+        final stall = await _stallRepository.fetchStallById(event.id);
+        emit (SingleStallLoaded(stall));
+      } catch (e){
+        emit (StallError(e.toString()));
+      }
+    });
   }
 }

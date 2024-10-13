@@ -18,6 +18,14 @@ class StallLoaded extends StallState {
   List<Object> get props => [stalls];
 }
 
+class SingleStallLoaded extends StallState {
+  final Stall stall;
+
+  const SingleStallLoaded(this.stall);
+  @override
+  List<Object> get props => [stall];
+}
+
 class StallError extends StallState {
   final String message;
 
