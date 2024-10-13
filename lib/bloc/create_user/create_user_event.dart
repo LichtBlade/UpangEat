@@ -7,6 +7,8 @@ abstract class CreateUserEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class CreateUserLoadDataEvent extends CreateUserEvent {}
+
 class SubmitUserFormEvent extends CreateUserEvent {
   final String firstName;
   final String lastName;

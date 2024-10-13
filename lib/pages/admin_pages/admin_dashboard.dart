@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:upang_eat/pages/admin_pages/create_stall_form.dart';
 import 'package:upang_eat/pages/admin_pages/create_user_form.dart';
 import 'package:upang_eat/pages/admin_pages/stall_data_display_list.dart';
+import 'package:upang_eat/pages/admin_pages/user_data_display.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -153,7 +154,10 @@ class _DashboardState extends State<AdminDashboard> {
                       child: Row(
                         children: <Widget>[
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const UserDataDisplay())),
                             child: const Text('See All Users'),
                           ),
                         ],

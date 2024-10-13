@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:upang_eat/bloc/login_bloc/login_bloc.dart';
+import 'package:upang_eat/bloc/stall_bloc/stall_bloc.dart';
+import 'package:upang_eat/models/user_model.dart';
 import 'package:upang_eat/repositories/user_repository.dart';
 
 part 'create_user_event.dart';
@@ -9,6 +12,8 @@ class CreateUserBloc extends Bloc<CreateUserEvent, CreateUserState> {
   final UserRepository userRepository;
 
   CreateUserBloc(this.userRepository) : super(CreateUserInitial()) {
+    on<CreateUserLoadDataEvent>(_onUserLoadDataEvent);
+
     on<SubmitUserFormEvent>(_onSubmitUserForm);
 
     on<UpdateUserEvent>(_onUpdateStall);
@@ -65,6 +70,19 @@ class CreateUserBloc extends Bloc<CreateUserEvent, CreateUserState> {
     emit(CreateUserLoading());
     try {
       await userRepository.deleteUser(event.id);
+    } catch (error) {
+      emit(CreateUserFailure(error.toString()));
+    }
+  }
+
+  Future<void> _onUserLoadDataEvent(
+    CreateUserLoadDataEvent event,
+    Emitter<CreateUserState> emit,
+  ) async {
+    emit(CreateUserLoading());
+    try {
+      final users = await userRepository.fetchUsers();
+      emit(CreateUserLoaded(users: users));
     } catch (error) {
       emit(CreateUserFailure(error.toString()));
     }

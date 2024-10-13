@@ -2,7 +2,7 @@ part of 'create_user_bloc.dart';
 
 abstract class CreateUserState extends Equatable {
   const CreateUserState();
-  
+
   @override
   List<Object?> get props => [];
 }
@@ -10,6 +10,15 @@ abstract class CreateUserState extends Equatable {
 class CreateUserInitial extends CreateUserState {}
 
 class CreateUserLoading extends CreateUserState {}
+
+class CreateUserLoaded extends CreateUserState {
+  final List<UserModel> users;
+
+  const CreateUserLoaded({required this.users});
+
+  @override
+  List<Object> get props => [users];
+}
 
 class CreateUserSuccess extends CreateUserState {
   final String message;
