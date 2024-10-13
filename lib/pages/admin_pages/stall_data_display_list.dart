@@ -10,31 +10,43 @@ class StallDataDisplayList extends StatefulWidget {
 }
 
 class _StallDataDisplayListState extends State<StallDataDisplayList> {
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<StallBloc>().add(LoadStalls());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<StallBloc, StallState>(builder: (context, state) {
-      if (state is StallLoading) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      } else if (state is StallLoaded) {
-        final stalls = state.stalls;
-        return stalls.isNotEmpty
-            ? Expanded(
-                child: SizedBox(
-                width: double.infinity,
-                child: ListView.builder(
-                  itemCount: stalls.length,
-                  itemBuilder: (context, index) {
-                    return const Icon(Icons.store_mall_directory);
-                  },
-                ),
-              ))
-            : const Center(
-                child: Text('No Data'),
-              );
-      }
-      return const Text('Unexpected data');
-    });
+    return Scaffold(
+      appBar: AppBar(),
+      body: BlocBuilder<StallBloc, StallState>(
+        builder: (context, state) {
+          if (state is StallLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is StallLoaded) {
+            final stalls = state.stalls;
+            return stalls.isNotEmpty
+                ? Expanded(
+                    child: SizedBox(
+                    width: double.infinity,
+                    child: ListView.builder(
+                      itemCount: stalls.length,
+                      itemBuilder: (context, index) {
+                        return const Icon(Icons.store_mall_directory);
+                      },
+                    ),
+                  ))
+                : const Center(
+                    child: Text('No Data'),
+                  );
+          }
+          return const Text('Unexpected data');
+        },
+      ),
+    );
   }
 }
