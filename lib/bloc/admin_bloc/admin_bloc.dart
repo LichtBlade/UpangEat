@@ -8,6 +8,10 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
 
   AdminBloc(this.adminRepository) : super(AdminInitial()) {
     on<CreateStallEvent>(_onCreateStall);
+
+    on<UpdateStallEvent>(_onUpdateStall);
+
+    on<DeleteStallEvent>(_onDeleteStall);
   }
 
   Future<void> _onCreateStall(
@@ -19,10 +23,38 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
       await adminRepository.createStall(
         stallName: event.stallName,
         description: event.description,
-        ownerId: event.ownerId, 
-        contactNo: event.contactNo, 
+        ownerId: event.ownerId,
+        contactNo: event.contactNo,
       );
       emit(AdminSuccess());
+    } catch (e) {
+      emit(AdminFailure(e.toString()));
+    }
+  }
+
+  Future<void> _onUpdateStall(
+    UpdateStallEvent event,
+    Emitter<AdminState> emit,
+  ) async {
+    emit(AdminLoading());
+    try {
+      await adminRepository.updateStall(
+          id: event.id,
+          stallName: event.stallname,
+          description: event.description);
+      emit(AdminSuccess());
+    } catch (e) {
+      emit(AdminFailure(e.toString()));
+    }
+  }
+
+  Future<void> _onDeleteStall(
+    DeleteStallEvent event,
+    Emitter<AdminState> emit,
+  ) async {
+    emit(AdminLoading());
+    try {
+      await adminRepository.deleteStall(event.id);
     } catch (e) {
       emit(AdminFailure(e.toString()));
     }

@@ -104,7 +104,7 @@ class _MyAppState extends State<MyApp> {
         home: const AdminDashboard(),
 
         //test for seller center
-        // home: const SellerCenter()
+        //home: const SellerCenter()
       ),
     );
   }

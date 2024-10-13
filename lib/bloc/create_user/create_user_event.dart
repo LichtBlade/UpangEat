@@ -37,3 +37,33 @@ class SubmitUserFormEvent extends CreateUserEvent {
         userType,
       ];
 }
+
+class UpdateUserEvent extends CreateUserEvent {
+  final int id;
+  final String studentId;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String password;
+  final String mobile;
+  final String userType;
+
+  const UpdateUserEvent(
+      {required this.id,
+      required this.studentId,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.password,
+      required this.mobile,
+      required this.userType});
+}
+
+class DeleteUserEvent extends CreateUserEvent {
+  final int id;
+
+  const DeleteUserEvent({required this.id});
+
+  @override
+  List<Object> get props => [id];
+}

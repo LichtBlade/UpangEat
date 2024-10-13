@@ -6,10 +6,8 @@ import 'package:http/http.dart' as http;
 
 import '../main.dart';
 
-
 class StallRepositoryImpl implements StallRepository {
   final String baseUrl = IpAddress.ipAddress;
-
 
   @override
   Future<List<Stall>> fetchStalls() async {
@@ -25,14 +23,18 @@ class StallRepositoryImpl implements StallRepository {
 
   @override
   Future<Stall> fetchStallById(int id) async {
-    // TODO: implement fetchStallById
-    throw UnimplementedError();
+    final response = await http.get(Uri.parse('$baseUrl/stalls/$id'));
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> stallData = json.decode(response.body);
+      return Stall.fromJson(stallData);
+    } else {
+      throw Exception('Failed to load notes');
+    }
   }
 
   @override
   Future<void> createStall() async {
-    // TODO: implement createStall
-    throw UnimplementedError();
+    final response = await http.get(Uri.parse('$baseUrl/sta'));
   }
 
   @override
@@ -46,5 +48,4 @@ class StallRepositoryImpl implements StallRepository {
     // TODO: implement deleteStall
     throw UnimplementedError();
   }
-
 }

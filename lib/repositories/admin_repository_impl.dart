@@ -32,7 +32,12 @@ class AdminRepositoryImpl implements AdminRepository {
   }
 
   @override
-  Future<void> createStall({required stallName, String? description, required String ownerId, required String contactNo,}) async {
+  Future<void> createStall({
+    required stallName,
+    String? description,
+    required String ownerId,
+    required String contactNo,
+  }) async {
     final response = await http.post(
       Uri.parse('$baseUrl/stalls'),
       headers: {'Content-Type': 'application/json'},
@@ -40,7 +45,7 @@ class AdminRepositoryImpl implements AdminRepository {
         'stall_name': stallName,
         'description': description ?? '',
         'owner_id': ownerId,
-        'contact_number': contactNo 
+        'contact_number': contactNo
       }),
     );
 
@@ -50,7 +55,8 @@ class AdminRepositoryImpl implements AdminRepository {
   }
 
   @override
-  Future<void> updateStall(int id, String stallName, {String? description}) async {
+  Future<void> updateStall(
+      {required int id, required String stallName, String? description}) async {
     final response = await http.put(
       Uri.parse('$baseUrl/stalls/$id'),
       headers: {'Content-Type': 'application/json'},
