@@ -97,6 +97,8 @@ class _WalletState extends State<Wallet> {
           ltcPriceChange = data['litecoin']['php_24h_change'] ?? 0.0;
           xrpPriceChange = data['ripple']['php_24h_change'] ?? 0.0;
           axsPriceChange = data['axie-infinity']['php_24h_change'] ?? 0.0;
+
+          globalEthPrice = ethPrice;
         });
       } else {
         print("Failed to load token prices.");

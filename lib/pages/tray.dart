@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:intl/intl.dart";
 import "package:skeletonizer/skeletonizer.dart";
 import "package:upang_eat/Widgets/stalls_stall_card.dart";
 import "package:upang_eat/bloc/tray_bloc/tray_bloc.dart";
@@ -30,6 +31,17 @@ class _TrayState extends State<Tray> {
     context.read<FoodBloc>().add(LoadFoodTray(widget.id));
   }
 
+  double convertPhpToEth(double totalPayment) {
+    if (globalEthPrice > 0) {
+      // Ensure the ETH price is not zero to avoid division by zero
+      double ethAmount = totalPayment / globalEthPrice; // Convert PHP to ETH
+      return ethAmount; // Return the amount in ETH
+    } else {
+      print("Error: ETH price is zero or not set.");
+      return 0.0; // Return 0.0 if ETH price is not available
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,9 +52,9 @@ class _TrayState extends State<Tray> {
             context.read<FoodBloc>().add(LoadFoodTray(widget.id));
           } else if (state is TrayLoaded) {
             // context.read<FoodBloc>().add(LoadFoodTray(widget.id));
-          }else if (state is TrayError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
-
+          } else if (state is TrayError) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         child: Stack(children: [
@@ -72,7 +84,8 @@ class _TrayState extends State<Tray> {
                       if (foodState is FoodLoaded) {
                         final foods = foodState.foods;
                         final totalAmount = foodState.totalPrice;
-
+                        final convertToEth =
+                            convertPhpToEth(totalAmount.toDouble());
                         if (foods.isEmpty) {
                           return AlertDialog(
                               title: const Text("Empty Tray"),
@@ -90,8 +103,8 @@ class _TrayState extends State<Tray> {
 
                         return AlertDialog(
                           title: const Text("Proceed to Payment"),
-                          content: const Text(
-                              "Please review your order before confirming payment"),
+                          content: Text(
+                              "Please review the amount of $convertToEth ETH for your order before confirming payment."),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -200,9 +213,24 @@ class _OrderSummaryAndWallet extends StatefulWidget {
 }
 
 class _OrderSummaryAndWalletState extends State<_OrderSummaryAndWallet> {
-  final double ethBalance = globalEthBalance;
+  final double ethBalance = globalEthBalance; // Replace with actual ETH balance
+  late double phpBalance; // Declare as late
+  late String formattedPhpBalance; // Declare as late
 
-  final double phpBalance = 1250.0;
+  @override
+  void initState() {
+    super.initState();
+    initializeBalances(); // Initialize balances in initState
+  }
+
+  void initializeBalances() {
+    phpBalance = globalEthBalance * globalEthPrice; // Calculate phpBalance
+    formattedPhpBalance = NumberFormat.currency(
+      locale: 'en_PH', // For the Philippines locale
+      symbol: '₱', // PHP currency symbol
+      decimalDigits: 2, // Optional: Set decimal digits
+    ).format(phpBalance); // Format phpBalance as currency
+  }
 
   bool isSwitch = false;
 
@@ -242,7 +270,7 @@ class _OrderSummaryAndWalletState extends State<_OrderSummaryAndWallet> {
                       children: [
                         Text(
                           isSwitch
-                              ? "${phpBalance.toStringAsFixed(2)} PHP"
+                              ? formattedPhpBalance
                               : "${ethBalance.toStringAsFixed(6)} ETH",
                           maxLines: 1,
                           style: const TextStyle(
