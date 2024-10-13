@@ -333,7 +333,7 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
       dismissDirection: DismissDirection.vertical,
       duration: const Duration(seconds: 4),
       margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).size.height - 180,
+          bottom: MediaQuery.of(context).size.height - 250,
           right: 20,
           left: 20),
       behavior: SnackBarBehavior.floating,
@@ -377,38 +377,30 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
             listener: (context, state) {
               if (state is TrayStallConflict) {
                 print("TrayStallConflict");
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text("Stall Conflict"),
-                        content: const Text(
-                            "You have items from another stall in your tray. Do you want to clear your tray and add this item?"),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              context
-                                  .read<TrayBloc>()
-                                  .add(DeleteTrayIds(state.trayIdsToDelete));
-                              context.read<TrayBloc>().add(CreateTray(
-                                  widget.food.foodItemId,
-                                  widget.quantity,
-                                  globalUserData!.userId));
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(snackBar);
-                            },
-                            child: const Text('Yes'),
-                          ),
-                          TextButton(
-                            onPressed: () =>
-                                Navigator.pop(context), // Close the dialog
-                            child: const Text('No'),
-                          ),
-                        ],
-                      );
-                    });
+                showDialog(context: context, builder: (context) {
+                  return AlertDialog(
+                    title: const Text("Stall Conflict"),
+                    content: const Text("You have items from another stall in your tray. Do you want to clear your tray and add this item?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          print("Delete and create tray");
+                          context.read<TrayBloc>().add(StallConflictDeleteTrayIds(state.trayIdsToDelete, globalUserData!.userId, widget.food.foodItemId, widget.quantity));
+
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(snackBar);
+                        },
+                        child: const Text('Yes'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context), // Close the dialog
+                        child: const Text('No'),
+                      ),
+                    ],
+                  );
+                });
               } else if (state is TrayAdded) {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
@@ -442,11 +434,14 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
                       context.read<FoodBloc>().add(const LoadFoodTray(1));
                     }
                   } else {
+                    print("Create Tray");
+
                     print("Food ${widget.food}");
-                    context.read<TrayBloc>().add(CreateTray(
-                        globalUserData!.userId,
-                        widget.food.foodItemId,
-                        widget.quantity));
+                    context
+                        .read<TrayBloc>()
+                        .add(CreateTray(globalUserData!.userId, widget.food.foodItemId, widget.quantity));
+
+
                   }
                   Navigator.pop(context);
                 },
