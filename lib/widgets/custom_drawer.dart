@@ -24,12 +24,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.lightGreen),
-            child: Text("Drawer Header"),
+          DrawerHeader(
+            decoration: const BoxDecoration(color: Colors.lightGreen),
+            padding: const EdgeInsets.only(top: 28.0),
+            child: Column(children: [Image.asset("assets/FlameCoin.png", width: 64, height: 64,), const Text("Upang Eats", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),)],),
           ),
           ListTile(
             title: const Text("Home"),
+            selected: true,
+            selectedTileColor: Colors.black12,
             onTap: () {
               setState(() {
                 Navigator.pop(context);
@@ -46,14 +49,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
               });
             },
           ),
-          ListTile(
-            title: const Text("Profile"),
-            onTap: () {
-              setState(() {
-                Navigator.pop(context);
-              });
-            },
-          ),
+          // ListTile(
+          //   title: const Text("Profile"),
+          //   onTap: () {
+          //     setState(() {
+          //       Navigator.pop(context);
+          //     });
+          //   },
+          // ),
           ListTile(
             title: const Text("Wallet"),
             onTap: () {

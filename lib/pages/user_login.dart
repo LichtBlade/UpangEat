@@ -65,7 +65,7 @@ class _UserLoginState extends State<UserLogin> {
                 );
               } else {
                 String globalUserWallet =
-                    '0xb92508c3bb483e1f2d48b49f419594fc6d3b8a0f6ee0aa2657a9497d8edc5796';
+                    '0x8e32f7442f65bdb5ea7fe253af3bbc284faaeca10d2634a495b48a0ab2d9ee1d';
                 globalPrivateKey = globalUserWallet;
                 _fetchWalletGanche(globalPrivateKey);
                 Navigator.of(context).pushReplacement(
@@ -192,10 +192,10 @@ class _UserLoginState extends State<UserLogin> {
 
     // Fetch balance
     EtherAmount balance = await client.getBalance(ownAddress);
-    setState(() {
+
       globalEthBalance = balance.getValueInUnit(EtherUnit.ether);
       globalWalletEthAddress = ownAddress.toString();
       print(globalWalletEthAddress); // Convert balance to ETH
-    });
+
   }
 }

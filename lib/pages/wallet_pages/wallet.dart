@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:upang_eat/pages/wallet_pages/transaction_history.dart';
 import 'package:upang_eat/user_data.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
+import '../../bloc/wallet_bloc/wallet_bloc.dart';
 import '../../widgets/wallet_widgets/send_dialog.dart';
 import '../../widgets/wallet_widgets/token_card.dart';
 
@@ -42,6 +44,7 @@ class _WalletState extends State<Wallet> {
   double _globalEthBalance = globalEthBalance;
 
   String walletAddress = globalWalletEthAddress;
+
   void _showSendDialog() {
     showDialog(
       context: context,
@@ -68,28 +71,28 @@ class _WalletState extends State<Wallet> {
         setState(() {
           ethPrice = data['ethereum']['php'] != null
               ? (data['ethereum']['php'] is int
-                  ? (data['ethereum']['php'] as int).toDouble()
-                  : data['ethereum']['php'])
+              ? (data['ethereum']['php'] as int).toDouble()
+              : data['ethereum']['php'])
               : 0.0;
           btcPrice = data['bitcoin']['php'] != null
               ? (data['bitcoin']['php'] is int
-                  ? (data['bitcoin']['php'] as int).toDouble()
-                  : data['bitcoin']['php'])
+              ? (data['bitcoin']['php'] as int).toDouble()
+              : data['bitcoin']['php'])
               : 0.0;
           ltcPrice = data['litecoin']['php'] != null
               ? (data['litecoin']['php'] is int
-                  ? (data['litecoin']['php'] as int).toDouble()
-                  : data['litecoin']['php'])
+              ? (data['litecoin']['php'] as int).toDouble()
+              : data['litecoin']['php'])
               : 0.0;
           xrpPrice = data['ripple']['php'] != null
               ? (data['ripple']['php'] is int
-                  ? (data['ripple']['php'] as int).toDouble()
-                  : data['ripple']['php'])
+              ? (data['ripple']['php'] as int).toDouble()
+              : data['ripple']['php'])
               : 0.0;
           axsPrice = data['axie-infinity']['php'] != null
               ? (data['axie-infinity']['php'] is int
-                  ? (data['axie-infinity']['php'] as int).toDouble()
-                  : data['axie-infinity']['php'])
+              ? (data['axie-infinity']['php'] as int).toDouble()
+              : data['axie-infinity']['php'])
               : 0.0;
 
           ethPriceChange = data['ethereum']['php_24h_change'] ?? 0.0;
@@ -127,7 +130,7 @@ class _WalletState extends State<Wallet> {
               // Your existing Card widget
               Container(
                 margin:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -161,13 +164,39 @@ class _WalletState extends State<Wallet> {
                           Expanded(
                             child: Column(
                               children: [
-                                Text(
-                                  _globalEthBalance.toStringAsFixed(2),
-                                  style: const TextStyle(
-                                    color: Color(0xFF202020),
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                BlocBuilder<WalletBloc, WalletState>(
+                                  builder: (context, state) {
+                                    if (state is WalletLoading){
+                                      print("Wallet Loading");
+                                      return Text(
+                                        _globalEthBalance.toStringAsFixed(2),
+                                        // globalEthBalance.toStringAsFixed(2),
+                                        style: const TextStyle(
+                                          color: Color(0xFF202020),
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    } else if (state is WalletBalanceLoaded){
+                                      print(" EYOO ${state.ethBalance.toStringAsFixed(2)}");
+                                      return Text(
+                                        // _globalEthBalance.toStringAsFixed(2),
+                                        state.ethBalance.toStringAsFixed(2),
+                                        style: const TextStyle(
+                                          color: Color(0xFF202020),
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    } else if (state is WalletError){
+                                      print("Wallet Error");
+                                      return Text(state.message);
+                                    } else {
+                                      print("Wallet Unexpected");
+                                      return const Text("Unexpected State");
+                                    }
+
+                                  },
                                 ),
                                 TextButton(
                                   onPressed: () {
@@ -272,7 +301,7 @@ class _WalletState extends State<Wallet> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const TransactionHistory()),
+                                const TransactionHistory()),
                           );
                           print('History clicked');
                         },

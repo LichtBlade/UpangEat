@@ -74,7 +74,7 @@ class _StallInformationState extends State<StallInformation> {
                                     physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
-                                    itemCount: 4,
+                                    itemCount: foods.length < 4 ? foods.length : 4,
                                     itemBuilder: (context, index) {
                                       final food = foods[index];
                                       return MealCardSquare(
@@ -99,7 +99,7 @@ class _StallInformationState extends State<StallInformation> {
                                 final foods = state.foods;
                                 return ListView.builder(
                                     padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                    const EdgeInsets.symmetric(horizontal: 0.0),
                                     physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,

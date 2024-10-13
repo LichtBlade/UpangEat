@@ -8,3 +8,5 @@ double globalEthPrice = 0;
 String globalWalletEthAddress = '';
 
 String globalPrivateKey = '';
+
+List<OrderModel> globalOrders = [];

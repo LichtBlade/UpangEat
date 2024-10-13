@@ -1,15 +1,26 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/main.dart';
+import 'package:upang_eat/pages/wallet_pages/wallet.dart';
 import 'package:upang_eat/user_data.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
+
+import 'package:upang_eat/pages/wallet_pages/wallet.dart' as walletpage;
 import 'package:http/http.dart' as http;
 
-class SendDialog extends StatelessWidget {
+import '../../bloc/wallet_bloc/wallet_bloc.dart';
+
+class SendDialog extends StatefulWidget {
   final Function(String) onSend;
 
   const SendDialog({Key? key, required this.onSend}) : super(key: key);
 
+  @override
+  State<SendDialog> createState() => _SendDialogState();
+}
+
+class _SendDialogState extends State<SendDialog> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController amountController = TextEditingController();
@@ -40,8 +51,15 @@ class SendDialog extends StatelessWidget {
             String amount = amountController.text.trim();
             String accountID = accountIDController.text.trim();
             if (amount.isNotEmpty && accountID.isNotEmpty) {
-              await sendEther(double.parse(amount), accountID);
+              // await sendEther(double.parse(amount), accountID);
+              context.read<WalletBloc>().add(LoadEthBalance(double.parse(amount), accountID));
+
+              // _fetchWalletGanche(globalPrivateKey);
               Navigator.of(context).pop();
+              setState(() {
+                globalEthBalance;
+              });
+
             }
           },
           child: const Text("Send"),
@@ -101,8 +119,38 @@ class SendDialog extends StatelessWidget {
       print("Transaction Hash: $result \n\n Successful Transaction");
 
       // After sending ETH, fetch the updated balance (optional)
+      _fetchWalletGanche(globalPrivateKey);
+
     } catch (e) {
       print("Transaction failed: $e");
     }
+  }
+
+  Future<void> _fetchWalletGanche(String privateKey) async {
+    String rpcUrl = IpAddress.rpGanacheUrl; // For Android emulator
+    String wsUrl = IpAddress.wsGanacheUrl;
+
+    Web3Client client = Web3Client(
+      rpcUrl,
+      http.Client(),
+      socketConnector: () {
+        return IOWebSocketChannel.connect(wsUrl).cast<String>();
+      },
+    );
+
+    // Obtain credentials from private key
+    Credentials credentials =
+    await client.credentialsFromPrivateKey(privateKey);
+
+    // Get your Ethereum address from the credentials
+    EthereumAddress ownAddress = await credentials.extractAddress();
+
+    // Fetch balance
+    EtherAmount balance = await client.getBalance(ownAddress);
+
+    globalEthBalance = balance.getValueInUnit(EtherUnit.ether);
+    globalWalletEthAddress = ownAddress.toString();
+    print(globalWalletEthAddress); // Convert balance to ETH
+
   }
 }
