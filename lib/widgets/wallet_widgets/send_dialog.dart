@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/main.dart';
-import 'package:upang_eat/pages/wallet_pages/wallet.dart';
 import 'package:upang_eat/user_data.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 
-import 'package:upang_eat/pages/wallet_pages/wallet.dart' as walletpage;
 import 'package:http/http.dart' as http;
 
 import '../../bloc/wallet_bloc/wallet_bloc.dart';
@@ -56,9 +54,9 @@ class _SendDialogState extends State<SendDialog> {
 
               // _fetchWalletGanche(globalPrivateKey);
               Navigator.of(context).pop();
-              setState(() {
-                globalEthBalance;
-              });
+              // setState(() {
+              //   globalEthBalance;
+              // });
 
             }
           },

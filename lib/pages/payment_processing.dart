@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/pages/order_status.dart';
 
 import '../bloc/order_bloc/order_bloc.dart';
+import '../user_data.dart';
 
 class PaymentProcessing extends StatefulWidget {
   const PaymentProcessing({super.key});
@@ -28,7 +29,9 @@ class _PaymentProcessingState extends State<PaymentProcessing> {
               final filteredOrders = state.order.where((order) =>
               order.orderStatus == 'pending' || order.orderStatus == 'ready' || order.orderStatus == 'accepted'
               ).toList();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: filteredOrders,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: filteredOrders,))).then((_) {
+                context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
+              });
 
             }
             );

@@ -26,30 +26,35 @@ class _FoodCategoryState extends State<FoodCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _AppBar(title: widget.category.categoryName,),
-      body: BlocBuilder<FoodBloc, FoodState>(
-        builder: (context, state) {
-          if (state is FoodLoading) {
-            return const CircularProgressIndicator();
-          } else if (state is FoodLoaded) {
-            final foods = state.foods;
-            return foods.isNotEmpty ?
-            ListView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                itemCount: foods.length,
-                itemBuilder: (context, index) {
-                  final food = foods[index];
-                  return HomeMealCard(food: food, isShowStallName: true,);
-                })
-                :
-                Center(child: Image.asset("assets/mingming.png", ),);
-          } else if (state is FoodError) {
-
-          } else {
-            return const Text("Unexpected state}");
-          }
-          return const Text("Unexpected state}");
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<FoodBloc>().add(LoadFoodCategory(widget.category.categoryId));
         },
+        child: BlocBuilder<FoodBloc, FoodState>(
+          builder: (context, state) {
+            if (state is FoodLoading) {
+              return const CircularProgressIndicator();
+            } else if (state is FoodLoaded) {
+              final foods = state.foods;
+              return foods.isNotEmpty ?
+              ListView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  itemCount: foods.length,
+                  itemBuilder: (context, index) {
+                    final food = foods[index];
+                    return HomeMealCard(food: food, isShowStallName: true,);
+                  })
+                  :
+                  Center(child: Image.asset("assets/mingming.png", ),);
+            } else if (state is FoodError) {
+
+            } else {
+              return const Text("Unexpected state}");
+            }
+            return const Text("Unexpected state}");
+          },
+        ),
       ),
     );
   }

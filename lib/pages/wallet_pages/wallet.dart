@@ -167,7 +167,6 @@ class _WalletState extends State<Wallet> {
                                 BlocBuilder<WalletBloc, WalletState>(
                                   builder: (context, state) {
                                     if (state is WalletLoading){
-                                      print("Wallet Loading");
                                       return Text(
                                         _globalEthBalance.toStringAsFixed(2),
                                         // globalEthBalance.toStringAsFixed(2),
@@ -178,7 +177,6 @@ class _WalletState extends State<Wallet> {
                                         ),
                                       );
                                     } else if (state is WalletBalanceLoaded){
-                                      print(" EYOO ${state.ethBalance.toStringAsFixed(2)}");
                                       return Text(
                                         // _globalEthBalance.toStringAsFixed(2),
                                         state.ethBalance.toStringAsFixed(2),
@@ -189,10 +187,8 @@ class _WalletState extends State<Wallet> {
                                         ),
                                       );
                                     } else if (state is WalletError){
-                                      print("Wallet Error");
                                       return Text(state.message);
                                     } else {
-                                      print("Wallet Unexpected");
                                       return const Text("Unexpected State");
                                     }
 

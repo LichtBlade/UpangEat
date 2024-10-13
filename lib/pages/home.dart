@@ -37,8 +37,6 @@ class _HomeState extends State<Home> {
   void initState() {
 
     context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
-    context.read<StallBloc>().add(LoadStalls());
-    context.read<FoodBloc>().add(LoadFood());
     context.read<CategoryBloc>().add(LoadCategory());
 
     super.initState();
@@ -62,8 +60,10 @@ class _HomeState extends State<Home> {
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           body: RefreshIndicator(
             onRefresh: () async {
+
               context.read<StallBloc>().add(LoadStalls());
               context.read<CategoryBloc>().add(LoadCategory());
+              context.read<FoodBloc>().add(LoadFood());
               context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
             },
             child: CustomScrollView(
@@ -289,7 +289,9 @@ class _FloatingActionBarState extends State<_FloatingActionBar> {
                 final filteredOrders = orders.where((order) =>
                 order.orderStatus == 'pending' || order.orderStatus == 'ready' || order.orderStatus == 'accepted'
                 ).toList();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: filteredOrders,)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: filteredOrders,))).then((_) {
+                  context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
+                });
               },
               extendedIconLabelSpacing: 16.0,
               icon: const Icon(Icons.my_library_books),
@@ -319,10 +321,12 @@ class _MealCardVerticalListState extends State<_MealCardVerticalList> {
   Widget build(BuildContext context) {
     return BlocBuilder<FoodBloc, FoodState>(builder: (context, state) {
       if (state is FoodLoading) {
+        print("Food is loading");
         return const SliverToBoxAdapter(
           child: SkeletonHomeMealCard(),
         );
       } else if (state is FoodLoaded) {
+        print("Food is loaded");
         final foods = state.foods;
         foods.shuffle();
         return SliverList(

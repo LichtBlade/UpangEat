@@ -57,7 +57,7 @@ class _UserLoginState extends State<UserLogin> {
                 );
               } else if (state.userType == 'stall_owner') {
                 String globalSelletWallet =
-                    '0x391275d70808dbaf71bebb0efbc988e719b93f6bb145d1635254e024496e3c36';
+                    '0xcd72e17e23b55819612cb4a79fd1eb3634802c28d912c6c76c612e65cc550827';
                 globalPrivateKey = globalSelletWallet;
                 _fetchWalletGanche(globalPrivateKey);
                 Navigator.of(context).pushReplacement(

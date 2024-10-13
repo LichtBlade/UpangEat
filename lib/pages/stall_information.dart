@@ -30,97 +30,100 @@ class _StallInformationState extends State<StallInformation> {
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: const _AppBar(),
-        body: Stack(fit: StackFit.expand, children: [
-          _StallImage(imageUrl: widget.stall.imageUrl!),
-          const _Gradient(),
-          _StallName(stallName: widget.stall.stallName,),
-          Positioned(
-              top: 180,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Card.outlined(
-                  color:  const Color(0xFFF8F8F8),
-                  margin: EdgeInsets.zero,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(18.0),
-                      topRight: Radius.circular(18.0),
+        body: RefreshIndicator(
+          onRefresh: () async {context.read<FoodBloc>().add(LoadFoodByStallId(widget.stall.stallId));},
+          child: Stack(fit: StackFit.expand, children: [
+            _StallImage(imageUrl: widget.stall.imageUrl!),
+            const _Gradient(),
+            _StallName(stallName: widget.stall.stallName,),
+            Positioned(
+                top: 180,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Card.outlined(
+                    color:  const Color(0xFFF8F8F8),
+                    margin: EdgeInsets.zero,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(18.0),
+                        topRight: Radius.circular(18.0),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 12.0, left: 12.0),
-                    child: ListView(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      children: [
-                        const SizedBox(height: 12,),
-                        const _Header(icon: Icons.recommend, iconSize: 26, title: "Recommendation",isSubtitle: true,),
-                        const SizedBox(height: 4,),
-                        BlocBuilder<FoodBloc, FoodState>(
-                            builder: (context, state) {
-                              if (state is FoodLoading) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (state is FoodLoaded) {
-                                final foods = state.foods;
-                                return GridView.builder(
-                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        crossAxisSpacing: 8.0,
-                                        mainAxisSpacing: 8.0,
-                                        childAspectRatio: 1/1
-                                    ),
-                                    padding:const EdgeInsets.symmetric(horizontal: 8.0),
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: foods.length < 4 ? foods.length : 4,
-                                    itemBuilder: (context, index) {
-                                      final food = foods[index];
-                                      return MealCardSquare(
-                                        food: food,
-                                      );
-                                    });
-                              } else if (state is FoodError) {
-                                return Text(state.message);
-                              } else {
-                                return const Text("Unexpected state");
-                              }
-                            }),
-                        const SizedBox(height: 12,),
-                        const _Header(icon: Icons.menu_book, iconSize: 26, title: "Everything on the Menu",isSubtitle: false,),
-                        const SizedBox(height: 4,),
-                        BlocBuilder<FoodBloc, FoodState>(
-                            builder: (context, state) {
-                              if (state is FoodLoading) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (state is FoodLoaded) {
-                                final foods = state.foods;
-                                return ListView.builder(
-                                    padding:
-                                    const EdgeInsets.symmetric(horizontal: 0.0),
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: foods.length,
-                                    itemBuilder: (context, index) {
-                                      final food = foods[index];
-                                      return HomeMealCard(
-                                        food: food,
-                                        isShowStallName: false,
-                                      );
-                                    });
-                              } else if (state is FoodError) {
-                                return Text(state.message);
-                              } else {
-                                return const Text("Unexpected state");
-                              }
-                            }),
-                      ],
-                    ),
-                  ))),
-        ]));
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 12.0, left: 12.0),
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        children: [
+                          const SizedBox(height: 12,),
+                          const _Header(icon: Icons.recommend, iconSize: 26, title: "Recommendation",isSubtitle: true,),
+                          const SizedBox(height: 4,),
+                          BlocBuilder<FoodBloc, FoodState>(
+                              builder: (context, state) {
+                                if (state is FoodLoading) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                } else if (state is FoodLoaded) {
+                                  final foods = state.foods;
+                                  return GridView.builder(
+                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          crossAxisSpacing: 8.0,
+                                          mainAxisSpacing: 8.0,
+                                          childAspectRatio: 1/1
+                                      ),
+                                      padding:const EdgeInsets.symmetric(horizontal: 8.0),
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: foods.length < 4 ? foods.length : 4,
+                                      itemBuilder: (context, index) {
+                                        final food = foods[index];
+                                        return MealCardSquare(
+                                          food: food,
+                                        );
+                                      });
+                                } else if (state is FoodError) {
+                                  return Text(state.message);
+                                } else {
+                                  return const Text("Unexpected state");
+                                }
+                              }),
+                          const SizedBox(height: 12,),
+                          const _Header(icon: Icons.menu_book, iconSize: 26, title: "Everything on the Menu",isSubtitle: false,),
+                          const SizedBox(height: 4,),
+                          BlocBuilder<FoodBloc, FoodState>(
+                              builder: (context, state) {
+                                if (state is FoodLoading) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                } else if (state is FoodLoaded) {
+                                  final foods = state.foods;
+                                  return ListView.builder(
+                                      padding:
+                                      const EdgeInsets.symmetric(horizontal: 0.0),
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: foods.length,
+                                      itemBuilder: (context, index) {
+                                        final food = foods[index];
+                                        return HomeMealCard(
+                                          food: food,
+                                          isShowStallName: false,
+                                        );
+                                      });
+                                } else if (state is FoodError) {
+                                  return Text(state.message);
+                                } else {
+                                  return const Text("Unexpected state");
+                                }
+                              }),
+                        ],
+                      ),
+                    ))),
+          ]),
+        ));
   }
 }
 

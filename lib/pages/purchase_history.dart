@@ -26,6 +26,7 @@ class _PurchaseHistoryState extends State<PurchaseHistory> {
             "ready" => Colors.green,
             "completed" => Colors.green,
             "refunded" => Colors.red,
+            "cancelled" => Colors.red,
             _ => Colors.black
           };
 
