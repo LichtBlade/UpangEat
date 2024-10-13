@@ -29,7 +29,17 @@ class _TrayState extends State<Tray> {
   void initState() {
     super.initState();
     context.read<FoodBloc>().add(LoadFoodTray(widget.id));
-    fetchTokenPrices();
+  }
+
+  double convertPhpToEth(double totalPayment) {
+    if (globalEthPrice > 0) {
+      // Ensure the ETH price is not zero to avoid division by zero
+      double ethAmount = totalPayment / globalEthPrice; // Convert PHP to ETH
+      return ethAmount; // Return the amount in ETH
+    } else {
+      print("Error: ETH price is zero or not set.");
+      return 0.0; // Return 0.0 if ETH price is not available
+    }
   }
 
   @override
@@ -74,7 +84,8 @@ class _TrayState extends State<Tray> {
                       if (foodState is FoodLoaded) {
                         final foods = foodState.foods;
                         final totalAmount = foodState.totalPrice;
-
+                        final convertToEth =
+                            convertPhpToEth(totalAmount.toDouble());
                         if (foods.isEmpty) {
                           return AlertDialog(
                               title: const Text("Empty Tray"),
@@ -92,8 +103,8 @@ class _TrayState extends State<Tray> {
 
                         return AlertDialog(
                           title: const Text("Proceed to Payment"),
-                          content: const Text(
-                              "Please review your order before confirming payment"),
+                          content: Text(
+                              "Please review the amount of $convertToEth ETH for your order before confirming payment."),
                           actions: [
                             TextButton(
                               onPressed: () {
