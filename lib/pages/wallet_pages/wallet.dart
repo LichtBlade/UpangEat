@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:upang_eat/pages/wallet_pages/transaction_history.dart';
+import 'package:upang_eat/user_data.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 import '../../widgets/wallet_widgets/send_dialog.dart';
@@ -18,6 +19,7 @@ class Wallet extends StatefulWidget {
 
 class _WalletState extends State<Wallet> {
   final coin = "assets/FlameCoin.png";
+  final ethImg = "assets/ethSign.png";
   final sendIcon = "assets/wallets/send.png";
   final depositIcon = "assets/wallets/deposit.png";
   final historyIcon = "assets/wallets/history.png";
@@ -37,7 +39,9 @@ class _WalletState extends State<Wallet> {
   double xrpPriceChange = 0.0;
 
   double currentEthBalance = 0.0;
-  String walletAddress = '';
+  double _globalEthBalance = globalEthBalance;
+
+  String walletAddress = globalWalletEthAddress;
   void _showSendDialog() {
     showDialog(
       context: context,
@@ -50,46 +54,6 @@ class _WalletState extends State<Wallet> {
         );
       },
     );
-  }
-
-  Future<void> _ganacheToken() async {
-    String rpcUrl = "http://10.0.2.2:7545"; // For Android emulator
-    String wsUrl = "ws://10.0.2.2:7545/";
-
-    double ethAmount = 0.0;
-  }
-
-  Future<void> _fetchEthBalance() async {
-    // Create Web3 client
-    String rpcUrl = "http://10.0.2.2:7545"; // For Android emulator
-    String wsUrl = "ws://10.0.2.2:7545/";
-
-    Web3Client client = Web3Client(
-      rpcUrl,
-      http.Client(),
-      socketConnector: () {
-        return IOWebSocketChannel.connect(wsUrl).cast<String>();
-      },
-    );
-
-    // Private key
-    String privateKey =
-        "0xb92508c3bb483e1f2d48b49f419594fc6d3b8a0f6ee0aa2657a9497d8edc5796";
-
-    // Obtain credentials from private key
-    Credentials credentials =
-        await client.credentialsFromPrivateKey(privateKey);
-
-    // Get your Ethereum address from the credentials
-    EthereumAddress ownAddress = await credentials.extractAddress();
-
-    // Fetch balance
-    EtherAmount balance = await client.getBalance(ownAddress);
-    setState(() {
-      currentEthBalance = balance.getValueInUnit(EtherUnit.ether);
-      walletAddress = ownAddress.toString();
-      print(walletAddress); // Convert balance to ETH
-    });
   }
 
   Future<void> _fetchTokenPrices() async {
@@ -146,7 +110,6 @@ class _WalletState extends State<Wallet> {
   void initState() {
     super.initState();
     _fetchTokenPrices(); // Fetch token prices when the widget initializes
-    _fetchEthBalance();
   }
 
   @override
@@ -188,7 +151,7 @@ class _WalletState extends State<Wallet> {
                           Padding(
                             padding: const EdgeInsets.only(left: 30.0),
                             child: Image.asset(
-                              coin,
+                              ethImg,
                               width: 100,
                               height: 100,
                             ),
@@ -197,7 +160,7 @@ class _WalletState extends State<Wallet> {
                             child: Column(
                               children: [
                                 Text(
-                                  currentEthBalance.toStringAsFixed(2),
+                                  _globalEthBalance.toStringAsFixed(2),
                                   style: const TextStyle(
                                     color: Color(0xFF202020),
                                     fontSize: 30,
@@ -342,7 +305,7 @@ class _WalletState extends State<Wallet> {
                 child: ListView(
                   children: [
                     TokenCard(
-                      tokenImage: coin,
+                      tokenImage: ethImg,
                       tokenName: 'ETH',
                       tokenAmount: NumberFormat.currency(
                         locale: 'en_PH',

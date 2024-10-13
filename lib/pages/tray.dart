@@ -7,6 +7,7 @@ import "package:upang_eat/models/food_model.dart";
 import "package:upang_eat/models/order_model.dart";
 import "package:upang_eat/models/tray_model.dart";
 import "package:upang_eat/pages/payment_processing.dart";
+import "package:upang_eat/user_data.dart";
 
 import "../bloc/food_bloc/food_bloc.dart";
 import "../bloc/order_bloc/order_bloc.dart";
@@ -41,6 +42,7 @@ class _TrayState extends State<Tray> {
             // context.read<FoodBloc>().add(LoadFoodTray(widget.id));
           }else if (state is TrayError) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+
           }
         },
         child: Stack(children: [
@@ -71,21 +73,25 @@ class _TrayState extends State<Tray> {
                         final foods = foodState.foods;
                         final totalAmount = foodState.totalPrice;
 
-                        if (foods.isEmpty){
-                          return AlertDialog(title: const Text("Empty Tray"), content: const Text("Your tray is empty. Add some delicious items before proceeding to payment."), actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Ok'),
-                            ),
-
-                          ]);
+                        if (foods.isEmpty) {
+                          return AlertDialog(
+                              title: const Text("Empty Tray"),
+                              content: const Text(
+                                  "Your tray is empty. Add some delicious items before proceeding to payment."),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Ok'),
+                                ),
+                              ]);
                         }
 
                         return AlertDialog(
                           title: const Text("Proceed to Payment"),
-                          content: const Text("Please review your order before confirming payment"),
+                          content: const Text(
+                              "Please review your order before confirming payment"),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -96,7 +102,14 @@ class _TrayState extends State<Tray> {
                             TextButton(
                               onPressed: () {
                                 // Create a list of OrderItemModel from foods
-                                final orderItems = foods.map((food) => OrderItemModel(orderItemId: 0, itemId: food.foodItemId, quantity: food.trayQuantity ?? 1, subtotal: food.price * (food.trayQuantity ?? 1))).toList();
+                                final orderItems = foods
+                                    .map((food) => OrderItemModel(
+                                        orderItemId: 0,
+                                        itemId: food.foodItemId,
+                                        quantity: food.trayQuantity ?? 1,
+                                        subtotal: food.price *
+                                            (food.trayQuantity ?? 1)))
+                                    .toList();
 
                                 // Create the OrderModel
                                 final order = OrderModel(
@@ -106,10 +119,16 @@ class _TrayState extends State<Tray> {
                                   items: orderItems,
                                 );
                                 print(order);
-                                context.read<OrderBloc>().add(CreateOrder(order, widget.id));
+                                context
+                                    .read<OrderBloc>()
+                                    .add(CreateOrder(order, widget.id));
 
                                 Navigator.of(context).pop();
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentProcessing()));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PaymentProcessing()));
                               },
                               child: const Text('Confirm'),
                             ),
@@ -117,15 +136,18 @@ class _TrayState extends State<Tray> {
                         );
                       } else {
                         print("error: creating order");
-                        return AlertDialog(title: const Text("Empty Tray"), content: const Text("Your tray is empty. Add some delicious items before proceeding to payment."), actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Ok'),
-                          ),
-
-                        ]);
+                        return AlertDialog(
+                            title: const Text("Empty Tray"),
+                            content: const Text(
+                                "Your tray is empty. Add some delicious items before proceeding to payment."),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Ok'),
+                              ),
+                            ]);
                       }
                     });
               },
@@ -178,7 +200,8 @@ class _OrderSummaryAndWallet extends StatefulWidget {
 }
 
 class _OrderSummaryAndWalletState extends State<_OrderSummaryAndWallet> {
-  final double ethBalance = 0.009106356336639561;
+  final double ethBalance = globalEthBalance;
+
   final double phpBalance = 1250.0;
 
   bool isSwitch = false;
@@ -218,7 +241,9 @@ class _OrderSummaryAndWalletState extends State<_OrderSummaryAndWallet> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          isSwitch ? "${phpBalance.toStringAsFixed(2)} PHP" : "${ethBalance.toStringAsFixed(6)} ETH",
+                          isSwitch
+                              ? "${phpBalance.toStringAsFixed(2)} PHP"
+                              : "${ethBalance.toStringAsFixed(6)} ETH",
                           maxLines: 1,
                           style: const TextStyle(
                             color: Color(0xFF202020),
@@ -245,7 +270,8 @@ class _OrderSummaryAndWalletState extends State<_OrderSummaryAndWallet> {
           margin: const EdgeInsets.symmetric(horizontal: 0),
           color: Colors.black12,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
             child: Column(
               children: [
                 Row(
@@ -277,16 +303,21 @@ class _OrderSummaryAndWalletState extends State<_OrderSummaryAndWallet> {
                   children: [
                     const Text(
                       "Total",
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                     ),
                     BlocBuilder<FoodBloc, FoodState>(
                       builder: (context, state) {
                         int totalPrice = 0;
                         if (state is FoodLoaded) {
                           totalPrice = state.totalPrice;
-                          return Text("₱ $totalPrice", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16));
+                          return Text("₱ $totalPrice",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 16));
                         } else {
-                          return const Text("₱ 0", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16));
+                          return const Text("₱ 0",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 16));
                         }
                       },
                     )
