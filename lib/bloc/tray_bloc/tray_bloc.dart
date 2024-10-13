@@ -60,10 +60,34 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
       emit(TrayLoading());
       try{
         await _trayRepository.deleteListOfTrays(event.id);
+
+        emit(TrayItemsRemoved());
+
+
       } catch (error) {
         emit(TrayError(error.toString()));
       }
     });
+
+    on<StallConflictDeleteTrayIds>((event, emit) async {
+      emit(TrayLoading());
+      try{
+        await _trayRepository.deleteListOfTrays(event.id);
+        emit(TrayItemsRemoved());
+
+        final newTray = TrayModel(
+            trayId: 0,
+            userId: globalUserData!.userId,
+            itemId: event.foodItemId,
+            quantity: event.quantity);
+        final stall = await _trayRepository.addToTray(newTray);
+        emit(TrayAdded(stall));
+      } catch (error) {
+        emit(TrayError(error.toString()));
+      }
+    });
+
+
 
     on<UpdateTray>((event, emit) async {
       emit(TrayLoading());

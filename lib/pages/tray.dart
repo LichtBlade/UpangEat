@@ -35,9 +35,11 @@ class _TrayState extends State<Tray> {
       appBar: const _AppBar(),
       body: BlocListener<TrayBloc, TrayState>(
         listener: (context, state) {
-          if (state is TrayItemRemoved) {
+          if (state is TrayItemsRemoved) {
             context.read<FoodBloc>().add(LoadFoodTray(widget.id));
-          } else if (state is TrayError) {
+          } else if (state is TrayLoaded) {
+            // context.read<FoodBloc>().add(LoadFoodTray(widget.id));
+          }else if (state is TrayError) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
@@ -317,6 +319,7 @@ class _FoodBlocBuilder extends StatelessWidget {
           );
         } else if (state is FoodLoaded) {
           final foods = state.foods;
+          print(foods);
           return foods.isNotEmpty
               ? ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),

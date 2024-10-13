@@ -33,6 +33,17 @@ class DeleteTray extends TrayEvent {
   List<Object> get props => [id];
 }
 
+class StallConflictDeleteTrayIds extends TrayEvent {
+  final List<int> id;
+  final int userId;
+  final int foodItemId;
+  final int quantity;
+  const StallConflictDeleteTrayIds(this.id, this.userId,this.foodItemId, this.quantity);
+
+  @override
+  List<Object> get props => [id, userId, foodItemId, quantity];
+}
+
 class DeleteTrayIds extends TrayEvent {
   final List<int> id;
   const DeleteTrayIds(this.id);

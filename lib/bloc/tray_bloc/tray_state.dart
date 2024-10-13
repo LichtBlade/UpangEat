@@ -16,6 +16,8 @@ final class TrayItemRemoved extends TrayState {
   List<Object> get props => [id];
 }
 
+final class TrayItemsRemoved extends TrayState {}
+
 final class TrayLoaded extends TrayState {
   final List<TrayModel> trays;
   const TrayLoaded(this.trays);

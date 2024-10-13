@@ -16,7 +16,7 @@ class TrayRepositoryImpl extends TrayRepository {
         body: json.encode(tray.toJson()));
     print(response.body);
     if (response.statusCode == 201) {
-      print("201");
+      print("201 Tray Created");
       return Stall.fromJson(json.decode(response.body));
       // return TrayModel.fromJson(json.decode(response.body));
     } else if (response.statusCode == 409) {
@@ -75,6 +75,8 @@ class TrayRepositoryImpl extends TrayRepository {
     if (response.statusCode != 204) {
       throw Exception('Failed to delete tray items');
     }
+    print("Trays Deleted!");
+
   }
 
 }
