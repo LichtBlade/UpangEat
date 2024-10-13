@@ -19,14 +19,21 @@ class StallRepositoryImpl implements StallRepository {
       final List<dynamic> stallData = json.decode(response.body);
       return stallData.map((json) => Stall.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to load notes');
+      throw Exception('Failed to load stalls');
     }
   }
 
   @override
   Future<Stall> fetchStallById(int id) async {
-    // TODO: implement fetchStallById
-    throw UnimplementedError();
+    final response = await http.get(Uri.parse('$baseUrl/stalls/$id'));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> stallData = json.decode(response.body);
+      print(Stall.fromJson(stallData));
+      return Stall.fromJson(stallData);
+    } else {
+      throw Exception('Failed to load stall');
+    }
   }
 
   @override

@@ -9,6 +9,15 @@ abstract class StallEvent extends Equatable {
 
 class LoadStalls extends StallEvent {}
 
+class LoadSingleStall extends StallEvent {
+  final int id;
+
+  const LoadSingleStall(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}
+
 class CreateStall extends StallEvent {
   final Stall stall;
 

@@ -18,6 +18,7 @@ import '../bloc/order_bloc/order_bloc.dart';
 import '../bloc/stall_bloc/stall_bloc.dart';
 import '../models/order_model.dart';
 import '../repositories/food_repository_impl.dart';
+import '../repositories/stall_repository_impl.dart';
 import '../widgets/category_card.dart';
 import '../widgets/home_meal_card.dart';
 import '../widgets/home_stall_card.dart';
@@ -45,17 +46,25 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return MultiBlocProvider(
+  providers: [
+    BlocProvider(
         create: (context) => FoodBloc(FoodRepositoryImpl())..add(LoadFood()),
-        child: Scaffold(
+),
+    BlocProvider(
+      create: (context) => StallBloc(StallRepositoryImpl())..add(LoadStalls()),
+    ),
+  ],
+  child: Scaffold(
           appBar: _HomeAppBar(),
-          drawer: const CustomDrawer(),
+          drawer: CustomDrawer(),
           floatingActionButton: const _FloatingActionBar(),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           body: RefreshIndicator(
             onRefresh: () async {
               context.read<StallBloc>().add(LoadStalls());
               context.read<CategoryBloc>().add(LoadCategory());
+              context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
             },
             child: CustomScrollView(
               slivers: [
@@ -89,7 +98,7 @@ class _HomeState extends State<Home> {
             ),
           ),
         ),
-      );
+);
   }
 }
 
@@ -235,6 +244,7 @@ class _StallCardHorizontalList extends StatelessWidget {
             return const SkeletonStallCard();
           } else if (state is StallLoaded) {
             final stallData = state.stalls;
+            stallData.shuffle();
             return ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 scrollDirection: Axis.horizontal,
@@ -271,11 +281,15 @@ class _FloatingActionBarState extends State<_FloatingActionBar> {
         } else if (state is OrderLoaded) {
           print("Order is loaded");
           final List<OrderModel> orders = state.order;
+          globalOrders = orders;
           return SizedBox(
             width: 250,
             child: FloatingActionButton.extended(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: orders,)));
+                final filteredOrders = orders.where((order) =>
+                order.orderStatus == 'pending' || order.orderStatus == 'ready' || order.orderStatus == 'accepted'
+                ).toList();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: filteredOrders,)));
               },
               extendedIconLabelSpacing: 16.0,
               icon: const Icon(Icons.my_library_books),
@@ -310,6 +324,7 @@ class _MealCardVerticalListState extends State<_MealCardVerticalList> {
         );
       } else if (state is FoodLoaded) {
         final foods = state.foods;
+        foods.shuffle();
         return SliverList(
           delegate: SliverChildBuilderDelegate(childCount: foods.length, (BuildContext context, int index) {
             final food = foods[index];

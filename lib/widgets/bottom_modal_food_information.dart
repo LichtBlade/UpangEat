@@ -20,29 +20,27 @@ class BottomModalFoodInformation extends StatefulWidget {
   final FoodModel food;
   final bool isOnHome;
   final bool? isOnTray;
-  const BottomModalFoodInformation(
-      {super.key,
-      required this.food,
-      this.isOnHome = false,
-      this.isOnTray = false});
+
+  const BottomModalFoodInformation({super.key, required this.food, this.isOnHome = false, this.isOnTray = false});
 
   @override
   State<BottomModalFoodInformation> createState() =>
       _BottomModalFoodInformationState();
 }
 
-class _BottomModalFoodInformationState
-    extends State<BottomModalFoodInformation> {
+class _BottomModalFoodInformationState extends State<BottomModalFoodInformation> {
   int _quantity = 1;
   int _price = 0;
   int id = globalUserData!.userId;
   bool _isUpdate = false;
   TrayModel _existingTrayItem =
-      const TrayModel(trayId: 0, userId: 0, itemId: 0, quantity: 0);
+  const TrayModel(trayId: 0, userId: 0, itemId: 0, quantity: 0);
+
   @override
   void initState() {
     _price = widget.food.price;
     context.read<TrayBloc>().add(LoadTray(id));
+    context.read<StallBloc>().add(LoadSingleStall(widget.food.stallId));
     super.initState();
   }
 
@@ -134,7 +132,7 @@ class _BottomModalFoodInformationState
                                       iconSize: 16,
                                       style: IconButton.styleFrom(
                                         backgroundColor:
-                                            const Color(0xFFF0F0F0),
+                                        const Color(0xFFF0F0F0),
                                       ),
                                       color: Colors.black,
                                       constraints: const BoxConstraints(
@@ -196,25 +194,25 @@ class _BottomModalFoodInformationState
                             ),
                             Expanded(
                                 child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                _Price(
-                                  price: _price,
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                _AddToTrayButton(
-                                  food: widget.food,
-                                  quantity: _quantity,
-                                  isUpdate: _isUpdate,
-                                  existingTrayItem: _existingTrayItem,
-                                  isOnHome: widget.isOnHome,
-                                  isOnTray: widget.isOnTray!,
-                                )
-                              ],
-                            )),
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    _Price(
+                                      price: _price,
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    _AddToTrayButton(
+                                      food: widget.food,
+                                      quantity: _quantity,
+                                      isUpdate: _isUpdate,
+                                      existingTrayItem: _existingTrayItem,
+                                      isOnHome: widget.isOnHome,
+                                      isOnTray: widget.isOnTray!,
+                                    )
+                                  ],
+                                )),
                             const SizedBox(
                               height: 10,
                             )
@@ -236,6 +234,7 @@ class _BottomModalFoodInformationState
 class _Title extends StatelessWidget {
   final String stallName;
   final String foodName;
+
   const _Title({super.key, required this.stallName, required this.foodName});
 
   @override
@@ -245,17 +244,54 @@ class _Title extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (stallName.isNotEmpty)
-            GestureDetector(
-              onTap: () {},
-              child: Text(
-                stallName,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Color.fromARGB(200, 0, 0, 0)),
-              ),
+            BlocBuilder<StallBloc, StallState>(
+              builder: (context, state) {
+                if (state is StallLoading) {
+                  print("Stall Loading");
+                  return Text(
+                    stallName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromARGB(200, 0, 0, 0)),
+                  );
+                } else if (state is SingleStallLoaded) {
+                  print("SingleStallLoaded");
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => StallInformation(stall: state.stall)));
+                    },
+                    child: Text(
+                      stallName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromARGB(200, 0, 0, 0)),
+                    ),
+                  );
+                } else if (state is StallError) {
+                  print(state.message);
+                  return Text(state.message);
+                } else {
+                  return const Text("Unexpected state");
+                }
+                // else {
+                //   return Text(
+                //     stallName,
+                //     maxLines: 1,
+                //     overflow: TextOverflow.ellipsis,
+                //     style: const TextStyle(
+                //         fontSize: 12,
+                //         fontWeight: FontWeight.w500,
+                //         color: Color.fromARGB(200, 0, 0, 0)),
+                //   );
+                // }
+
+              },
             ),
           Text(
             foodName,
@@ -271,6 +307,7 @@ class _Title extends StatelessWidget {
 
 class _Description extends StatelessWidget {
   final String description;
+
   const _Description({super.key, required this.description});
 
   @override
@@ -287,6 +324,7 @@ class _Description extends StatelessWidget {
 
 class _Price extends StatelessWidget {
   final int price;
+
   const _Price({super.key, required this.price});
 
   @override
@@ -313,14 +351,13 @@ class _AddToTrayButton extends StatefulWidget {
   final bool isOnTray;
   final TrayModel existingTrayItem;
   final bool isOnHome;
-  const _AddToTrayButton(
-      {super.key,
-      required this.food,
-      required this.quantity,
-      required this.isUpdate,
-      required this.existingTrayItem,
-      required this.isOnHome,
-      required this.isOnTray});
+
+  const _AddToTrayButton({super.key,
+    required this.food,
+    required this.quantity,
+    required this.isUpdate,
+    required this.existingTrayItem,
+    required this.isOnHome, required this.isOnTray});
 
   @override
   State<_AddToTrayButton> createState() => _AddToTrayButtonState();
@@ -333,15 +370,17 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
       dismissDirection: DismissDirection.vertical,
       duration: const Duration(seconds: 4),
       margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).size.height - 250,
+          bottom: MediaQuery
+              .of(context)
+              .size
+              .height - 250,
           right: 20,
           left: 20),
       behavior: SnackBarBehavior.floating,
       content: AwesomeSnackbarContent(
         title: widget.isUpdate ? "All set!" : "Got It!",
-        message: widget.isUpdate
-            ? "We've updated the quantity of ${widget.food.itemName} in your tray."
-            : "Your ${widget.food.itemName} has been added to your tray. Bon appétit!",
+        message:
+        widget.isUpdate ? "We've updated the quantity of ${widget.food.itemName} in your tray." : "Your ${widget.food.itemName} has been added to your tray. Bon appétit!",
         contentType: ContentType.success,
       ),
       elevation: 0,
@@ -360,10 +399,11 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
                         return _DeleteDialog(
                             title: "Delete Item",
                             message:
-                                "Are you sure you want to delete ${widget.food.itemName}?",
+                            "Are you sure you want to delete ${widget.food.itemName}?",
                             onDelete: () {
-                              context.read<TrayBloc>().add(
-                                  DeleteTray(widget.existingTrayItem.trayId));
+                              context
+                                  .read<TrayBloc>()
+                                  .add(DeleteTray(widget.existingTrayItem.trayId));
                             });
                       });
                 },
@@ -406,13 +446,7 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
                   ..hideCurrentSnackBar()
                   ..showSnackBar(snackBar);
                 print(widget.isOnHome);
-                widget.isOnHome
-                    ? Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                StallInformation(stall: state.stall)))
-                    : null;
+                widget.isOnHome ? Navigator.push(context, MaterialPageRoute(builder: (context) => StallInformation(stall: state.stall))) : null;
               }
             },
             child: FilledButton(
@@ -425,7 +459,9 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
                             userId: widget.existingTrayItem.userId,
                             itemId: widget.existingTrayItem.itemId,
                             quantity: widget.quantity),
-                        globalUserData!.userId));
+                        globalUserData!.userId
+                    )
+                    );
                     ScaffoldMessenger.of(context)
                       ..hideCurrentSnackBar()
                       ..showSnackBar(snackBar);
@@ -440,8 +476,6 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
                     context
                         .read<TrayBloc>()
                         .add(CreateTray(globalUserData!.userId, widget.food.foodItemId, widget.quantity));
-
-
                   }
                   Navigator.pop(context);
                 },
@@ -461,11 +495,10 @@ class _DeleteDialog extends StatelessWidget {
 
   final VoidCallback onDelete;
 
-  const _DeleteDialog(
-      {super.key,
-      required this.title,
-      required this.message,
-      required this.onDelete});
+  const _DeleteDialog({super.key,
+    required this.title,
+    required this.message,
+    required this.onDelete});
 
   @override
   Widget build(BuildContext context) {

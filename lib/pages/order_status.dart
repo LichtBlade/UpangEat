@@ -17,7 +17,7 @@ class _OrderStatusState extends State<OrderStatus> {
       appBar: AppBar(
         title: const Text("Order Status"),
       ),
-      body: ListView.builder(
+      body: widget.orders.isNotEmpty ? ListView.builder(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           scrollDirection: Axis.vertical,
           itemCount: widget.orders.length,
@@ -76,7 +76,7 @@ class _OrderStatusState extends State<OrderStatus> {
                 ),
               ),
             );
-          }),
+          }) : Center(child: Image.asset("assets/mingming.png", ),)
     );
   }
 }

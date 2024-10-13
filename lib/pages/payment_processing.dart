@@ -18,16 +18,17 @@ class _PaymentProcessingState extends State<PaymentProcessing> {
       body: BlocListener<OrderBloc, OrderState>(
         listener: (context, state) {
           if (state is OrderAdded){
-            Future.delayed(const Duration(milliseconds: 2000), () {
-              Navigator.pop(context);
-              Navigator.pop(context);
+            print("order is added");
 
-            }
-            );
           }else if (state is OrderLoaded){
             print("ORDERS ${state.order} ORDERS");
             Future.delayed(const Duration(milliseconds: 2000), () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: state.order,)));
+              Navigator.pop(context);
+              Navigator.pop(context);
+              final filteredOrders = state.order.where((order) =>
+              order.orderStatus == 'pending' || order.orderStatus == 'ready' || order.orderStatus == 'accepted'
+              ).toList();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: filteredOrders,)));
 
             }
             );
