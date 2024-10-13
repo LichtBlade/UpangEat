@@ -13,9 +13,23 @@ class SellerCenterProductForm extends StatefulWidget {
 
   const SellerCenterProductForm({
     super.key,
-    required this.stallId, this.isUpdate = false, this.food = const FoodModel(foodItemId: 0, stallId: 0, itemName: "", price: 0, isAvailable: true, isBreakfast: false, isLunch: false, isMerienda: true, imageUrl: "", description: "", stallName: "", trayId: 0, trayQuantity: 0),
+    required this.stallId,
+    this.isUpdate = false,
+    this.food = const FoodModel(
+        foodItemId: 0,
+        stallId: 0,
+        itemName: "",
+        price: 0,
+        isAvailable: true,
+        isBreakfast: false,
+        isLunch: false,
+        isMerienda: true,
+        imageUrl: "",
+        description: "",
+        stallName: "",
+        trayId: 0,
+        trayQuantity: 0),
   });
-
 
   @override
   State<SellerCenterProductForm> createState() =>
@@ -27,7 +41,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _itemName = TextEditingController() ;
+  final TextEditingController _itemName = TextEditingController();
   final TextEditingController _description = TextEditingController();
   final TextEditingController _price = TextEditingController();
   final TextEditingController _category = TextEditingController();
@@ -46,11 +60,15 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
     _itemName.text = widget.food!.itemName;
     _description.text = widget.food!.description!;
     _price.text = widget.food!.price.toString();
-    _selectedType = switch ((widget.food!.isBreakfast, widget.food!.isLunch, widget.food!.isMerienda)) {
-    (true, false, false) => 'Breakfast',
-    (false, true, false) => 'Lunch',
-    (false, false, true) => 'Merienda',
-    _ => 'Unknown', // Handle other cases if needed
+    _selectedType = switch ((
+      widget.food!.isBreakfast,
+      widget.food!.isLunch,
+      widget.food!.isMerienda
+    )) {
+      (true, false, false) => 'Breakfast',
+      (false, true, false) => 'Lunch',
+      (false, false, true) => 'Merienda',
+      _ => 'Unknown', // Handle other cases if needed
     };
     return Scaffold(
       appBar: AppBar(
@@ -62,44 +80,58 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
             color: Colors.white,
           ),
         ),
-        leading: IconButton(onPressed: () {
-          Navigator.pop(context);
-        }, icon: const Icon(Icons.arrow_back, color: Colors.white,),),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         actions: [
-          IconButton(onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              widget.isUpdate!
-                  ? context.read<FoodBloc>().add(UpdateFood(
-                id: widget.food!.foodItemId,
-
-                  stallId: widget.stallId,
-                  itemName: _itemName.text,
-                  description: _description.text,
-                  price: int.parse(_price.text),
-                  imageURL: '',
-                  isAvailable: _isActive,
-                  isBreakfast: _selectedType == 'Breakfast' ? true : false,
-                  isLunch: _selectedType == 'Lunch' ? true : false,
-                  isMerienda: _selectedType == 'Merienda' ? true : false))
-                  : context.read<FoodBloc>().add(CreateFood(
-                  stallId: widget.stallId,
-                  itemName: _itemName.text,
-                  description: _description.text,
-                  price: int.parse(_price.text),
-                  imageURL: '',
-                  isAvailable: _isActive,
-                  isBreakfast: _selectedType == 'Breakfast' ? true : false,
-                  isLunch: _selectedType == 'Lunch' ? true : false,
-                  isMerienda: _selectedType == 'Merienda' ? true : false));
-            }
-          }, icon: const Icon(Icons.check, color: Colors.white,))
+          IconButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  widget.isUpdate!
+                      ? context.read<FoodBloc>().add(UpdateFood(
+                          id: widget.food!.foodItemId,
+                          stallId: widget.stallId,
+                          itemName: _itemName.text,
+                          description: _description.text,
+                          price: int.parse(_price.text),
+                          imageURL: '',
+                          isAvailable: _isActive,
+                          isBreakfast:
+                              _selectedType == 'Breakfast' ? true : false,
+                          isLunch: _selectedType == 'Lunch' ? true : false,
+                          isMerienda:
+                              _selectedType == 'Merienda' ? true : false))
+                      : context.read<FoodBloc>().add(CreateFood(
+                          stallId: widget.stallId,
+                          itemName: _itemName.text,
+                          description: _description.text,
+                          price: int.parse(_price.text),
+                          imageURL: '',
+                          isAvailable: _isActive,
+                          isBreakfast:
+                              _selectedType == 'Breakfast' ? true : false,
+                          isLunch: _selectedType == 'Lunch' ? true : false,
+                          isMerienda:
+                              _selectedType == 'Merienda' ? true : false));
+                }
+              },
+              icon: const Icon(
+                Icons.check,
+                color: Colors.white,
+              ))
         ],
       ),
       body: BlocListener<FoodBloc, FoodState>(
         listener: (context, state) {
           if (state is FoodLoading) {
             print("Loading");
-          } else if (state is FoodUpdated){
+          } else if (state is FoodUpdated) {
             ScaffoldMessenger.of(context)
               ..clearSnackBars()
               ..showSnackBar(
@@ -108,7 +140,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                 ),
               );
             Navigator.pop(context);
-          }else if (state is FoodAdded) {
+          } else if (state is FoodAdded) {
             print("Loaded");
 
             ScaffoldMessenger.of(context)
@@ -139,9 +171,9 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Create Food',
-                    style: TextStyle(
+                  Text(
+                    widget.isUpdate! ? 'Edit Food' : 'Create Food',
+                    style: const TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.w600,
                     ),
@@ -164,10 +196,10 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                       controller: _itemName,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
                       ),
                       textAlignVertical: TextAlignVertical.center,
-
                       maxLines: 1,
                       maxLength: 100,
                       validator: (value) {
@@ -175,8 +207,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                           return 'Please enter name';
                         }
                         return null;
-                      }
-                  ),
+                      }),
 
                   // Price
                   _titleText('Price'),
@@ -212,7 +243,6 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                       contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                     ),
                     textAlignVertical: TextAlignVertical.center,
-
                   ),
 
                   //Description
@@ -224,8 +254,8 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                     keyboardType: TextInputType.multiline,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 8.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                     ),
                     textAlignVertical: TextAlignVertical.top,
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:upang_eat/pages/admin_pages/create_stall_form.dart';
 import 'package:upang_eat/pages/admin_pages/create_user_form.dart';
+import 'package:upang_eat/pages/admin_pages/stall_data_display_list.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -23,18 +24,21 @@ class _DashboardState extends State<AdminDashboard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             const SizedBox(
                 child: Text(
-                    'Welcome Admin',
-                  style: TextStyle(
-                    color: Color(0xFF202020),
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
+              'Welcome Admin',
+              style: TextStyle(
+                color: Color(0xFF202020),
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
+            const SizedBox(
+              height: 10,
             ),
-            const SizedBox(height: 10,),
             Card.filled(
               color: const Color(0xFFF2AAB6),
               elevation: 8,
@@ -55,22 +59,22 @@ class _DashboardState extends State<AdminDashboard> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(bottom: 15.0), 
+                    margin: const EdgeInsets.only(bottom: 15.0),
                     height: 120,
-                    width: 380, 
-                    alignment: Alignment.center, 
+                    width: 380,
+                    alignment: Alignment.center,
                     // decoration: BoxDecoration(
-                    //   color:  const Color(0xFFF2AAB6), 
-                    //   borderRadius: BorderRadius.circular(8.0), 
+                    //   color:  const Color(0xFFF2AAB6),
+                    //   borderRadius: BorderRadius.circular(8.0),
                     // ),
                     child: const Text(
-                      'Something', 
+                      'Something',
                       style: TextStyle(
-                        fontSize: 24, 
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black54, 
+                        color: Colors.black54,
                       ),
-                      textAlign: TextAlign.center, 
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ],
@@ -92,11 +96,11 @@ class _DashboardState extends State<AdminDashboard> {
                       child: Row(
                         children: <Widget>[
                           ElevatedButton(
-                            onPressed: () => Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) => const CreateStallForm())),
-                            child: const Text(
-                                'Add Stall'
-                            ),
+                            onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateStallForm())),
+                            child: const Text('Add Stall'),
                           ),
                         ],
                       ),
@@ -106,10 +110,11 @@ class _DashboardState extends State<AdminDashboard> {
                       child: Row(
                         children: <Widget>[
                           ElevatedButton(
-                            onPressed: () {},
-                            child: const Text(
-                                'See All Stalls'
-                            ),
+                            onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const StallDataDisplayList())),
+                            child: const Text('See All Stalls'),
                           ),
                         ],
                       ),
@@ -118,8 +123,6 @@ class _DashboardState extends State<AdminDashboard> {
                 ),
               ),
             ),
-
-
             const SizedBox(height: 20),
             Card.filled(
               color: const Color(0xFFF2AAB6),
@@ -136,11 +139,11 @@ class _DashboardState extends State<AdminDashboard> {
                       child: Row(
                         children: <Widget>[
                           ElevatedButton(
-                            onPressed: () => Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) => const CreateUserForm())),
-                            child: const Text(
-                                'Add User'
-                            ),
+                            onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateUserForm())),
+                            child: const Text('Add User'),
                           ),
                         ],
                       ),
@@ -151,9 +154,7 @@ class _DashboardState extends State<AdminDashboard> {
                         children: <Widget>[
                           ElevatedButton(
                             onPressed: () {},
-                            child: const Text(
-                                'See All Users'
-                            ),
+                            child: const Text('See All Users'),
                           ),
                         ],
                       ),
@@ -167,6 +168,7 @@ class _DashboardState extends State<AdminDashboard> {
       ),
     );
   }
+
   Widget _stallTitle() {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,6 +188,7 @@ class _DashboardState extends State<AdminDashboard> {
       ],
     );
   }
+
   Widget _userTitle() {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,

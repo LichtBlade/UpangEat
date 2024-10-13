@@ -7,6 +7,7 @@ import 'package:upang_eat/bloc/food_bloc/food_bloc.dart';
 import 'package:upang_eat/bloc/order_bloc/order_bloc.dart';
 import 'package:upang_eat/bloc/stall_bloc/stall_bloc.dart';
 import 'package:upang_eat/bloc/transaction_bloc/transaction_bloc.dart';
+import 'package:upang_eat/pages/admin_pages/admin_dashboard.dart';
 import 'package:upang_eat/pages/seller_center/seller_center.dart';
 import 'package:upang_eat/repositories/admin_repository_impl.dart';
 import 'package:upang_eat/repositories/auth_repository_impl.dart';
@@ -19,7 +20,6 @@ import 'package:upang_eat/repositories/tray_repository_impl.dart';
 
 import 'package:upang_eat/repositories/user_repository_impl.dart';
 
-
 import 'package:upang_eat/pages/user_login.dart';
 import 'Pages/home.dart';
 
@@ -31,7 +31,8 @@ void main() {
 }
 
 class IpAddress {
-  static String get ipAddress => "http://192.168.68.104:3000"; // change ip before running
+  static String get ipAddress =>
+      "http://192.168.68.104:3000"; // change ip before running
 }
 
 class MyApp extends StatefulWidget {
@@ -46,6 +47,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -56,7 +58,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<AdminBloc>(
           create: (context) => AdminBloc(AdminRepositoryImpl()),
         ),
-      //create_user
+        //create_user
         BlocProvider<CreateUserBloc>(
           create: (context) => CreateUserBloc(
             UserRepositoryImpl(baseUrl: IpAddress.ipAddress),
@@ -84,22 +86,25 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         title: "Upang Eat",
         debugShowCheckedModeBanner: false,
- 
+
         theme: ThemeData(
             scaffoldBackgroundColor: const Color(0xFFF8F8F8),
             cardTheme: const CardTheme(color: Colors.white),
             appBarTheme: const AppBarTheme(color: Color(0xFFF8F8F8))),
         //temporary for testing, uncomment if done
         // home: const Home(),
-        
+
         //test for admin
-        home: const UserLogin(),
+        //home: const UserLogin(),
 
         //test for login
         // home: LoginPage(),
 
+        //test for admin
+        home: const AdminDashboard(),
 
-
+        //test for seller center
+        // home: const SellerCenter()
       ),
     );
   }
