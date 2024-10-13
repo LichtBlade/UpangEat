@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:upang_eat/main.dart';
 import 'package:upang_eat/user_data.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
@@ -54,8 +55,8 @@ class SendDialog extends StatelessWidget {
   }
 
   Future<void> sendEther(double ethAmount, String accountID) async {
-    String rpcUrl = "http://10.0.2.2:7545"; // For Android emulator
-    String wsUrl = "ws://10.0.2.2:7545/";
+    String rpcUrl = IpAddress.rpGanacheUrl; // For Android emulator
+    String wsUrl = IpAddress.wsGanacheUrl;
 
     try {
       // Create Web3 client

@@ -377,30 +377,39 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
             listener: (context, state) {
               if (state is TrayStallConflict) {
                 print("TrayStallConflict");
-                showDialog(context: context, builder: (context) {
-                  return AlertDialog(
-                    title: const Text("Stall Conflict"),
-                    content: const Text("You have items from another stall in your tray. Do you want to clear your tray and add this item?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          print("Delete and create tray");
-                          context.read<TrayBloc>().add(StallConflictDeleteTrayIds(state.trayIdsToDelete, globalUserData!.userId, widget.food.foodItemId, widget.quantity));
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text("Stall Conflict"),
+                        content: const Text(
+                            "You have items from another stall in your tray. Do you want to clear your tray and add this item?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              print("Delete and create tray");
+                              context.read<TrayBloc>().add(
+                                  StallConflictDeleteTrayIds(
+                                      state.trayIdsToDelete,
+                                      globalUserData!.userId,
+                                      widget.food.foodItemId,
+                                      widget.quantity));
 
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(snackBar);
-                        },
-                        child: const Text('Yes'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context), // Close the dialog
-                        child: const Text('No'),
-                      ),
-                    ],
-                  );
-                });
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(snackBar);
+                            },
+                            child: const Text('Yes'),
+                          ),
+                          TextButton(
+                            onPressed: () =>
+                                Navigator.pop(context), // Close the dialog
+                            child: const Text('No'),
+                          ),
+                        ],
+                      );
+                    });
               } else if (state is TrayAdded) {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
@@ -437,11 +446,10 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
                     print("Create Tray");
 
                     print("Food ${widget.food}");
-                    context
-                        .read<TrayBloc>()
-                        .add(CreateTray(globalUserData!.userId, widget.food.foodItemId, widget.quantity));
-
-
+                    context.read<TrayBloc>().add(CreateTray(
+                        globalUserData!.userId,
+                        widget.food.foodItemId,
+                        widget.quantity));
                   }
                   Navigator.pop(context);
                 },
