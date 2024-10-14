@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
           create: (context) => LoginBloc(AuthRepositoryImpl()),
         ),
         BlocProvider<AdminBloc>(
-          create: (context) => AdminBloc(AdminRepositoryImpl()),
+          create: (context) => AdminBloc(StallRepositoryImpl()),
         ),
         //create_user
         BlocProvider<CreateUserBloc>(
