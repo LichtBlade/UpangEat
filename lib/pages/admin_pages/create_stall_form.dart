@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/bloc/admin_bloc/admin_bloc.dart';
 import 'package:upang_eat/bloc/admin_bloc/admin_event.dart';
 import 'package:upang_eat/bloc/admin_bloc/admin_state.dart';
-import 'package:upang_eat/repositories/admin_repository_impl.dart';
-import 'package:upang_eat/pages/admin_pages/admin_dashboard.dart'; 
+import 'package:upang_eat/pages/admin_pages/admin_dashboard.dart';
+import 'package:upang_eat/repositories/stall_repository_impl.dart';
 
 class CreateStallForm extends StatefulWidget {
   const CreateStallForm({super.key});
@@ -20,10 +20,12 @@ class _CreateStallFormState extends State<CreateStallForm> {
   final TextEditingController _contactNoController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
+  bool _isActive = true;
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AdminBloc(AdminRepositoryImpl()),
+      create: (context) => AdminBloc(StallRepositoryImpl()),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Create Stall'),
@@ -51,8 +53,6 @@ class _CreateStallFormState extends State<CreateStallForm> {
                     },
                   ),
                   const SizedBox(height: 16.0),
-
-                  // Owner User ID Field
                   TextFormField(
                     controller: _ownerIdController,
                     decoration: const InputDecoration(
@@ -67,7 +67,6 @@ class _CreateStallFormState extends State<CreateStallForm> {
                     },
                   ),
                   const SizedBox(height: 16.0),
-
                   TextFormField(
                     controller: _contactNoController,
                     decoration: const InputDecoration(
@@ -82,7 +81,6 @@ class _CreateStallFormState extends State<CreateStallForm> {
                     },
                   ),
                   const SizedBox(height: 16.0),
-
                   TextFormField(
                     controller: _descriptionController,
                     decoration: const InputDecoration(
@@ -93,7 +91,24 @@ class _CreateStallFormState extends State<CreateStallForm> {
                     maxLines: 4,
                   ),
                   const SizedBox(height: 32.0),
-
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Active',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Switch(
+                        value: _isActive,
+                        onChanged: (bool value) {
+                          setState(() {
+                            _isActive = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32.0),
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
@@ -101,9 +116,10 @@ class _CreateStallFormState extends State<CreateStallForm> {
                           context.read<AdminBloc>().add(
                             CreateStallEvent(
                               stallName: _stallNameController.text.trim(),
+                              ownerId: int.parse(_ownerIdController.text.trim()),
+                              contactNumber: int.parse(_contactNoController.text.trim()),
                               description: _descriptionController.text.trim(),
-                              ownerId: _ownerIdController.text.trim(),
-                              contactNo: _contactNoController.text.trim(),
+                              isActive: _isActive,
                             ),
                           );
                         }
