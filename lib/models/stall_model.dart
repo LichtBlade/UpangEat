@@ -27,7 +27,7 @@ class Stall extends Equatable {
       stallName: json['stall_name'],
       ownerId: json['owner_id'],
       description: json['description'] ?? "No Desc",
-      contactNumber: json['contact_number'] ?? 0,
+      contactNumber: json['contact_number'] is int ? json['contact_number'] : int.tryParse(json['contact_number'] ?? '0'),
       imageUrl: json['image_url'] ?? "assets/stalls/banners/BossSisigBanner.jpg",
       imageBannerUrl: json['image_banner_url'] ?? "assets/stalls/profiles/1.jpg",
       isActive: json['is_active'] == 1,
