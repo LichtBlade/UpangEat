@@ -14,3 +14,5 @@ class LoadTransaction extends TransactionEvent {
   @override
   List<Object?> get props => [id];
 }
+
+class LoadAllTransactions extends TransactionEvent {}

@@ -87,9 +87,9 @@ class _HomeState extends State<Home> {
                 SliverToBoxAdapter(
                   child: _StallCardHorizontalList(),
                 ),
-                const SliverToBoxAdapter(
-                  child: Carousel(),
-                ),
+                // const SliverToBoxAdapter(
+                //   child: Carousel(),
+                // ),
                 const SliverToBoxAdapter(
                   child: _Header(title: "Meals"),
                 ),

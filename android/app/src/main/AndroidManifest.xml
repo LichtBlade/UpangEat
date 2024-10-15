@@ -4,7 +4,7 @@
     <application
         android:label="upang_eat"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/upangeats3">
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:upang_eat/main.dart';
 import 'package:upang_eat/pages/admin_pages/all_stalls.dart';
 import 'package:upang_eat/pages/admin_pages/create_stall_form.dart';
 import 'package:upang_eat/pages/admin_pages/create_user_form.dart';
@@ -14,7 +15,7 @@ class AdminDashboard extends StatefulWidget {
 
 class _DashboardState extends State<AdminDashboard> {
   final stallRepository = StallRepositoryImpl();
-  final userRepository = UserRepositoryImpl(baseUrl: 'http://localhost:3000');
+  final userRepository = UserRepositoryImpl(baseUrl: 'http"//192.168.100.25:3000');
 
   int? totalStalls;
   int? totalUsers;

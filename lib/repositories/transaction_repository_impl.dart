@@ -19,4 +19,15 @@ class TransactionRepositoryImpl extends TransactionRepository {
       throw Exception('Failed to load transactions');
     }
   }
+
+  @override
+  Future<List<TransactionModel>> fetchTransaction() async {
+    final response = await http.get(Uri.parse('$baseUrl/transactions'));
+    if (response.statusCode == 200) {
+      final List<dynamic> transactionData = json.decode(response.body);
+      return transactionData.map((json) => TransactionModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load transactions');
+    }
+  }
 }

@@ -22,6 +22,10 @@ class Wallet extends StatefulWidget {
 class _WalletState extends State<Wallet> {
   final coin = "assets/FlameCoin.png";
   final ethImg = "assets/ethSign.png";
+  final btc = "assets/wallets/btc.png";
+  final ltc = "assets/wallets/ltc.png";
+  final xrp = "assets/wallets/xrp.png";
+  final axs = "assets/wallets/axs.png";
   final sendIcon = "assets/wallets/send.png";
   final depositIcon = "assets/wallets/deposit.png";
   final historyIcon = "assets/wallets/history.png";
@@ -344,7 +348,7 @@ class _WalletState extends State<Wallet> {
                           : '${ethPriceChange.toStringAsFixed(2)}%', // Just show as is if negative
                     ),
                     TokenCard(
-                      tokenImage: coin,
+                      tokenImage: btc,
                       tokenName: 'BTC',
                       tokenAmount: NumberFormat.currency(
                         locale: 'en_PH',
@@ -356,7 +360,7 @@ class _WalletState extends State<Wallet> {
                           : '${btcPriceChange.toStringAsFixed(2)}%',
                     ),
                     TokenCard(
-                      tokenImage: coin,
+                      tokenImage: ltc,
                       tokenName: 'LTC',
                       tokenAmount: NumberFormat.currency(
                         locale: 'en_PH',
@@ -368,7 +372,7 @@ class _WalletState extends State<Wallet> {
                           : '${ltcPriceChange.toStringAsFixed(2)}%',
                     ),
                     TokenCard(
-                      tokenImage: coin,
+                      tokenImage: xrp,
                       tokenName: 'XRP',
                       tokenAmount: NumberFormat.currency(
                         locale: 'en_PH',
@@ -380,7 +384,7 @@ class _WalletState extends State<Wallet> {
                           : '${xrpPriceChange.toStringAsFixed(2)}%',
                     ),
                     TokenCard(
-                      tokenImage: coin,
+                      tokenImage: axs,
                       tokenName: 'AXS',
                       tokenAmount: NumberFormat.currency(
                         locale: 'en_PH',
