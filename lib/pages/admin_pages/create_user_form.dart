@@ -23,7 +23,21 @@ class _CreateUserFormState extends State<CreateUserForm> {
           ),
         ],
       ),
-      body: const UserFormCard()
+      body: Stack(
+        children: [
+          // Background image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/image.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // Form content
+          const UserFormCard(),
+        ],
+      ),
     );
   }
 
