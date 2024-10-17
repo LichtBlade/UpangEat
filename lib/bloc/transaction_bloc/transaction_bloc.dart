@@ -20,5 +20,15 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         emit(TransactionError(error.toString()));
       }
     });
+
+    on<LoadAllTransactions>((event, emit) async {
+      emit(TransactionLoading());
+      try {
+        final transactions = await _transactionRepository.fetchTransaction();
+        emit(TransactionLoaded(transactions));
+      } catch (error) {
+        emit(TransactionError(error.toString()));
+      }
+    });
   }
 }

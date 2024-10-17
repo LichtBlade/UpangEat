@@ -24,7 +24,7 @@ class _AllStallsScreenState extends State<AllStallsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('All Stalls'),
-        backgroundColor: const Color.fromARGB(255, 255, 169, 186),
+        backgroundColor: Colors.white,
       ),
       body: FutureBuilder<List<Stall>>(
         future: futureStalls,

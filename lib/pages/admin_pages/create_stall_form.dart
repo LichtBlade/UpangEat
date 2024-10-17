@@ -29,137 +29,160 @@ class _CreateStallFormState extends State<CreateStallForm> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Create Stall'),
-          backgroundColor: const Color.fromARGB(255, 255, 169, 186),
+          backgroundColor: Colors.white,
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formkey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    controller: _stallNameController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Stall Name',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter stall name';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16.0),
-                  TextFormField(
-                    controller: _ownerIdController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Owner User ID',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Owner User ID';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16.0),
-                  TextFormField(
-                    controller: _contactNoController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Contact No.',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Contact No.';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16.0),
-                  TextFormField(
-                    controller: _descriptionController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Description (Optional)',
-                      hintText: 'Brief description of the stall',
-                    ),
-                    maxLines: 4,
-                  ),
-                  const SizedBox(height: 32.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Active',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Switch(
-                        value: _isActive,
-                        onChanged: (bool value) {
-                          setState(() {
-                            _isActive = value;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 32.0),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formkey.currentState!.validate()) {
-                          context.read<AdminBloc>().add(
-                            CreateStallEvent(
-                              stallName: _stallNameController.text.trim(),
-                              ownerId: int.parse(_ownerIdController.text.trim()),
-                              contactNumber: int.parse(_contactNoController.text.trim()),
-                              description: _descriptionController.text.trim(),
-                              isActive: _isActive,
-                            ),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 255, 169, 186),
-                      ),
-                      child: const Text('Create Stall'),
-                    ),
-                  ),
-                  BlocListener<AdminBloc, AdminState>(
-                    listener: (context, state) {
-                      if (state is AdminLoading) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Creating stall...')),
-                        );
-                      } else if (state is AdminSuccess) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Stall created successfully!'),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const AdminDashboard(),
-                          ),
-                        );
-                      } else if (state is AdminFailure) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error: ${state.error}')),
-                        );
-                      }
-                    },
-                    child: const SizedBox.shrink(),
-                  ),
-                ],
+        body: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/image.png'),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 50.0),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Form(
+                      key: _formkey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextFormField(
+                            controller: _stallNameController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Stall Name',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter stall name';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16.0),
+                          TextFormField(
+                            controller: _ownerIdController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Owner User ID',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter Owner User ID';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16.0),
+                          TextFormField(
+                            controller: _contactNoController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Contact No.',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter Contact No.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16.0),
+                          TextFormField(
+                            controller: _descriptionController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Description (Optional)',
+                              hintText: 'Brief description of the stall',
+                            ),
+                            maxLines: 4,
+                          ),
+                          const SizedBox(height: 32.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Active',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Switch(
+                                value: _isActive,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    _isActive = value;
+                                  });
+                                },
+                                activeColor: const Color(0xFFc5473d),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 32.0),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_formkey.currentState!.validate()) {
+                                  context.read<AdminBloc>().add(
+                                    CreateStallEvent(
+                                      stallName: _stallNameController.text.trim(),
+                                      ownerId: int.parse(_ownerIdController.text.trim()),
+                                      contactNumber: int.parse(_contactNoController.text.trim()),
+                                      description: _descriptionController.text.trim(),
+                                      isActive: _isActive,
+                                    ),
+                                  );
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const AdminDashboard()), // Replace with your AdminDashboard widget
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFc5473d),
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text('Create Stall'),
+                            ),
+                          ),
+                          BlocListener<AdminBloc, AdminState>(
+                            listener: (context, state) {
+                              if (state is AdminLoading) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Creating stall...')),
+                                );
+                              } else if (state is AdminSuccess) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Stall created successfully!'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const AdminDashboard(),
+                                  ),
+                                );
+                              } else if (state is AdminFailure) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Error: ${state.error}')),
+                                );
+                              }
+                            },
+                            child: const SizedBox.shrink(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

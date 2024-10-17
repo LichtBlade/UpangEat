@@ -32,11 +32,14 @@ class TransactionModel extends Equatable {
       amount: json['amount'],
       sourceId: json['source_id'],
       destinationId: json['destination_id'],
-      transactionDate: DateFormat("M/d/yy HH:mm").format(DateTime.parse(json['transaction_date'])),
+      transactionDate: json['transaction_date'] != null
+          ? DateFormat("M/d/yy HH:mm").format(DateTime.parse(json['transaction_date']))
+          : null,  // Handle potential null values
       status: _toSentenceCase(json['status']),
       description: json['description'],
     );
   }
+
 
   Map<String, dynamic> toJson() {
     return {

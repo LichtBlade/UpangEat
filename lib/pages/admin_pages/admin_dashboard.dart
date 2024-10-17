@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:upang_eat/main.dart';
 import 'package:upang_eat/pages/admin_pages/all_stalls.dart';
 import 'package:upang_eat/pages/admin_pages/create_stall_form.dart';
 import 'package:upang_eat/pages/admin_pages/create_user_form.dart';
 import 'package:upang_eat/repositories/stall_repository_impl.dart';
 import 'package:upang_eat/repositories/user_repository_impl.dart';
+import 'package:upang_eat/widgets/admin_widgets/linechart_card.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -14,7 +16,7 @@ class AdminDashboard extends StatefulWidget {
 
 class _DashboardState extends State<AdminDashboard> {
   final stallRepository = StallRepositoryImpl();
-  final userRepository = UserRepositoryImpl(baseUrl: 'http://localhost:3000');
+  final userRepository = UserRepositoryImpl(baseUrl: IpAddress.ipAddress);
 
   int? totalStalls;
   int? totalUsers;
@@ -47,170 +49,198 @@ class _DashboardState extends State<AdminDashboard> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
-        backgroundColor: const Color.fromARGB(255, 255, 169, 186),
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
       ),
-      body: totalStalls == null || totalUsers == null || activeStalls == null
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Welcome Admin',
-                    style: TextStyle(
-                      color: Color(0xFF202020),
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/image.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          totalStalls == null || totalUsers == null || activeStalls == null
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Card.filled(
-                    color: const Color(0xFFF2AAB6),
-                    elevation: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: SizedBox(
-                        width: 380,
-                        child: Text(
-                          'Overview\nTotal Stalls: $totalStalls\nActive Stalls: $activeStalls\nTotal Users: $totalUsers',
-                          style: const TextStyle(
-                            color: Color(0xFF202020),
-                            fontSize: 20,
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Welcome Admin',
+                          style: TextStyle(
+                            color: Color(0xFFffffff),
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-                  Card.filled(
-                    color: const Color(0xFFF2AAB6),
-                    elevation: 8,
-                    child: Theme(
-                      data: Theme.of(context).copyWith(
-                        dividerColor: Colors.transparent,
-                      ),
-                      child: ExpansionTile(
-                        title: _stallTitle(),
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: <Widget>[
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    final result = await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (context) => const CreateStallForm()),
-                                    );
-                                    if (result == true) {
-                                      _loadDashboardData();
-                                    }
-                                  },
-                                  child: const Text('Add Stall'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: <Widget>[
-                                ElevatedButton(
-                                  onPressed: () => Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) => const AllStallsScreen()),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _buildStatCard('Total Stalls', totalStalls!),
+                            _buildStatCard('Active Stalls', activeStalls!),
+                            _buildStatCard('Total Users', totalUsers!),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        const Card.filled(
+                          color: Colors.white,
+                          elevation: 8,
+                          child: LineChartCard(),
+                        ),
+                        const SizedBox(height: 20),
+                        _buildExpansionTile(
+                          title: _stallTitle(),
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                final result = await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => const CreateStallForm()
                                   ),
-                                  child: const Text('See All Stalls'),
-                                ),
-                              ],
+                                );
+                                if (result == true) {
+                                  _loadDashboardData();
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFc5473d),
+                              ),
+                              child: const Text(
+                                  'Add Stall',
+                                  style: TextStyle(color: Color(0xFFFFFFFF))
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                            ElevatedButton(
+                              onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => const AllStallsScreen()
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFc5473d),
+                              ),
+                              child: const Text(
+                                  'See All Stalls',
+                                  style: TextStyle(color: Color(0xFFFFFFFF))
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        _buildExpansionTile(
+                          title: _userTitle(),
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                final result = await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => const CreateUserForm()
+                                  ),
+                                );
+                                if (result == true) {
+                                  _loadDashboardData();
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFc5473d),
+                              ),
+                              child: const Text(
+                                  'Add User',
+                                  style: TextStyle(color: Color(0xFFFFFFFF)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
+          ),
+        ],
+      ),
 
-                  const SizedBox(height: 20),
-                  Card.filled(
-                    color: const Color(0xFFF2AAB6),
-                    elevation: 8,
-                    child: Theme(
-                      data: Theme.of(context).copyWith(
-                        dividerColor: Colors.transparent,
-                      ),
-                      child: ExpansionTile(
-                        title: _userTitle(),
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: <Widget>[
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    final result = await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (context) => const CreateUserForm()),
-                                    );
-                                    if (result == true) {
-                                      _loadDashboardData();
-                                    }
-                                  },
-                                  child: const Text('Add User'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+    );
+  }
+
+  Widget _buildStatCard(String title, int value) {
+    return Card.filled(
+      color: Colors.white,
+      elevation: 8,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        width: 100,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '$value',
+              style: const TextStyle(
+                color: Color(0xFFc5473d),
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
+            Text(
+              title,
+              style: const TextStyle(
+                color: Color(0xFF202020),
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExpansionTile({required Widget title, required List<Widget> children}) {
+    return Card.filled(
+      color: Colors.white,
+      elevation: 8,
+      child: ExpansionTile(
+        title: title,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: children,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _stallTitle() {
-    return const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Text(
-              'Stalls',
-              style: TextStyle(
-                color: Color(0xFF202020),
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ],
+    return const Text(
+      'Stalls',
+      style: TextStyle(
+        color: Color(0xFFc5473d),
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 
   Widget _userTitle() {
-    return const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Text(
-              'Users',
-              style: TextStyle(
-                color: Color(0xFF202020),
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ],
+    return const Text(
+      'Users',
+      style: TextStyle(
+        color: Color(0xFFc5473d),
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 }

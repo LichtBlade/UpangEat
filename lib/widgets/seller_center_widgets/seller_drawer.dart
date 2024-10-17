@@ -18,9 +18,28 @@ class _SellerDrawerState extends State<SellerDrawer> {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(color: Colors.lightGreen),
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 222, 25, 67),
+            ),
             padding: const EdgeInsets.only(top: 28.0),
-            child: Column(children: [Image.asset("assets/FlameCoin.png", width: 64, height: 64,), const Text("Upang Eats", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),)],),
+            child: Column(
+              children: [
+                Image.asset(
+                  "assets/upangeats.png",
+                  width: 98,
+                  height: 98,
+                  color: Colors.white,
+                ),
+                const Text(
+                  "Upang Eats",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 22,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            ),
           ),
           ListTile(
             title: const Text("Home"),

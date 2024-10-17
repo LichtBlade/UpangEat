@@ -5,6 +5,7 @@ import 'package:upang_eat/Pages/home.dart';
 import 'package:upang_eat/main.dart';
 import 'package:upang_eat/pages/admin_pages/admin_dashboard.dart';
 import 'package:upang_eat/pages/seller_center/seller_center.dart';
+import 'package:upang_eat/pages/slideshow.dart';
 import 'package:upang_eat/user_data.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
@@ -26,7 +27,6 @@ class _UserLoginState extends State<UserLogin> {
   @override
   void initState() {
     context.read<LoginBloc>().add(RemoveUserData());
-
     super.initState();
   }
 
@@ -69,7 +69,7 @@ class _UserLoginState extends State<UserLogin> {
                 globalPrivateKey = globalUserWallet;
                 _fetchWalletGanche(globalPrivateKey);
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const Home()),
+                  MaterialPageRoute(builder: (context) => SlideshowScreen()),
                 );
               }
             } else if (state is LoginFailed) {
@@ -81,22 +81,46 @@ class _UserLoginState extends State<UserLogin> {
           },
           child: Stack(
             children: [
-              Column(
-                children: [
-                  const Image(
-                    image: AssetImage("assets/slazzer-edit-image.png"),
-                    width: 200,
-                    height: 200,
-                    fit: BoxFit.cover,
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/upang.jpg',
+                  fit: BoxFit.cover,
+                  color: Color(0xFF9A140A).withOpacity(0.5),
+                  colorBlendMode: BlendMode.luminosity,
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.65,  // More than half of the screen
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
                   ),
-                  const Text(
-                    "Log In",
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        const Image(
+                          image: AssetImage("assets/upangeats.png"),
+                          width: 200,
+                          height: 200,
+                          fit: BoxFit.contain,
+                        ),
+                        const Text(
+                          "Log In",
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
                         TextField(
                           controller: emailController,
                           decoration: InputDecoration(
@@ -105,8 +129,7 @@ class _UserLoginState extends State<UserLogin> {
                               borderRadius: BorderRadius.circular(18),
                               borderSide: BorderSide.none,
                             ),
-                            fillColor:
-                                Theme.of(context).primaryColor.withOpacity(0.1),
+                            fillColor: Colors.white,
                             filled: true,
                             prefixIcon: const Icon(Icons.person),
                           ),
@@ -120,8 +143,7 @@ class _UserLoginState extends State<UserLogin> {
                               borderRadius: BorderRadius.circular(18),
                               borderSide: BorderSide.none,
                             ),
-                            fillColor:
-                                Theme.of(context).primaryColor.withOpacity(0.1),
+                            fillColor: Colors.white,
                             filled: true,
                             prefixIcon: const Icon(Icons.lock),
                           ),
@@ -139,31 +161,36 @@ class _UserLoginState extends State<UserLogin> {
                             );
                           },
                           style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
                             shape: const StadiumBorder(),
                             padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
                           child: const Text(
                             "Login",
-                            style: TextStyle(fontSize: 20),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF3A3A3A),
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
-              isLoading
-                  ? Positioned(
-                      bottom: 0,
-                      right: 0,
-                      left: 0,
-                      top: 0,
-                      child: Container(
-                          color: Colors.black54,
-                          child:
-                              const Center(child: CircularProgressIndicator())),
-                    )
-                  : const SizedBox.shrink(),
+              // Loader if isLoading is true
+              if (isLoading)
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  left: 0,
+                  top: 0,
+                  child: Container(
+                    color: Colors.black54,
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                ),
             ],
           ),
         ),
@@ -185,7 +212,7 @@ class _UserLoginState extends State<UserLogin> {
 
     // Obtain credentials from private key
     Credentials credentials =
-        await client.credentialsFromPrivateKey(privateKey);
+    await client.credentialsFromPrivateKey(privateKey);
 
     // Get your Ethereum address from the credentials
     EthereumAddress ownAddress = await credentials.extractAddress();
@@ -193,9 +220,8 @@ class _UserLoginState extends State<UserLogin> {
     // Fetch balance
     EtherAmount balance = await client.getBalance(ownAddress);
 
-      globalEthBalance = balance.getValueInUnit(EtherUnit.ether);
-      globalWalletEthAddress = ownAddress.toString();
-      print(globalWalletEthAddress); // Convert balance to ETH
-
+    globalEthBalance = balance.getValueInUnit(EtherUnit.ether);
+    globalWalletEthAddress = ownAddress.toString();
+    print(globalWalletEthAddress); // Convert balance to ETH
   }
 }
