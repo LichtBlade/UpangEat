@@ -30,20 +30,6 @@ class _WalletState extends State<Wallet> {
   final depositIcon = "assets/wallets/deposit.png";
   final historyIcon = "assets/wallets/history.png";
 
-  // Price
-  double ethPrice = 0.0;
-  double btcPrice = 0.0;
-  double ltcPrice = 0.0;
-  double xrpPrice = 0.0;
-  double axsPrice = 0.0;
-
-  // Price change
-  double axsPriceChange = 0.0;
-  double ethPriceChange = 0.0;
-  double btcPriceChange = 0.0;
-  double ltcPriceChange = 0.0;
-  double xrpPriceChange = 0.0;
-
   double currentEthBalance = 0.0;
   double _globalEthBalance = globalEthBalance;
 
@@ -63,62 +49,9 @@ class _WalletState extends State<Wallet> {
     );
   }
 
-  Future<void> _fetchTokenPrices() async {
-    const String apiUrl =
-        "https://api.coingecko.com/api/v3/simple/price?ids=ethereum,bitcoin,litecoin,ripple,axie-infinity&vs_currencies=php&include_24hr_change=true"; // Include 24hr change
-
-    try {
-      final response = await http.get(Uri.parse(apiUrl));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        setState(() {
-          ethPrice = data['ethereum']['php'] != null
-              ? (data['ethereum']['php'] is int
-              ? (data['ethereum']['php'] as int).toDouble()
-              : data['ethereum']['php'])
-              : 0.0;
-          btcPrice = data['bitcoin']['php'] != null
-              ? (data['bitcoin']['php'] is int
-              ? (data['bitcoin']['php'] as int).toDouble()
-              : data['bitcoin']['php'])
-              : 0.0;
-          ltcPrice = data['litecoin']['php'] != null
-              ? (data['litecoin']['php'] is int
-              ? (data['litecoin']['php'] as int).toDouble()
-              : data['litecoin']['php'])
-              : 0.0;
-          xrpPrice = data['ripple']['php'] != null
-              ? (data['ripple']['php'] is int
-              ? (data['ripple']['php'] as int).toDouble()
-              : data['ripple']['php'])
-              : 0.0;
-          axsPrice = data['axie-infinity']['php'] != null
-              ? (data['axie-infinity']['php'] is int
-              ? (data['axie-infinity']['php'] as int).toDouble()
-              : data['axie-infinity']['php'])
-              : 0.0;
-
-          ethPriceChange = data['ethereum']['php_24h_change'] ?? 0.0;
-          btcPriceChange = data['bitcoin']['php_24h_change'] ?? 0.0;
-          ltcPriceChange = data['litecoin']['php_24h_change'] ?? 0.0;
-          xrpPriceChange = data['ripple']['php_24h_change'] ?? 0.0;
-          axsPriceChange = data['axie-infinity']['php_24h_change'] ?? 0.0;
-
-          globalEthPrice = ethPrice;
-        });
-      } else {
-        print("Failed to load token prices.");
-      }
-    } catch (error) {
-      print("Error fetching token prices: $error");
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    _fetchTokenPrices(); // Fetch token prices when the widget initializes
   }
 
   @override
@@ -134,7 +67,7 @@ class _WalletState extends State<Wallet> {
               // Your existing Card widget
               Container(
                 margin:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -170,7 +103,7 @@ class _WalletState extends State<Wallet> {
                               children: [
                                 BlocBuilder<WalletBloc, WalletState>(
                                   builder: (context, state) {
-                                    if (state is WalletLoading){
+                                    if (state is WalletLoading) {
                                       return Text(
                                         _globalEthBalance.toStringAsFixed(2),
                                         // globalEthBalance.toStringAsFixed(2),
@@ -180,7 +113,7 @@ class _WalletState extends State<Wallet> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       );
-                                    } else if (state is WalletBalanceLoaded){
+                                    } else if (state is WalletBalanceLoaded) {
                                       return Text(
                                         // _globalEthBalance.toStringAsFixed(2),
                                         state.ethBalance.toStringAsFixed(2),
@@ -190,12 +123,11 @@ class _WalletState extends State<Wallet> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       );
-                                    } else if (state is WalletError){
+                                    } else if (state is WalletError) {
                                       return Text(state.message);
                                     } else {
                                       return const Text("Unexpected State");
                                     }
-
                                   },
                                 ),
                                 TextButton(
@@ -301,7 +233,7 @@ class _WalletState extends State<Wallet> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const TransactionHistory()),
+                                    const TransactionHistory()),
                           );
                           print('History clicked');
                         },
@@ -342,10 +274,10 @@ class _WalletState extends State<Wallet> {
                         locale: 'en_PH',
                         symbol: '₱',
                         decimalDigits: 2,
-                      ).format(ethPrice), // Real value of ETH formatted
-                      tokenChange: ethPriceChange >= 0
-                          ? '+${ethPriceChange.toStringAsFixed(2)}%' // Format with '+' if positive
-                          : '${ethPriceChange.toStringAsFixed(2)}%', // Just show as is if negative
+                      ).format(globalEthPrice), // Real value of ETH formatted
+                      tokenChange: globalEthPriceChange >= 0
+                          ? '+${globalEthPriceChange.toStringAsFixed(2)}%' // Format with '+' if positive
+                          : '${globalEthPriceChange.toStringAsFixed(2)}%', // Just show as is if negative
                     ),
                     TokenCard(
                       tokenImage: btc,
@@ -354,10 +286,10 @@ class _WalletState extends State<Wallet> {
                         locale: 'en_PH',
                         symbol: '₱',
                         decimalDigits: 2,
-                      ).format(btcPrice),
-                      tokenChange: btcPriceChange >= 0
-                          ? '+${btcPriceChange.toStringAsFixed(2)}%'
-                          : '${btcPriceChange.toStringAsFixed(2)}%',
+                      ).format(globalBtcPrice),
+                      tokenChange: globalBtcPriceChange >= 0
+                          ? '+${globalBtcPriceChange.toStringAsFixed(2)}%'
+                          : '${globalBtcPriceChange.toStringAsFixed(2)}%',
                     ),
                     TokenCard(
                       tokenImage: ltc,
@@ -366,10 +298,10 @@ class _WalletState extends State<Wallet> {
                         locale: 'en_PH',
                         symbol: '₱',
                         decimalDigits: 2,
-                      ).format(ltcPrice),
-                      tokenChange: ltcPriceChange >= 0
-                          ? '+${ltcPriceChange.toStringAsFixed(2)}%'
-                          : '${ltcPriceChange.toStringAsFixed(2)}%',
+                      ).format(globalLtcPrice),
+                      tokenChange: globalLtcPriceChange >= 0
+                          ? '+${globalLtcPriceChange.toStringAsFixed(2)}%'
+                          : '${globalLtcPriceChange.toStringAsFixed(2)}%',
                     ),
                     TokenCard(
                       tokenImage: xrp,
@@ -378,10 +310,10 @@ class _WalletState extends State<Wallet> {
                         locale: 'en_PH',
                         symbol: '₱',
                         decimalDigits: 2,
-                      ).format(xrpPrice),
-                      tokenChange: xrpPriceChange >= 0
-                          ? '+${xrpPriceChange.toStringAsFixed(2)}%'
-                          : '${xrpPriceChange.toStringAsFixed(2)}%',
+                      ).format(globalXrpPrice),
+                      tokenChange: globalXrpPriceChange >= 0
+                          ? '+${globalXrpPriceChange.toStringAsFixed(2)}%'
+                          : '${globalXrpPriceChange.toStringAsFixed(2)}%',
                     ),
                     TokenCard(
                       tokenImage: axs,
@@ -390,10 +322,10 @@ class _WalletState extends State<Wallet> {
                         locale: 'en_PH',
                         symbol: '₱',
                         decimalDigits: 2,
-                      ).format(axsPrice),
-                      tokenChange: axsPriceChange >= 0
-                          ? '+${axsPriceChange.toStringAsFixed(2)}%'
-                          : '${axsPriceChange.toStringAsFixed(2)}%',
+                      ).format(globalAxsPriceChange),
+                      tokenChange: globalAxsPriceChange >= 0
+                          ? '+${globalAxsPriceChange.toStringAsFixed(2)}%'
+                          : '${globalAxsPriceChange.toStringAsFixed(2)}%',
                     ),
                   ],
                 ),
