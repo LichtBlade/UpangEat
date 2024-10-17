@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:upang_eat/pages/seller_center/analytics.dart';
 import 'package:upang_eat/pages/user_login.dart';
+import 'package:upang_eat/user_data.dart';
 
 import '../../Pages/wallet_pages/wallet.dart';
+import '../../bloc/analytic_food_bloc/analytic_food_bloc.dart';
+import '../../models/food_analytic_model.dart';
 
 class SellerDrawer extends StatefulWidget {
   const SellerDrawer({super.key});
@@ -11,6 +16,7 @@ class SellerDrawer extends StatefulWidget {
 }
 
 class _SellerDrawerState extends State<SellerDrawer> {
+  List<FoodAnalyticModel> foodAnalytics = [];
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -48,6 +54,21 @@ class _SellerDrawerState extends State<SellerDrawer> {
             onTap: () {
               setState(() {
                 Navigator.pop(context);
+              });
+            },
+          ),
+          ListTile(
+            title: const Text("Analytics"),
+            onTap: () {
+              setState(() {
+                Navigator.pop(context);
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Analytics(),
+                  ),
+                );
               });
             },
           ),

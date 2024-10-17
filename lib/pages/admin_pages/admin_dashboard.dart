@@ -7,6 +7,8 @@ import 'package:upang_eat/repositories/stall_repository_impl.dart';
 import 'package:upang_eat/repositories/user_repository_impl.dart';
 import 'package:upang_eat/widgets/admin_widgets/linechart_card.dart';
 
+import '../../main.dart';
+
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
 

@@ -25,6 +25,7 @@ import 'package:upang_eat/repositories/user_repository_impl.dart';
 import 'package:upang_eat/pages/user_login.dart';
 import 'Pages/home.dart';
 
+import 'bloc/analytic_food_bloc/analytic_food_bloc.dart';
 import 'bloc/login_bloc/login_bloc.dart';
 import 'bloc/tray_bloc/tray_bloc.dart';
 
@@ -39,7 +40,7 @@ class IpAddress {
     if (Platform.isIOS) {
       return "http://localhost:3000"; // iOS uses localhost
     } else if (Platform.isAndroid) {
-      return "http://10.0.2.2:3000"; // Android emulator uses this IP
+      return "http://192.168.68.104:3000"; // Android emulator uses this IP
     } else {
       return "http://defaultAddress:3000"; // Default case if platform is unknown
     }
@@ -49,7 +50,7 @@ class IpAddress {
     if (Platform.isIOS) {
       return "http://localhost:7545"; // iOS uses localhost
     } else if (Platform.isAndroid) {
-      return "http://10.0.2.2:3000"; // Android emulator uses this IP
+      return "http://192.168.68.104:7545"; // Android emulator uses this IP
     } else {
       return "http://defaultAddress:7545"; // Default case if platform is unknown
     }
@@ -59,7 +60,7 @@ class IpAddress {
     if (Platform.isIOS) {
       return "ws://localhost:7545"; // iOS uses localhost
     } else if (Platform.isAndroid) {
-      return "http://10.0.2.2:3000"; // Android emulator uses this IP
+      return "http://192.168.68.104:7545"; // Android emulator uses this IP
     } else {
       return "ws://defaultAddress:7545"; // Default case if platform is unknown
     }
@@ -115,6 +116,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider<WalletBloc>(
           create: (context) => WalletBloc(),
+        ),
+        BlocProvider<AnalyticFoodBloc>(
+          create: (context) => AnalyticFoodBloc(FoodRepositoryImpl()),
         ),
       ],
       child: MaterialApp(

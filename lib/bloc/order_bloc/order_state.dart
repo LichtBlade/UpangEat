@@ -11,6 +11,8 @@ final class OrderLoading extends OrderState {}
 
 final class OrderAdded extends OrderState {}
 
+final class OrderDeleted extends OrderState {}
+
 final class OrderLoaded extends OrderState {
   final List<OrderModel> order;
   const OrderLoaded(this.order);

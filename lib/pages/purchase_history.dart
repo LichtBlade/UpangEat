@@ -41,7 +41,13 @@ class _PurchaseHistoryState extends State<PurchaseHistory> {
                       "Order #${order.orderId}",
                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                     ),
-                    Text(order.orderStatus!, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: color),)
+                    Row(
+                      children: [
+                        Text(order.orderDate!, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400,)),
+                        const SizedBox(width: 8,),
+                        Text(order.orderStatus!, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: color),),
+                      ],
+                    )
                   ]),
                   Column(
                     children: [

@@ -7,9 +7,9 @@ sealed class TrayEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadTray extends TrayEvent {
+class TrayLoadFood extends TrayEvent {
   final int id;
-  const LoadTray(this.id);
+  const TrayLoadFood(this.id);
 
   @override
   List<Object> get props => [id];

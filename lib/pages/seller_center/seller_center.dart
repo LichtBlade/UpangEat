@@ -10,8 +10,10 @@ import 'package:upang_eat/widgets/seller_center_widgets/order_list_display.dart'
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_appbar.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_center_btn.dart';
 import 'package:upang_eat/widgets/seller_center_widgets/seller_drawer.dart';
+import '../../bloc/analytic_food_bloc/analytic_food_bloc.dart';
 import '../../bloc/login_bloc/login_bloc.dart';
 import '../../bloc/order_bloc/order_bloc.dart';
+import '../../models/food_analytic_model.dart';
 import '../../widgets/seller_center_widgets/order_list.dart';
 
 
@@ -25,32 +27,34 @@ class SellerCenter extends StatefulWidget {
 class _SellerCenterState extends State<SellerCenter> {
   UserModel? userData = const UserModel(userId: 0, firstName: "firstName", lastName: "lastName", email: "email");
   String _selectedValue = 'pending';
-
+  List<FoodAnalyticModel> foodAnalytics = [];
 
   @override
   void initState() {
     context.read<LoginBloc>().add(LoadUserData());
-    print("Stall IDD: ${globalUserData?.stallId}");
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state is UserLoaded) {
-          print("UserLoaded");
-          print(globalUserData);
-          userData = globalUserData;
-          context.read<OrderBloc>().add(StallFetchOrder(globalUserData?.stallId ?? 0));
-
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state is UserLoaded) {
+              print("UserLoaded");
+              print(globalUserData);
+              userData = globalUserData;
+              context.read<OrderBloc>().add(StallFetchOrder(globalUserData?.stallId ?? 0));
+            }
+          },
+        )
+      ],
       child: Scaffold(
         appBar: SellerCenterAppbar(stallName: globalUserData?.stallName ?? ""),
         drawer: const SellerDrawer(),
         body: RefreshIndicator(
-          onRefresh: ()async {
+          onRefresh: () async {
             context.read<OrderBloc>().add(StallFetchOrder(globalUserData?.stallId ?? 0));
           },
           child: Stack(children: [
@@ -99,11 +103,10 @@ class _SellerCenterState extends State<SellerCenter> {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: BlocBuilder<OrderBloc, OrderState>(
                     builder: (context, state) {
-
-                      if (state is OrderLoading){
+                      if (state is OrderLoading) {
                         print("Order Loading");
                         return const Center(child: CircularProgressIndicator(),);
-                      } else if (state is OrderLoaded){
+                      } else if (state is OrderLoaded) {
                         final orders = state.order;
                         globalOrders = orders;
                         final filteredOrders = orders.where((order) => order.orderStatus == _selectedValue).toList();
@@ -112,7 +115,8 @@ class _SellerCenterState extends State<SellerCenter> {
                           children: [
                             Card.filled(child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text("Orders:", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),), Text("${filteredOrders.length}", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),)],),
+                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [const Text("Orders:", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),), Text("${filteredOrders.length}", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),)],),
                             ),),
                             Expanded(
                               child: ListView.builder(
@@ -125,14 +129,11 @@ class _SellerCenterState extends State<SellerCenter> {
                             ),
                           ],
                         );
-                      } else if (state is OrderError){
+                      } else if (state is OrderError) {
                         return Text("Error: ${state.message}");
                       } else {
                         return const Text("Unexpected state}");
-
                       }
-
-
                     },
                   ),
                 )),

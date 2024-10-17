@@ -18,12 +18,13 @@ final class TrayItemRemoved extends TrayState {
 
 final class TrayItemsRemoved extends TrayState {}
 
-final class TrayLoaded extends TrayState {
-  final List<TrayModel> trays;
-  const TrayLoaded(this.trays);
+final class TrayFoodLoaded extends TrayState {
+  final List<FoodModel> foods;
+  int get totalPrice => foods.fold<int>(0, (sum, food) => sum + food.price * (food.trayQuantity ?? 1)); // Add this getter
+  const TrayFoodLoaded(this.foods);
 
   @override
-  List<Object> get props => [trays];
+  List<Object> get props => [foods];
 }
 
 final class TrayAdded extends TrayState {

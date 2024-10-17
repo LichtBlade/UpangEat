@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:upang_eat/user_data.dart';
 
 import '../../models/order_model.dart';
 import '../../repositories/order_repository.dart';
@@ -20,6 +21,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
         final orders = await _orderRepository.fetchOrdersByUserId(event.id);
         emit (OrderLoaded(orders));
+        globalOrders = orders;
       } catch (error) {
         emit(OrderError(error.toString()));
       }
@@ -30,6 +32,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       try {
         final orders = await _orderRepository.fetchOrdersByUserId(event.id);
         emit (OrderLoaded(orders));
+        globalOrders = orders;
       } catch (error) {
         emit(OrderError(error.toString()));
       }
@@ -40,6 +43,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       try {
         final orders = await _orderRepository.fetchOrdersByStallId(event.id);
         emit (OrderLoaded(orders));
+        globalOrders = orders;
       } catch (error) {
         emit(OrderError(error.toString()));
       }
@@ -52,9 +56,25 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
         final orders = await _orderRepository.fetchOrdersByStallId(event.stallId);
         emit (OrderLoaded(orders));
+        globalOrders = orders;
       } catch (error) {
         emit(OrderError(error.toString()));
       }
     });
+
+    on<DeleteOrder>((event, emit) async {
+      emit(OrderLoading());
+      try {
+        await _orderRepository.deleteOrder(event.orderId);
+        emit (OrderDeleted());
+
+        final orders = await _orderRepository.fetchOrdersByStallId(event.stallId);
+        emit (OrderLoaded(orders));
+        globalOrders = orders;
+      } catch (error) {
+        emit(OrderError(error.toString()));
+      }
+    });
+
   }
 }
