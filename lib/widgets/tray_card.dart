@@ -34,6 +34,7 @@ class TrayCardState extends State<TrayCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+
         showCupertinoModalBottomSheet(
             context: context,
             builder: (context) => BottomModalFoodInformation(
@@ -87,7 +88,7 @@ class TrayCardState extends State<TrayCard> {
                     ),
                     BlocListener<FoodBloc, FoodState>(
                       listener: (context, state) {
-                        if (state is TrayLoaded){
+                        if (state is TrayFoodLoaded){
                           // state.trays.
                         }
                       },

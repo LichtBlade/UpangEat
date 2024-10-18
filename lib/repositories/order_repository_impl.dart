@@ -69,4 +69,28 @@ class OrderRepositoryImpl extends OrderRepository{
     }
   }
 
+  @override
+  Future<void> deleteOrder(int orderId) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/orders/$orderId'),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 204) {
+      return;
+    } else if (response.statusCode == 400) {
+      final errorMessage = json.decode(response.body)['message'] as String;
+      throw OrderDeletionException(errorMessage);
+    } else {
+      throw Exception('Failed to delete order: $orderId');
+    }
+  }
+}
+
+class OrderDeletionException implements Exception {
+  final String message;
+  OrderDeletionException(this.message);
+
+  @override
+  String toString() => message;
 }

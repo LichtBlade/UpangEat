@@ -6,4 +6,5 @@ abstract class OrderRepository {
   Future<List<OrderModel>> fetchOrdersByStallId(int id);
   Future<int> createOrders(OrderModel order);
   Future<void> updateOrders(int orderId, String status);
+  Future<void> deleteOrder(int orderId);
 }

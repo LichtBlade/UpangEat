@@ -22,6 +22,7 @@ class UserLogin extends StatefulWidget {
 class _UserLoginState extends State<UserLogin> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _obscureText = true;
   bool isLoading = false;
 
   @override
@@ -56,12 +57,23 @@ class _UserLoginState extends State<UserLogin> {
                       builder: (context) => const AdminDashboard()),
                 );
               } else if (state.userType == 'stall_owner') {
+// <<<<<<< dev_rm
                 globalPrivateKey = globalSellerWallet;
+// =======
+//                 String globalSelletWallet =
+//                     '0x8e32f7442f65bdb5ea7fe253af3bbc284faaeca10d2634a495b48a0ab2d9ee1d';
+//                 globalPrivateKey = globalSelletWallet;
+// >>>>>>> master
                 _fetchWalletGanche(globalPrivateKey);
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const SellerCenter()),
                 );
               } else {
+// <<<<<<< dev_rm
+// =======
+//                 String globalUserWallet =
+//                     '0xcd72e17e23b55819612cb4a79fd1eb3634802c28d912c6c76c612e65cc550827';
+// >>>>>>> master
                 globalPrivateKey = globalUserWallet;
                 _fetchWalletGanche(globalPrivateKey, globalSellerWallet);
                 Navigator.of(context).pushReplacement(
@@ -69,6 +81,7 @@ class _UserLoginState extends State<UserLogin> {
                 );
               }
             } else if (state is LoginFailed) {
+              isLoading = false;
               print(state.error);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Login Failed: ${state.error}')),
@@ -85,8 +98,10 @@ class _UserLoginState extends State<UserLogin> {
                   colorBlendMode: BlendMode.luminosity,
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
                 child: Container(
                   height: MediaQuery.of(context).size.height *
                       0.65, // More than half of the screen
@@ -100,24 +115,23 @@ class _UserLoginState extends State<UserLogin> {
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const Image(
                           image: AssetImage("assets/upangeats.png"),
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.contain,
+                          width: 250,
+                          height: 160,
+                          fit: BoxFit.fitHeight,
                         ),
                         const Text(
                           "Log In",
                           style: TextStyle(
-                            fontSize: 32,
+                            fontSize: 26,
                             fontWeight: FontWeight.bold,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 20),
                         TextField(
                           controller: emailController,
                           decoration: InputDecoration(
@@ -129,9 +143,11 @@ class _UserLoginState extends State<UserLogin> {
                             fillColor: Colors.white,
                             filled: true,
                             prefixIcon: const Icon(Icons.person),
+                            suffixIcon: IconButton(onPressed: () => emailController.clear(), icon: const Icon(Icons.clear)),
                           ),
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
                         ),
-                        const SizedBox(height: 10),
                         TextField(
                           controller: passwordController,
                           decoration: InputDecoration(
@@ -143,10 +159,17 @@ class _UserLoginState extends State<UserLogin> {
                             fillColor: Colors.white,
                             filled: true,
                             prefixIcon: const Icon(Icons.lock),
+                            suffixIcon: IconButton(onPressed: (){
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            }, icon: _obscureText ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),)
                           ),
-                          obscureText: true,
+                          obscureText: _obscureText,
+                          keyboardType: TextInputType.visiblePassword,
+                          textInputAction: TextInputAction.done,
+
                         ),
-                        const SizedBox(height: 10),
                         // Login Button
                         ElevatedButton(
                           onPressed: () {

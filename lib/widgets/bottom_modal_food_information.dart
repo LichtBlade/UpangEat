@@ -15,6 +15,7 @@ import 'package:upang_eat/user_data.dart';
 import '../Pages/stall_information.dart';
 import '../bloc/food_bloc/food_bloc.dart';
 import '../pages/tray.dart';
+import '../repositories/tray_repository_impl.dart';
 
 class BottomModalFoodInformation extends StatefulWidget {
   final FoodModel food;
@@ -33,13 +34,14 @@ class _BottomModalFoodInformationState extends State<BottomModalFoodInformation>
   int _price = 0;
   int id = globalUserData!.userId;
   bool _isUpdate = false;
-  TrayModel _existingTrayItem =
-  const TrayModel(trayId: 0, userId: 0, itemId: 0, quantity: 0);
+  
+  FoodModel _existingTrayItem =
+  const FoodModel(foodItemId: 0, stallId: 0, itemName: "", price: 0, isAvailable: false, isBreakfast: false, isLunch: false, isMerienda: false);
 
   @override
   void initState() {
     _price = widget.food.price;
-    context.read<TrayBloc>().add(LoadTray(id));
+    context.read<TrayBloc>().add(TrayLoadFood(id));
     context.read<StallBloc>().add(LoadSingleStall(widget.food.stallId));
     super.initState();
   }
@@ -65,169 +67,170 @@ class _BottomModalFoodInformationState extends State<BottomModalFoodInformation>
   @override
   Widget build(BuildContext context) {
     return BlocListener<TrayBloc, TrayState>(
-      listener: (context, state) {
-        if (state is TrayLoaded) {
-          for (var trayItem in state.trays) {
-            if (trayItem.itemId == widget.food.foodItemId) {
-              // If a match is found, update the state
-              setState(() {
-                _isUpdate = true;
-                _quantity = trayItem.quantity;
-                _existingTrayItem = trayItem;
-                _price = widget.food.price * _quantity;
-              });
-              break; // Exit the loop after finding a match
+        listener: (context, state) {
+          if (state is TrayFoodLoaded) {
+            print(state.foods);
+            for (var trayItem in state.foods) {
+              if (trayItem.foodItemId == widget.food.foodItemId) {
+                // If a match is found, update the state
+                setState(() {
+                  _isUpdate = true;
+                  _quantity = trayItem.trayQuantity!;
+                  _existingTrayItem = trayItem;
+                  _price = widget.food.price * _quantity;
+                });
+                break; // Exit the loop after finding a match
+              }
             }
           }
-        }
-      },
-      child: BlocBuilder<TrayBloc, TrayState>(
-        builder: (context, state) {
-          return SizedBox(
-            height: 600,
-            width: double.infinity,
-            child: Stack(
-              children: [
-                Positioned(
-                    top: 0,
+        },
+        child: BlocBuilder<TrayBloc, TrayState>(
+          builder: (context, state) {
+            return SizedBox(
+              height: 600,
+              width: double.infinity,
+              child: Stack(
+                children: [
+                  Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: Image.asset(
+                        widget.food.imageUrl! != ""
+                            ? widget.food.imageUrl!
+                            : "assets/stalls/profiles/1.jpg",
+                        height: 300,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )),
+                  Positioned(
+                    top: 250,
                     left: 0,
                     right: 0,
-                    child: Image.asset(
-                      widget.food.imageUrl! != ""
-                          ? widget.food.imageUrl!
-                          : "assets/stalls/profiles/1.jpg",
-                      height: 300,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )),
-                Positioned(
-                  top: 250,
-                  left: 0,
-                  right: 0,
-                  bottom: -10,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
-                    ),
-                    child: Card(
-                      margin: EdgeInsets.zero,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                _Title(
-                                  foodName: widget.food.itemName,
-                                  stallName: widget.food.stallName!,
-                                ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: _decrementQuantity,
-                                      iconSize: 16,
-                                      style: IconButton.styleFrom(
-                                        backgroundColor:
-                                        const Color(0xFFF0F0F0),
-                                      ),
-                                      color: Colors.black,
-                                      constraints: const BoxConstraints(
-                                        minWidth: 36,
-                                        minHeight: 36,
-                                      ),
-                                      icon: const Icon(
-                                        Icons.remove,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 4,
-                                    ),
-                                    Container(
-                                      width: 50,
-                                      height: 35,
-                                      decoration: BoxDecoration(
-                                        color: Colors.redAccent,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          '$_quantity', // Display the quantity
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.white),
+                    bottom: -10,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _Title(
+                                    foodName: widget.food.itemName,
+                                    stallName: widget.food.stallName!,
+                                  ),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        onPressed: _decrementQuantity,
+                                        iconSize: 16,
+                                        style: IconButton.styleFrom(
+                                          backgroundColor:
+                                          const Color(0xFFF0F0F0),
+                                        ),
+                                        color: Colors.black,
+                                        constraints: const BoxConstraints(
+                                          minWidth: 36,
+                                          minHeight: 36,
+                                        ),
+                                        icon: const Icon(
+                                          Icons.remove,
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 4,
-                                    ),
-                                    IconButton(
-                                      onPressed: _incrementQuantity,
-                                      icon: const Icon(Icons.add),
-                                      color: Colors.black,
-                                      style: IconButton.styleFrom(
-                                        backgroundColor: Colors.redAccent,
+                                      const SizedBox(
+                                        width: 4,
                                       ),
-                                      constraints: const BoxConstraints(
-                                        minWidth: 36,
-                                        minHeight: 36,
+                                      Container(
+                                        width: 50,
+                                        height: 35,
+                                        decoration: BoxDecoration(
+                                          color: Colors.redAccent,
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            '$_quantity', // Display the quantity
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.white),
+                                          ),
+                                        ),
                                       ),
-                                      iconSize: 16,
-                                    ),
-                                    const SizedBox(
-                                      width: 4,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            _Description(
-                              description: widget.food.description!,
-                            ),
-                            Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    _Price(
-                                      price: _price,
-                                    ),
-                                    const SizedBox(
-                                      width: 8,
-                                    ),
-                                    _AddToTrayButton(
-                                      food: widget.food,
-                                      quantity: _quantity,
-                                      isUpdate: _isUpdate,
-                                      existingTrayItem: _existingTrayItem,
-                                      isOnHome: widget.isOnHome,
-                                      isOnTray: widget.isOnTray!,
-                                    )
-                                  ],
-                                )),
-                            const SizedBox(
-                              height: 10,
-                            )
-                          ],
+                                      const SizedBox(
+                                        width: 4,
+                                      ),
+                                      IconButton(
+                                        onPressed: _incrementQuantity,
+                                        icon: const Icon(Icons.add),
+                                        color: Colors.black,
+                                        style: IconButton.styleFrom(
+                                          backgroundColor: Colors.redAccent,
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 36,
+                                          minHeight: 36,
+                                        ),
+                                        iconSize: 16,
+                                      ),
+                                      const SizedBox(
+                                        width: 4,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              _Description(
+                                description: widget.food.description!,
+                              ),
+                              Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      _Price(
+                                        price: _price,
+                                      ),
+                                      const SizedBox(
+                                        width: 8,
+                                      ),
+                                      _AddToTrayButton(
+                                        food: widget.food,
+                                        quantity: _quantity,
+                                        isUpdate: _isUpdate,
+                                        existingTrayItem: _existingTrayItem,
+                                        isOnHome: widget.isOnHome,
+                                        isOnTray: widget.isOnTray!,
+                                      )
+                                    ],
+                                  )),
+                              const SizedBox(
+                                height: 10,
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                )
-              ],
-            ),
-          );
-        },
-      ),
-    );
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      );
   }
 }
 
@@ -349,7 +352,7 @@ class _AddToTrayButton extends StatefulWidget {
   final int quantity;
   final bool isUpdate;
   final bool isOnTray;
-  final TrayModel existingTrayItem;
+  final FoodModel existingTrayItem;
   final bool isOnHome;
 
   const _AddToTrayButton({super.key,
@@ -403,7 +406,7 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
                             onDelete: () {
                               context
                                   .read<TrayBloc>()
-                                  .add(DeleteTray(widget.existingTrayItem.trayId));
+                                  .add(DeleteTray(widget.existingTrayItem.trayId!));
                             });
                       });
                 },
@@ -462,11 +465,11 @@ class _AddToTrayButtonState extends State<_AddToTrayButton> {
                 onPressed: () async {
                   if (widget.isUpdate) {
                     context.read<TrayBloc>().add(UpdateTray(
-                        widget.existingTrayItem.trayId,
+                        widget.existingTrayItem.trayId!,
                         TrayModel(
-                            trayId: widget.existingTrayItem.trayId,
-                            userId: widget.existingTrayItem.userId,
-                            itemId: widget.existingTrayItem.itemId,
+                            trayId: widget.existingTrayItem.trayId!,
+                            userId: globalUserData!.userId,
+                            itemId: widget.existingTrayItem.foodItemId,
                             quantity: widget.quantity),
                         globalUserData!.userId
                     )

@@ -14,14 +14,14 @@ part 'tray_state.dart';
 class TrayBloc extends Bloc<TrayEvent, TrayState> {
   final TrayRepository _trayRepository;
   TrayBloc(this._trayRepository) : super(TrayLoading()) {
-    on<LoadTray>((event, emit) async {
+
+    on<TrayLoadFood>((event, emit) async {
       emit(TrayLoading());
-      try{
-        final trays = await _trayRepository.fetchTrayByUserId(event.id);
-        emit(TrayLoaded(trays));
+      try {
+        final foods = await _trayRepository.fetchTrayFood(event.id);
+        emit(TrayFoodLoaded(foods));
       } catch (error) {
         emit(TrayError(error.toString()));
-
       }
     });
 
@@ -51,6 +51,10 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
       try{
         await _trayRepository.deleteTray(event.id);
         emit(TrayItemRemoved(event.id));
+
+        final foods = await _trayRepository.fetchTrayFood(event.id);
+        emit(TrayFoodLoaded(foods));
+
       } catch (error) {
         emit(TrayError(error.toString()));
       }
@@ -94,9 +98,8 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
       try{
         await _trayRepository.updateTray(event.tray,event.id);
 
-        // Re-fetch the updated tray items
-        final updatedTrayItems = await _trayRepository.fetchTrayByUserId(event.userId);
-        emit(TrayLoaded(updatedTrayItems));
+        final foods = await _trayRepository.fetchTrayFood(globalUserData!.userId);
+        emit(TrayFoodLoaded(foods));
 
 
 
@@ -108,3 +111,4 @@ class TrayBloc extends Bloc<TrayEvent, TrayState> {
 
   }
 }
+

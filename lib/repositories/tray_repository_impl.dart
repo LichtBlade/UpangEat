@@ -7,6 +7,8 @@ import 'package:upang_eat/models/tray_model.dart';
 import 'package:upang_eat/repositories/tray_repository.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/food_model.dart';
+
 class TrayRepositoryImpl extends TrayRepository {
   final String baseUrl = IpAddress.ipAddress;
   @override
@@ -31,16 +33,16 @@ class TrayRepositoryImpl extends TrayRepository {
     }
   }
 
-  @override
-  Future<List<TrayModel>> fetchTrayByUserId(int id) async {
-    final response = await http.get(Uri.parse('$baseUrl/trays/$id'));
-    if (response.statusCode == 200) {
-      final List<dynamic> trayCategoryData = json.decode(response.body);
-      return trayCategoryData.map((json) => TrayModel.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load trays');
-    }
-  }
+  // @override
+  // Future<List<TrayModel>> fetchTrayByUserId(int id) async {
+  //   final response = await http.get(Uri.parse('$baseUrl/trays/$id'));
+  //   if (response.statusCode == 200) {
+  //     final List<dynamic> trayCategoryData = json.decode(response.body);
+  //     return trayCategoryData.map((json) => TrayModel.fromJson(json)).toList();
+  //   } else {
+  //     throw Exception('Failed to load trays');
+  //   }
+  // }
 
   @override
   Future<void> deleteTray(int id) async {
@@ -63,6 +65,17 @@ class TrayRepositoryImpl extends TrayRepository {
       return TrayModel.fromJson(trayCategoryData);
     } else {
       throw Exception('Failed to update tray');
+    }
+  }
+
+  @override
+  Future<List<FoodModel>> fetchTrayFood(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl/foods/$id/trays'));
+    if (response.statusCode == 200) {
+      final List<dynamic> foodCategoryData = json.decode(response.body);
+      return foodCategoryData.map((json) => FoodModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load foods');
     }
   }
 

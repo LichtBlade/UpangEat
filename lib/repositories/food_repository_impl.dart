@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:upang_eat/models/food_analytic_model.dart';
 import 'package:upang_eat/models/food_model.dart';
 import 'package:upang_eat/repositories/food_repository.dart';
 import 'package:http/http.dart' as http;
@@ -128,4 +129,34 @@ class FoodRepositoryImpl extends FoodRepository {
       throw Exception('Failed to delete food: $id');
     }
   }
+
+  @override
+  Future<List<FoodAnalyticModel>> analyticFood(int stallId, String startDate, String endDate) async {
+    print("AnalyticFood!");
+    final response = await http.post(Uri.parse('$baseUrl/stalls/$stallId/analytics'),
+      headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({"start_date" : startDate, "end_date" : endDate}));
+    print(response.body);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.map((item) => FoodAnalyticModel.fromJson(item)).toList();
+    } else {
+      if (response.statusCode == 400) {
+        final jsonResponse = json.decode(response.body);
+        final errorMessage = jsonResponse['error'] as String;
+        throw AnalyticException(errorMessage);
+      } else {
+        throw Exception('Failed to load analytics');
+      }
+    }
+  }
+}
+
+class AnalyticException implements Exception {
+  final String message;
+  AnalyticException(this.message);
+
+  @override
+  String toString() => message;
 }

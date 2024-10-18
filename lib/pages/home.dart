@@ -281,17 +281,19 @@ class _FloatingActionBarState extends State<_FloatingActionBar> {
         } else if (state is OrderLoaded) {
           print("Order is loaded");
           final List<OrderModel> orders = state.order;
-          globalOrders = orders;
+          final hasRelevantOrders = orders.any((order) =>
+          order.orderStatus == 'pending' ||
+              order.orderStatus == 'ready' ||
+              order.orderStatus == 'accepted'
+          );
+          if (!hasRelevantOrders) {
+            return const SizedBox.shrink();
+          }
           return SizedBox(
             width: 250,
             child: FloatingActionButton.extended(
               onPressed: () {
-                final filteredOrders = orders.where((order) =>
-                order.orderStatus == 'pending' || order.orderStatus == 'ready' || order.orderStatus == 'accepted'
-                ).toList();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: filteredOrders,))).then((_) {
-                  context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
-                });
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const OrderStatus(isAllowPending: true, isAllowAccepted: true, isAllowReady: true,)));
               },
               extendedIconLabelSpacing: 16.0,
               icon: const Icon(Icons.my_library_books),

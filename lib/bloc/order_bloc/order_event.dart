@@ -45,5 +45,15 @@ class UpdateOrder extends OrderEvent {
   List<Object> get props => [orderId ,stallId,status];
 }
 
+class DeleteOrder extends OrderEvent {
+  final int orderId;
+  final int stallId;
+  const DeleteOrder(this.orderId, this.stallId);
+
+
+  @override
+  List<Object> get props => [orderId];
+}
+
 
 

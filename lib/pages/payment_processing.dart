@@ -26,10 +26,7 @@ class _PaymentProcessingState extends State<PaymentProcessing> {
             Future.delayed(const Duration(milliseconds: 2000), () {
               Navigator.pop(context);
               Navigator.pop(context);
-              final filteredOrders = state.order.where((order) =>
-              order.orderStatus == 'pending' || order.orderStatus == 'ready' || order.orderStatus == 'accepted'
-              ).toList();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatus(orders: filteredOrders,))).then((_) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const OrderStatus(isAllowPending: true, isAllowAccepted: true, isAllowReady: true))).then((_) {
                 context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
               });
 

@@ -264,8 +264,9 @@ class _WalletState extends State<Wallet> {
 
               // List of TokenCards
               SizedBox(
-                height: 410,
                 child: ListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
                   children: [
                     TokenCard(
                       tokenImage: ethImg,

@@ -1,3 +1,4 @@
+import 'package:upang_eat/models/food_analytic_model.dart';
 import 'package:upang_eat/models/food_model.dart';
 
 abstract class FoodRepository {
@@ -27,4 +28,5 @@ abstract class FoodRepository {
       bool isLunch,
       bool isMerienda);
   Future<void> deleteFood(int id);
+  Future<List<FoodAnalyticModel>> analyticFood(int stallId, String startDate, String endDate);
 }
