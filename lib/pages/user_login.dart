@@ -57,18 +57,25 @@ class _UserLoginState extends State<UserLogin> {
                       builder: (context) => const AdminDashboard()),
                 );
               } else if (state.userType == 'stall_owner') {
-                String globalSelletWallet =
-                    '0x8e32f7442f65bdb5ea7fe253af3bbc284faaeca10d2634a495b48a0ab2d9ee1d';
-                globalPrivateKey = globalSelletWallet;
+// <<<<<<< dev_rm
+                globalPrivateKey = globalSellerWallet;
+// =======
+//                 String globalSelletWallet =
+//                     '0x8e32f7442f65bdb5ea7fe253af3bbc284faaeca10d2634a495b48a0ab2d9ee1d';
+//                 globalPrivateKey = globalSelletWallet;
+// >>>>>>> master
                 _fetchWalletGanche(globalPrivateKey);
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const SellerCenter()),
                 );
               } else {
-                String globalUserWallet =
-                    '0xcd72e17e23b55819612cb4a79fd1eb3634802c28d912c6c76c612e65cc550827';
+// <<<<<<< dev_rm
+// =======
+//                 String globalUserWallet =
+//                     '0xcd72e17e23b55819612cb4a79fd1eb3634802c28d912c6c76c612e65cc550827';
+// >>>>>>> master
                 globalPrivateKey = globalUserWallet;
-                _fetchWalletGanche(globalPrivateKey);
+                _fetchWalletGanche(globalPrivateKey, globalSellerWallet);
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => SlideshowScreen()),
                 );
@@ -96,7 +103,8 @@ class _UserLoginState extends State<UserLogin> {
                 right: 0,
                 bottom: 0,
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.65,  // More than half of the screen
+                  height: MediaQuery.of(context).size.height *
+                      0.65, // More than half of the screen
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.8),
                     borderRadius: const BorderRadius.only(
@@ -210,7 +218,8 @@ class _UserLoginState extends State<UserLogin> {
     );
   }
 
-  Future<void> _fetchWalletGanche(String privateKey) async {
+  Future<void> _fetchWalletGanche(String privateKey,
+      [String? privateKeySeller]) async {
     String rpcUrl = IpAddress.rpGanacheUrl; // For Android emulator
     String wsUrl = IpAddress.wsGanacheUrl;
 
@@ -224,16 +233,31 @@ class _UserLoginState extends State<UserLogin> {
 
     // Obtain credentials from private key
     Credentials credentials =
-    await client.credentialsFromPrivateKey(privateKey);
+        await client.credentialsFromPrivateKey(privateKey);
 
     // Get your Ethereum address from the credentials
     EthereumAddress ownAddress = await credentials.extractAddress();
 
     // Fetch balance
     EtherAmount balance = await client.getBalance(ownAddress);
-
     globalEthBalance = balance.getValueInUnit(EtherUnit.ether);
     globalWalletEthAddress = ownAddress.toString();
     print(globalWalletEthAddress); // Convert balance to ETH
+
+    // Fetching the seller wallet address, if provided
+    if (privateKeySeller != null && privateKeySeller.isNotEmpty) {
+      Credentials credentialSeller =
+          await client.credentialsFromPrivateKey(privateKeySeller);
+
+      // Get the seller's Ethereum address from the credentials
+      EthereumAddress sellerAddress = await credentialSeller.extractAddress();
+
+      // You can now store or use the seller address here
+      print('Seller Address: $sellerAddress');
+
+      globalPaymentEth = sellerAddress.toString();
+    } else {
+      print('No privateKeySeller provided');
+    }
   }
 }

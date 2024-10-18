@@ -9,7 +9,10 @@ import "package:upang_eat/models/order_model.dart";
 import "package:upang_eat/models/tray_model.dart";
 import "package:upang_eat/pages/payment_processing.dart";
 import "package:upang_eat/user_data.dart";
-
+import "package:upang_eat/main.dart";
+import "package:web3dart/web3dart.dart";
+import "package:web_socket_channel/io.dart";
+import 'package:http/http.dart' as http;
 import "../bloc/food_bloc/food_bloc.dart";
 import "../bloc/order_bloc/order_bloc.dart";
 import "../fake_data.dart";
@@ -35,7 +38,7 @@ class _TrayState extends State<Tray> {
   double convertPhpToEth(double totalPayment) {
     if (globalEthPrice > 0) {
       // Ensure the ETH price is not zero to avoid division by zero
-      double ethAmount = totalPayment / globalEthPrice; // Convert PHP to ETH
+      ethAmount = totalPayment / globalEthPrice; // Convert PHP to ETH
       return ethAmount; // Return the amount in ETH
     } else {
       print("Error: ETH price is zero or not set.");
@@ -162,19 +165,174 @@ class _TrayState extends State<Tray> {
                                   child: const Text('Ok'),
                                 ),
                               ]);
-                        }
-                      });
-                },
-                style: ButtonStyle(
-                  elevation: WidgetStateProperty.all(8.0),
-                  minimumSize: WidgetStateProperty.all(const Size(100, 50)),
-                ),
-                child: const Text("Proceed to Pay"),
+                        }=
+                        return AlertDialog(
+                          title: const Text("Proceed to Payment"),
+                          content: Text(
+                              "Please review the amount of $convertToEth ETH for your order before confirming payment."),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                try {
+                                  double ethAmount = convertToEth; // ETH amount
+                                  await sendEther(ethAmount, globalPaymentEth);
+
+                                  // Create a list of OrderItemModel from foods
+                                  final orderItems = foods
+                                      .map((food) => OrderItemModel(
+                                          orderItemId: 0,
+                                          itemId: food.foodItemId,
+                                          quantity: food.trayQuantity ?? 1,
+                                          subtotal: food.price *
+                                              (food.trayQuantity ?? 1)))
+                                      .toList();
+
+                                  // Create the OrderModel
+                                  final order = OrderModel(
+                                    orderId: 0,
+                                    userId: widget.id,
+                                    totalAmount: totalAmount,
+                                    items: orderItems,
+                                  );
+                                  print(order);
+                                  context
+                                      .read<OrderBloc>()
+                                      .add(CreateOrder(order, widget.id));
+
+                                  Navigator.of(context).pop();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PaymentProcessing()));
+                                } catch (e) {
+                                  // Show an error dialog if balance is insufficient or other error occurs
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text("Payment Error"),
+                                        content: Text(e.toString()),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Ok'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                              child: const Text('Confirm'),
+                            ),
+                          ],
+                        );
+                      } else {
+                        print("error: creating order");
+                        return AlertDialog(
+                            title: const Text("Empty Tray"),
+                            content: const Text(
+                                "Your tray is empty. Add some delicious items before proceeding to payment."),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Ok'),
+                              ),
+                            ]);
+                      }
+                    });
+              },
+              style: ButtonStyle(
+                elevation: WidgetStateProperty.all(8.0),
+                minimumSize: WidgetStateProperty.all(const Size(100, 50)),
+// =======
+//                       });
+//                 },
+//                 style: ButtonStyle(
+//                   elevation: WidgetStateProperty.all(8.0),
+//                   minimumSize: WidgetStateProperty.all(const Size(100, 50)),
+//                 ),
+//                 child: const Text("Proceed to Pay"),
+// >>>>>>> master
               ),
             ),
           ]),
         ),
       );
+  }
+}
+
+Future<void> sendEther(double ethAmount, String accountID) async {
+  String rpcUrl = IpAddress.rpGanacheUrl; // For Android emulator
+  String wsUrl = IpAddress.wsGanacheUrl;
+  String test = '';
+
+  try {
+    // Create Web3 client
+    Web3Client client = Web3Client(
+      rpcUrl,
+      http.Client(),
+      socketConnector: () {
+        return IOWebSocketChannel.connect(wsUrl).cast<String>();
+      },
+    );
+
+    // Private key (use a test key for Ganache or testnets)
+    String privateKey = globalPrivateKey;
+
+    // Obtain credentials from private key
+    Credentials credentials =
+        await client.credentialsFromPrivateKey(privateKey);
+
+    EthereumAddress ownAddress = await credentials.extractAddress();
+    print("Own Address: $ownAddress");
+
+    // Convert accountID (string) to EthereumAddress
+    EthereumAddress receiver = EthereumAddress.fromHex(accountID);
+
+    // Get the current balance of the user's wallet
+    EtherAmount balance = await client.getBalance(ownAddress);
+
+    // Convert ethAmount (ETH) to Wei
+    BigInt weiAmount =
+        BigInt.from(ethAmount * 1e18); // Multiply ETH by 10^18 to get Wei
+
+    // Check if the user's balance is sufficient
+    if (balance.getInWei < weiAmount) {
+      print("Insufficient balance.");
+      throw Exception("Insufficient balance. Please top up your wallet.");
+    }
+
+    // Send Ether transaction
+    var result = await client.sendTransaction(
+      credentials,
+      Transaction(
+        from: ownAddress,
+        to: receiver, // EthereumAddress object
+        value: EtherAmount.inWei(weiAmount), // Use the Wei amount
+        gasPrice: EtherAmount.inWei(BigInt.from(1000000000)), // Set a gas price
+        maxGas: 21000, // Set gas limit
+      ),
+      chainId: 1337, // Ganache default chain ID
+    );
+
+    print("Transaction Hash: $result \n\n Successful Transaction");
+  } catch (e) {
+    print("Transaction failed: $e");
+    print(globalPaymentEth);
+    print(test);
+    throw e; // Re-throw the exception to handle in the UI
   }
 }
 
