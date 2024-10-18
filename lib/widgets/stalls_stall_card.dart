@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:upang_eat/pages/stall_information.dart';
 import 'package:upang_eat/models/stall_model.dart';
 
+import '../main.dart';
+
 class StallsStallCard extends StatelessWidget {
   final Stall stall;
 
@@ -28,16 +30,16 @@ class StallsStallCard extends StatelessWidget {
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
                   child: Row(
                     children: [
-                      Image.asset(
-                        stall.imageUrl!,
+                      Image.network(
+                        "${IpAddress.ipAddress}/uploads/profile_${stall.stallId}.jpg",
                         height: 100,
                         width: 100,
                         fit: BoxFit.cover,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
-                        child: Image.asset(
-                          stall.imageBannerUrl!,
+                        child: Image.network(
+                          "${IpAddress.ipAddress}/uploads/banner_${stall.stallId}.jpg",
                           height: 100,
                           fit: BoxFit.cover,
                         ),

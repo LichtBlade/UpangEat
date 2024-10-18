@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/models/food_model.dart';
 
 import '../../bloc/food_bloc/food_bloc.dart';
+import '../../main.dart';
 import '../../pages/seller_center/seller_center_product_form.dart';
 
 class FoodCard extends StatefulWidget {
@@ -35,9 +36,10 @@ class _FoodCardState extends State<FoodCard> {
               child: SizedBox(
                 height: 80,
                 width: 80,
-                child: Image.asset(widget.food.imageUrl != null
-                    ? 'assets/foods/1_1.jpg'
-                    : '${widget.food.imageUrl}', fit: BoxFit.cover,),
+                child: Image.network("${IpAddress.ipAddress}/uploads/${widget.food.stallId}_${widget.food.foodItemId}.jpg", fit: BoxFit.cover,errorBuilder:
+                    (context, error, stackTrace) {
+                  return const Text('Error loading image');
+                }),
               ),
             ),
             const SizedBox(width: 8,),

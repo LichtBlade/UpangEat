@@ -105,7 +105,7 @@ class _WalletState extends State<Wallet> {
                                   builder: (context, state) {
                                     if (state is WalletLoading) {
                                       return Text(
-                                        _globalEthBalance.toStringAsFixed(2),
+                                        _globalEthBalance.toStringAsFixed(4),
                                         // globalEthBalance.toStringAsFixed(2),
                                         style: const TextStyle(
                                           color: Color(0xFF202020),

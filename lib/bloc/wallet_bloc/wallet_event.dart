@@ -15,3 +15,14 @@ class LoadEthBalance extends WalletEvent{
   @override
   List<Object> get props => [amount, accountId];
 }
+
+class SendEther extends WalletEvent{
+  final double amount;
+  final String accountId;
+  const SendEther(this.amount, this.accountId);
+
+  @override
+  List<Object> get props => [amount, accountId];
+}
+
+

@@ -25,10 +25,18 @@ class _CustomDrawerState extends State<CustomDrawer> {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(
-                color: Colors.lightGreen,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: const AssetImage("assets/upang.jpg"),
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+                colorFilter: ColorFilter.mode( // Add a color filter
+                  Colors.black.withOpacity(0.5), // Adjust the opacity as needed
+                  BlendMode.darken,
+                ),
+              ),
             ),
-            padding: const EdgeInsets.only(top: 28.0),
+            padding: const EdgeInsets.only(top: 8.0),
             child: Column(
               children: [
                 Image.asset(
@@ -36,6 +44,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   width: 98,
                   height: 98,
                   color: Colors.white,
+
                 ),
                 const Text(
                   "Upang Eats",
@@ -68,14 +77,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
               });
             },
           ),
-          // ListTile(
-          //   title: const Text("Profile"),
-          //   onTap: () {
-          //     setState(() {
-          //       Navigator.pop(context);
-          //     });
-          //   },
-          // ),
           ListTile(
             title: const Text("Wallet"),
             onTap: () {
@@ -108,6 +109,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               });
             },
           ),
+
           // ListTile(
           //   title: const Text("Report A Problem"),
           //   onTap: () {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:upang_eat/Pages/stall_information.dart';
+import 'package:upang_eat/main.dart';
 import 'package:upang_eat/models/stall_model.dart';
 
 class HomeStallCard extends StatefulWidget {
@@ -23,7 +24,7 @@ class _HomeStallCardState extends State<HomeStallCard> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(14.0),
             child: Column(children: [
-              Image.asset(widget.stall.imageUrl!,
+              Image.network("${IpAddress.ipAddress}/uploads/profile_${widget.stall.stallId}.jpg",
                   height: 100,
                   width: 130,
                   fit: BoxFit.cover, errorBuilder:

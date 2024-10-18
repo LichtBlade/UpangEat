@@ -75,7 +75,7 @@ class UpdateFood extends FoodEvent {
         required this.itemName,
         required this.description,
         required this.price,
-        required this.imageURL,
+        this.imageURL,
         required this.isAvailable,
         required this.isBreakfast,
         required this.isLunch,

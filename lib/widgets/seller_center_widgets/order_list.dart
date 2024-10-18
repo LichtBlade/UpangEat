@@ -4,6 +4,7 @@ import 'package:upang_eat/models/order_item_model.dart';
 import 'package:upang_eat/models/order_model.dart';
 
 import '../../bloc/order_bloc/order_bloc.dart';
+import '../../main.dart';
 
 class OrderList extends StatefulWidget {
   final OrderModel order;
@@ -34,6 +35,7 @@ class _OrderListState extends State<OrderList> {
                 final item = widget.order.items[index];
                 return _OrderItem(
                   item: item,
+                  stallId: widget.order.stallId!,
                 );
               },
             ),
@@ -128,7 +130,8 @@ class _Header extends StatelessWidget {
 
 class _OrderItem extends StatelessWidget {
   final OrderItemModel item;
-  const _OrderItem({super.key, required this.item});
+  final int stallId;
+  const _OrderItem({super.key, required this.item, required this.stallId});
 
   @override
   Widget build(BuildContext context) {
@@ -141,9 +144,12 @@ class _OrderItem extends StatelessWidget {
             child: SizedBox(
               height: 65,
               width: 65,
-              child: Image.asset(
-                item.imageUrl!,
-                fit: BoxFit.cover,
+              child: Image.network(
+                "${IpAddress.ipAddress}/uploads/${stallId}_${item.itemId}.jpg",
+                fit: BoxFit.cover,errorBuilder:
+                  (context, error, stackTrace) {
+                return const Text('Error loading image');
+              }
               ),
             ),
           ),

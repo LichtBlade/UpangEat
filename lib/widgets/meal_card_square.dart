@@ -3,6 +3,8 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:upang_eat/models/food_model.dart';
 import 'package:upang_eat/widgets/bottom_modal_food_information.dart';
 
+import '../main.dart';
+
 class MealCardSquare extends StatefulWidget {
   final FoodModel food;
   const MealCardSquare({super.key, required this.food});
@@ -25,7 +27,7 @@ class _MealCardSquareState extends State<MealCardSquare> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(14.0),
             child: Column(children: [
-              Image.asset(widget.food.imageUrl! != "" ? widget.food.imageUrl! : "assets/stalls/profiles/1.jpg",
+              Image.network("${IpAddress.ipAddress}/uploads/${widget.food.stallId}_${widget.food.foodItemId}.jpg",
                   height: 100,
                   width: double.infinity,
                   fit: BoxFit.cover, errorBuilder:

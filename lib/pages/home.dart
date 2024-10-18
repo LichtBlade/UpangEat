@@ -332,7 +332,7 @@ class _MealCardVerticalListState extends State<_MealCardVerticalList> {
         final foods = state.foods;
         foods.shuffle();
         return SliverList(
-          delegate: SliverChildBuilderDelegate(childCount: foods.length, (BuildContext context, int index) {
+          delegate: SliverChildBuilderDelegate(childCount: foods.length,  (BuildContext context, int index) {
             final food = foods[index];
             return HomeMealCard(
               food: food,

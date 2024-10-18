@@ -5,6 +5,7 @@ import 'package:upang_eat/models/food_model.dart';
 
 import '../bloc/food_bloc/food_bloc.dart';
 import '../bloc/tray_bloc/tray_bloc.dart';
+import '../main.dart';
 import 'bottom_modal_food_information.dart';
 
 class TrayCard extends StatefulWidget {
@@ -52,11 +53,14 @@ class TrayCardState extends State<TrayCard> {
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
-                child: Image.asset(
-                  widget.food.imageUrl == "" ? "assets/stalls/profiles/1.jpg" : widget.food.imageUrl ?? "assets/stalls/profiles/1.jpg",
+                child: Image.network(
+                  "${IpAddress.ipAddress}/uploads/${widget.food.stallId}_${widget.food.foodItemId}.jpg",
                   width: 90,
                   height: 90,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.cover,errorBuilder:
+                    (context, error, stackTrace) {
+                  return const Text('Error loading image');
+                }
                 ),
               ),
             ),

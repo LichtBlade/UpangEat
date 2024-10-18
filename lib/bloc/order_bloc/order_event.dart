@@ -47,8 +47,8 @@ class UpdateOrder extends OrderEvent {
 
 class DeleteOrder extends OrderEvent {
   final int orderId;
-  final int stallId;
-  const DeleteOrder(this.orderId, this.stallId);
+  final int userId;
+  const DeleteOrder(this.orderId, this.userId);
 
 
   @override

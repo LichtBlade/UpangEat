@@ -15,7 +15,8 @@ final class OrderDeleted extends OrderState {}
 
 final class OrderLoaded extends OrderState {
   final List<OrderModel> order;
-  const OrderLoaded(this.order);
+  final String message;
+  const OrderLoaded(this.order, {this.message = ""});
 
   @override
   List<Object> get props => [order];

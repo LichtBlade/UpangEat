@@ -14,6 +14,7 @@ import 'package:upang_eat/user_data.dart';
 
 import '../Pages/stall_information.dart';
 import '../bloc/food_bloc/food_bloc.dart';
+import '../main.dart';
 import '../pages/tray.dart';
 import '../repositories/tray_repository_impl.dart';
 
@@ -95,10 +96,8 @@ class _BottomModalFoodInformationState extends State<BottomModalFoodInformation>
                       top: 0,
                       left: 0,
                       right: 0,
-                      child: Image.asset(
-                        widget.food.imageUrl! != ""
-                            ? widget.food.imageUrl!
-                            : "assets/stalls/profiles/1.jpg",
+                      child: Image.network(
+                        "${IpAddress.ipAddress}/uploads/${widget.food.stallId}_${widget.food.foodItemId}.jpg",
                         height: 300,
                         width: double.infinity,
                         fit: BoxFit.cover,

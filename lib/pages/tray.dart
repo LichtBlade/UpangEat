@@ -15,6 +15,7 @@ import "package:web_socket_channel/io.dart";
 import 'package:http/http.dart' as http;
 import "../bloc/food_bloc/food_bloc.dart";
 import "../bloc/order_bloc/order_bloc.dart";
+import "../bloc/wallet_bloc/wallet_bloc.dart";
 import "../fake_data.dart";
 import "../models/order_item_model.dart";
 import "../repositories/tray_repository_impl.dart";
@@ -49,127 +50,59 @@ class _TrayState extends State<Tray> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const _AppBar(),
-        body: BlocListener<TrayBloc, TrayState>(
-          listener: (context, state) {
-            if (state is TrayItemsRemoved) {
-              context.read<TrayBloc>().add(TrayLoadFood(widget.id));
-            } else if (state is TrayFoodLoaded) {
-              // context.read<TrayBloc>().add(TrayLoadFood(widget.id));
-            } else if (state is TrayError) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.message)));
-            }
-          },
-          child: Stack(children: [
-            const Positioned(
-              top: 0,
-              bottom: 320,
-              right: 0,
-              left: 0,
-              child: _FoodBlocBuilder(),
-            ),
-            const Positioned(
-              bottom: 80,
-              left: 24,
-              right: 24,
-              child: _OrderSummaryAndWallet(),
-            ),
-            Positioned(
-              bottom: 16,
-              left: 24,
-              right: 24,
-              child: FilledButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        final foodState = context.read<TrayBloc>().state;
-                        if (foodState is TrayFoodLoaded) {
-                          final foods = foodState.foods;
-                          final totalAmount = foodState.totalPrice;
-                          final convertToEth =
-                              convertPhpToEth(totalAmount.toDouble());
-                          if (foods.isEmpty) {
-                            return AlertDialog(
-                                title: const Text("Empty Tray"),
-                                content: const Text(
-                                    "Your tray is empty. Add some delicious items before proceeding to payment."),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('Ok'),
-                                  ),
-                                ]);
-                          }
+      appBar: const _AppBar(),
+      body: BlocListener<TrayBloc, TrayState>(
+        listener: (context, state) {
+          if (state is TrayItemsRemoved) {
+            context.read<TrayBloc>().add(TrayLoadFood(widget.id));
+          } else if (state is TrayFoodLoaded) {
+            // context.read<TrayBloc>().add(TrayLoadFood(widget.id));
+          } else if (state is TrayError) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        child: Stack(children: [
+          const Positioned(
+            top: 0,
+            bottom: 320,
+            right: 0,
+            left: 0,
+            child: _FoodBlocBuilder(),
+          ),
+          const Positioned(
+            bottom: 80,
+            left: 24,
+            right: 24,
+            child: _OrderSummaryAndWallet(),
+          ),
+          Positioned(
+            bottom: 16,
+            left: 24,
+            right: 24,
+            child: FilledButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      final foodState = context.read<TrayBloc>().state;
+                      if (foodState is TrayFoodLoaded) {
+                        final foods = foodState.foods;
+                        final totalAmount = foodState.totalPrice;
+                        final convertToEth = convertPhpToEth(totalAmount.toDouble());
+                        if (foods.isEmpty) {
+                          return AlertDialog(title: const Text("Empty Tray"), content: const Text("Your tray is empty. Add some delicious items before proceeding to payment."), actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Ok'),
+                            ),
+                          ]);
+                        }
 
-                          return AlertDialog(
-                            title: const Text("Proceed to Payment"),
-                            content: Text(
-                                "Please review the amount of $convertToEth ETH for your order before confirming payment."),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  // Create a list of OrderItemModel from foods
-                                  final orderItems = foods
-                                      .map((food) => OrderItemModel(
-                                          orderItemId: 0,
-                                          itemId: food.foodItemId,
-                                          quantity: food.trayQuantity ?? 1,
-                                          subtotal: food.price *
-                                              (food.trayQuantity ?? 1)))
-                                      .toList();
-
-                                  // Create the OrderModel
-                                  final order = OrderModel(
-                                    orderId: 0,
-                                    userId: widget.id,
-                                    totalAmount: totalAmount,
-                                    items: orderItems,
-                                  );
-                                  print(order);
-                                  context
-                                      .read<OrderBloc>()
-                                      .add(CreateOrder(order, widget.id));
-
-                                  Navigator.of(context).pop();
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const PaymentProcessing()));
-                                },
-                                child: const Text('Confirm'),
-                              ),
-                            ],
-                          );
-                        } else {
-                          print("error: creating order");
-                          return AlertDialog(
-                              title: const Text("Empty Tray"),
-                              content: const Text(
-                                  "Your tray is empty. Add some delicious items before proceeding to payment."),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('Ok'),
-                                ),
-                              ]);
-                        }=
                         return AlertDialog(
                           title: const Text("Proceed to Payment"),
-                          content: Text(
-                              "Please review the amount of $convertToEth ETH for your order before confirming payment."),
+                          content: Text("Please review the amount of $convertToEth ETH for your order before confirming payment."),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -181,17 +114,13 @@ class _TrayState extends State<Tray> {
                               onPressed: () async {
                                 try {
                                   double ethAmount = convertToEth; // ETH amount
-                                  await sendEther(ethAmount, globalPaymentEth);
+                                  // await sendEther(ethAmount, globalPaymentEth);
+                                  context.read<WalletBloc>().add(LoadEthBalance(ethAmount, globalPaymentEth));
+                                  print(ethAmount);
+                                  print(globalPaymentEth);
 
                                   // Create a list of OrderItemModel from foods
-                                  final orderItems = foods
-                                      .map((food) => OrderItemModel(
-                                          orderItemId: 0,
-                                          itemId: food.foodItemId,
-                                          quantity: food.trayQuantity ?? 1,
-                                          subtotal: food.price *
-                                              (food.trayQuantity ?? 1)))
-                                      .toList();
+                                  final orderItems = foods.map((food) => OrderItemModel(orderItemId: 0, itemId: food.foodItemId, quantity: food.trayQuantity ?? 1, subtotal: food.price * (food.trayQuantity ?? 1))).toList();
 
                                   // Create the OrderModel
                                   final order = OrderModel(
@@ -201,16 +130,10 @@ class _TrayState extends State<Tray> {
                                     items: orderItems,
                                   );
                                   print(order);
-                                  context
-                                      .read<OrderBloc>()
-                                      .add(CreateOrder(order, widget.id));
+                                  context.read<OrderBloc>().add(CreateOrder(order, widget.id));
 
                                   Navigator.of(context).pop();
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const PaymentProcessing()));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentProcessing()));
                                 } catch (e) {
                                   // Show an error dialog if balance is insufficient or other error occurs
                                   showDialog(
@@ -238,38 +161,27 @@ class _TrayState extends State<Tray> {
                         );
                       } else {
                         print("error: creating order");
-                        return AlertDialog(
-                            title: const Text("Empty Tray"),
-                            content: const Text(
-                                "Your tray is empty. Add some delicious items before proceeding to payment."),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Ok'),
-                              ),
-                            ]);
+                        return AlertDialog(title: const Text("Empty Tray"), content: const Text("Your tray is empty. Add some delicious items before proceeding to payment."), actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Ok'),
+                          ),
+                        ]);
                       }
                     });
               },
               style: ButtonStyle(
                 elevation: WidgetStateProperty.all(8.0),
                 minimumSize: WidgetStateProperty.all(const Size(100, 50)),
-// =======
-//                       });
-//                 },
-//                 style: ButtonStyle(
-//                   elevation: WidgetStateProperty.all(8.0),
-//                   minimumSize: WidgetStateProperty.all(const Size(100, 50)),
-//                 ),
-//                 child: const Text("Proceed to Pay"),
-// >>>>>>> master
               ),
+              child: const Text("Proceed to Pay"),
             ),
-          ]),
-        ),
-      );
+          ),
+        ]),
+      ),
+    );
   }
 }
 
@@ -292,8 +204,7 @@ Future<void> sendEther(double ethAmount, String accountID) async {
     String privateKey = globalPrivateKey;
 
     // Obtain credentials from private key
-    Credentials credentials =
-        await client.credentialsFromPrivateKey(privateKey);
+    Credentials credentials = await client.credentialsFromPrivateKey(privateKey);
 
     EthereumAddress ownAddress = await credentials.extractAddress();
     print("Own Address: $ownAddress");
@@ -305,8 +216,7 @@ Future<void> sendEther(double ethAmount, String accountID) async {
     EtherAmount balance = await client.getBalance(ownAddress);
 
     // Convert ethAmount (ETH) to Wei
-    BigInt weiAmount =
-        BigInt.from(ethAmount * 1e18); // Multiply ETH by 10^18 to get Wei
+    BigInt weiAmount = BigInt.from(ethAmount * 1e18); // Multiply ETH by 10^18 to get Wei
 
     // Check if the user's balance is sufficient
     if (balance.getInWei < weiAmount) {
@@ -428,9 +338,7 @@ class _OrderSummaryAndWalletState extends State<_OrderSummaryAndWallet> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          isSwitch
-                              ? formattedPhpBalance
-                              : "${ethBalance.toStringAsFixed(6)} ETH",
+                          isSwitch ? formattedPhpBalance : "${ethBalance.toStringAsFixed(4)} ETH",
                           maxLines: 1,
                           style: const TextStyle(
                             color: Color(0xFF202020),
@@ -457,8 +365,7 @@ class _OrderSummaryAndWalletState extends State<_OrderSummaryAndWallet> {
           margin: const EdgeInsets.symmetric(horizontal: 0),
           color: Colors.black12,
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
             child: Column(
               children: [
                 Row(
@@ -490,21 +397,16 @@ class _OrderSummaryAndWalletState extends State<_OrderSummaryAndWallet> {
                   children: [
                     const Text(
                       "Total",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                     ),
                     BlocBuilder<TrayBloc, TrayState>(
                       builder: (context, state) {
                         int totalPrice = 0;
                         if (state is TrayFoodLoaded) {
                           totalPrice = state.totalPrice;
-                          return Text("₱ $totalPrice",
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 16));
+                          return Text("₱ $totalPrice", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16));
                         } else {
-                          return const Text("₱ 0",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 16));
+                          return const Text("₱ 0", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16));
                         }
                       },
                     )
@@ -546,7 +448,11 @@ class _FoodBlocBuilder extends StatelessWidget {
                     final food = foods[index];
                     return TrayCard(food: food);
                   })
-              : Center(child: Image.asset("assets/mingming.png", ),);
+              : Center(
+                  child: Image.asset(
+                    "assets/mingming.png",
+                  ),
+                );
         } else if (state is TrayError) {
           return Text(state.message);
         } else {

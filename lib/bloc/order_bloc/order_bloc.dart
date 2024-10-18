@@ -4,6 +4,7 @@ import 'package:upang_eat/user_data.dart';
 
 import '../../models/order_model.dart';
 import '../../repositories/order_repository.dart';
+import '../../repositories/order_repository_impl.dart';
 
 part 'order_event.dart';
 part 'order_state.dart';
@@ -68,8 +69,12 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         await _orderRepository.deleteOrder(event.orderId);
         emit (OrderDeleted());
 
-        final orders = await _orderRepository.fetchOrdersByStallId(event.stallId);
+        final orders = await _orderRepository.fetchOrdersByUserId(event.userId);
         emit (OrderLoaded(orders));
+        globalOrders = orders;
+      } on OrderDeletionException catch (error) {
+        final orders = await _orderRepository.fetchOrdersByUserId(event.userId);
+        emit (OrderLoaded(orders, message: error.message));
         globalOrders = orders;
       } catch (error) {
         emit(OrderError(error.toString()));

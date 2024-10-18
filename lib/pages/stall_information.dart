@@ -6,6 +6,7 @@ import 'package:upang_eat/pages/tray.dart';
 import 'package:upang_eat/widgets/meal_card_square.dart';
 
 import '../bloc/food_bloc/food_bloc.dart';
+import '../main.dart';
 import '../widgets/home_meal_card.dart';
 
 class StallInformation extends StatefulWidget {
@@ -33,7 +34,7 @@ class _StallInformationState extends State<StallInformation> {
         body: RefreshIndicator(
           onRefresh: () async {context.read<FoodBloc>().add(LoadFoodByStallId(widget.stall.stallId));},
           child: Stack(fit: StackFit.expand, children: [
-            _StallImage(imageUrl: widget.stall.imageUrl!),
+            _StallImage(imageUrl: "${IpAddress.ipAddress}/uploads/profile_${widget.stall.stallId}.jpg"),
             const _Gradient(),
             _StallName(stallName: widget.stall.stallName,),
             Positioned(
@@ -165,9 +166,6 @@ class _AppBarState extends State<_AppBar> {
       // ],
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
 class _StallImage extends StatelessWidget {
@@ -185,7 +183,7 @@ class _StallImage extends StatelessWidget {
         height: 200,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(
+            image: NetworkImage(
               imageUrl,
             ),
             fit: BoxFit.cover,
@@ -228,8 +226,8 @@ class _StallName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: 0,
-      right: 0,
+      left: 40,
+      right: 40,
       top: 60,
       child: SizedBox(
         height: 70,

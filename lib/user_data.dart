@@ -5,9 +5,9 @@ UserModel? globalUserData;
 
 // Wallet Address Global
 String globalSellerWallet =
-    '0x391275d70808dbaf71bebb0efbc988e719b93f6bb145d1635254e024496e3c36';
+    '0x8e32f7442f65bdb5ea7fe253af3bbc284faaeca10d2634a495b48a0ab2d9ee1d';
 String globalUserWallet =
-    '0xb92508c3bb483e1f2d48b49f419594fc6d3b8a0f6ee0aa2657a9497d8edc5796';
+    '0xcd72e17e23b55819612cb4a79fd1eb3634802c28d912c6c76c612e65cc550827';
 
 double globalEthBalance = 0;
 double globalEthPrice = 0;

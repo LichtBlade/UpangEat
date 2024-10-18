@@ -76,7 +76,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                   itemName: _itemName.text,
                   description: _description.text,
                   price: int.parse(_price.text),
-                  imageURL: '',
+                  // imageURL: '',
                   isAvailable: _isActive,
                   isBreakfast: _selectedType == 'Breakfast' ? true : false,
                   isLunch: _selectedType == 'Lunch' ? true : false,
