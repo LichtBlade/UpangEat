@@ -23,13 +23,13 @@ class _SlideshowScreenState extends State<SlideshowScreen> {
                 _currentPage = page;
               });
             },
-            children: [
-              buildPage('assets/mingming.png', 'Welcome to the App! \n\n step 1 \n sjdghoishgfoeiushgoieuh'),
-              buildPage('assets/stalls/banners/BossSisigBanner.jpg', 'Discover New Features \n klwgsjuhreoiguhs'),
-              buildPage('assets/stalls/banners/MasamsamitSoAdeleBanner.jpg', 'Let’s Get Started!'),
-              buildPage('assets/stalls/banners/MekusMekusTayoInsanBanner.jpeg', 'avgrrrrrrr'),
-              buildPage('assets/stalls/banners/NinongRySpecialDelicacyBanner.jpg', 'a\na\na\na\na'),
-            ],
+              children: [
+                buildPage('assets/upangeats.png', 'Welcome to the Upang Eats! \nThe Food Application \nfor everyone in PHINMA - UPang'),
+                buildPage('assets/slideshow/bitcoin.png', 'Discover New Features \nUse the built-in Crypto Wallet \nfor all of your transactions.'),
+                buildPage('assets/slideshow/order.png', 'Discover \nSelect the food items you wish to order \nand add them to your tray.'),
+                buildPage('assets/slideshow/cooking.png', 'Wait \nCheck out your order \nand wait while it is being prepared'),
+                buildPage('assets/slideshow/food-pickup.png', 'Enjoy \nOnce your order is ready, \nhead to the designated location \nto pick it up'),
+              ],
           ),
           Positioned(
             bottom: 30,
