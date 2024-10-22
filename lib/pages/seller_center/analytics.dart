@@ -1,80 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:upang_eat/widgets/seller_center_widgets/monthly_analytics.dart';
 import '../../bloc/analytic_food_bloc/analytic_food_bloc.dart';
+import '../../repositories/food_repository_impl.dart';
 import '../../user_data.dart';
+import '../../widgets/seller_center_widgets/daily_analytics.dart';
 
 class Analytics extends StatefulWidget {
   const Analytics({super.key});
 
   @override
-  State<Analytics> createState() => _AnalyticsState();
+  _AnalyticsState createState() => _AnalyticsState();
 }
 
 class _AnalyticsState extends State<Analytics> {
-
-  @override
-  void initState() {
-    final currentDate = DateTime.now();
-    final startDate = DateTime(currentDate.year, currentDate.month, currentDate.day); // Today's date
-    final endDate = DateTime(currentDate.year, currentDate.month, currentDate.day);
-
-    context.read<AnalyticFoodBloc>().add(LoadAnalyticFood(globalUserData!.stallId!, "$startDate", "$currentDate"));
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final foodRepository = FoodRepositoryImpl();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Analytics",
-          style: TextStyle(
-            color: Colors.white,
-          ),
+          "Analytics Overview",
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: const Color.fromARGB(255, 222, 15, 57),
         centerTitle: true,
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: BlocBuilder<AnalyticFoodBloc, AnalyticFoodState>(
-        builder: (context, state) {
-          print("Current State: $state");
-          if (state is AnalyticFoodLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is AnalyticFoodLoaded) {
-            final foodAnalytics = state.foodAnalytics;
-
-            return ListView.builder(
-              itemCount: foodAnalytics.length,
-              itemBuilder: (context, index) {
-                final foodItem = foodAnalytics[index];
-
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  elevation: 5,
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(16),
-                    title: Text(foodItem.itemName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    subtitle: Text('Total Sales: ${foodItem.totalQuantitySold}', style: const TextStyle(fontSize: 16)),
-                  ),
-                );
-              },
-            );
-          } else if (state is AnalyticFoodError) {
-            // Error state
-            return Center(
-              child: Text(
-                'Error: ${state.message}',
-                style: const TextStyle(color: Colors.red, fontSize: 18),
+      body: Column(
+        children: [
+          const SizedBox(height: 16),
+          const Text('Current Sales'),
+          Expanded(
+            child: BlocProvider<AnalyticFoodBloc>(
+              create: (context) => AnalyticFoodBloc(foodRepository)
+                ..add(LoadAnalyticFood(globalUserData!.stallId!, "${DateTime.now().toIso8601String()}", "${DateTime.now().toIso8601String()}")),
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: DailyAnalytics(),
               ),
-            );
-          } else {
-            return const Center(child: Text("Unexpected State"));
-          }
-        },
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text('Monthly Sales'),
+          // Separate BlocProvider for MonthlyAnalytics
+          Expanded(
+            child: BlocProvider<AnalyticFoodBloc>(
+              create: (context) => AnalyticFoodBloc(foodRepository)
+                ..add(LoadAnalyticFood(globalUserData!.stallId!, "${DateTime(DateTime.now().year, DateTime.now().month, 1).toIso8601String()}", "${DateTime(DateTime.now().year, DateTime.now().month + 1, 0).toIso8601String()}")),
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: MonthlyAnalytics(),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
