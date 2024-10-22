@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:upang_eat/models/food_model.dart';
 import 'package:upang_eat/widgets/bottom_modal_food_information.dart';
 
@@ -33,7 +34,20 @@ class _MealCardSquareState extends State<MealCardSquare> {
                   fit: BoxFit.cover, errorBuilder:
                       (context, error, stackTrace) {
                     return const Text('Error loading image');
-                  }),
+                  },
+                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                  if (frame == null) {
+                    return Skeletonizer(
+                      enabled: true,
+                      child: Image.asset("assets/foods/1_1.jpg",
+                        height: 100,
+                        width: double.infinity,
+                        fit: BoxFit.cover,),
+                    );
+                  } else {
+                    return child;
+                  }
+                },),
               Expanded(
                 child: SizedBox(
                   width: 130,

@@ -47,6 +47,7 @@ class _BottomModalFoodInformationState extends State<BottomModalFoodInformation>
     super.initState();
   }
 
+
   void _incrementQuantity() {
     if (_quantity < 99) {
       setState(() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:upang_eat/main.dart';
 import 'package:upang_eat/widgets/bottom_modal_food_information.dart';
 
@@ -70,6 +71,18 @@ class _Image extends StatelessWidget {
               width: 100,
                 child: Text('Error loading images'),
             );
+          },
+          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+            if (frame == null) {
+              return Skeletonizer(
+                child: Image.asset("assets/foods/1_1.jpg",
+                  height: 100,
+                  width: 100,
+                  fit: BoxFit.cover,),
+              );
+            } else {
+              return child;
+            }
           },
         ));
   }

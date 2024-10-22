@@ -63,6 +63,21 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       }
     });
 
+
+
+    on<UpdateUserOrder>((event, emit) async {
+      emit(OrderLoading());
+      try {
+        await _orderRepository.updateOrders(event.orderId, event.status);
+
+        final orders = await _orderRepository.fetchOrdersByUserId(event.userId);
+        emit (OrderLoaded(orders));
+        globalOrders = orders;
+      } catch (error) {
+        emit(OrderError(error.toString()));
+      }
+    });
+
     on<DeleteOrder>((event, emit) async {
       emit(OrderLoading());
       try {

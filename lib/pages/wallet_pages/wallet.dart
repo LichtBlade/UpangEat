@@ -51,6 +51,9 @@ class _WalletState extends State<Wallet> {
 
   @override
   void initState() {
+    print(_globalEthBalance);
+    print(walletAddress);
+
     super.initState();
   }
 
@@ -114,9 +117,10 @@ class _WalletState extends State<Wallet> {
                                         ),
                                       );
                                     } else if (state is WalletBalanceLoaded) {
+                                      print(state.ethBalance);
                                       return Text(
-                                        // _globalEthBalance.toStringAsFixed(2),
-                                        state.ethBalance.toStringAsFixed(2),
+                                        _globalEthBalance.toStringAsFixed(2),
+                                        // state.ethBalance.toStringAsFixed(2),
                                         style: const TextStyle(
                                           color: Color(0xFF202020),
                                           fontSize: 30,

@@ -23,7 +23,7 @@ class _PaymentProcessingState extends State<PaymentProcessing> {
 
           }else if (state is OrderLoaded){
             print("ORDERS ${state.order} ORDERS");
-            Future.delayed(const Duration(milliseconds: 2000), () {
+            Future.delayed(const Duration(milliseconds: 2200), () {
               Navigator.pop(context);
               Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context) => const OrderStatus(isAllowPending: true, isAllowAccepted: true, isAllowReady: true)));
@@ -46,7 +46,12 @@ class _PaymentProcessingState extends State<PaymentProcessing> {
                     ],),
                   );
                 } else if (state is OrderAdded || state is OrderLoaded) {
-                  return const Center(child: Text("Woohoo! Payment confirmed. You're one step closer to deliciousness!"));
+                  return Center(child: Column(
+                    children: [
+                      Image.asset("assets/payment_success.gif"),
+                      const Text("Payment Success!", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),)
+                    ],
+                  ));
                 } else if (state is OrderError) {
                   return Text("Error: ${state.message}");
                 } else {

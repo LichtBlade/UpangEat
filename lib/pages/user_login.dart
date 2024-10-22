@@ -24,6 +24,9 @@ class _UserLoginState extends State<UserLogin> {
   final TextEditingController passwordController = TextEditingController();
   bool _obscureText = true;
   bool isLoading = false;
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _emailFocusNode = FocusNode();
+
 
   @override
   void initState() {
@@ -75,7 +78,7 @@ class _UserLoginState extends State<UserLogin> {
 //                     '0xcd72e17e23b55819612cb4a79fd1eb3634802c28d912c6c76c612e65cc550827';
 // >>>>>>> master
                 globalPrivateKey = globalUserWallet;
-                _fetchWalletGanche(globalPrivateKey, globalSellerWallet);
+                _fetchWalletGanche(globalPrivateKey);
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => SlideshowScreen()),
                 );
@@ -143,10 +146,13 @@ class _UserLoginState extends State<UserLogin> {
                             fillColor: Colors.white,
                             filled: true,
                             prefixIcon: const Icon(Icons.person),
-                            suffixIcon: IconButton(onPressed: () => emailController.clear(), icon: const Icon(Icons.clear)),
+                            suffixIcon: IconButton(onPressed: () => emailController.clear(), icon: const Icon(Icons.clear),),
                           ),
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
+                          onSubmitted: (_){
+                            _passwordFocusNode.requestFocus();
+                          },
                         ),
                         TextField(
                           controller: passwordController,
@@ -168,6 +174,15 @@ class _UserLoginState extends State<UserLogin> {
                           obscureText: _obscureText,
                           keyboardType: TextInputType.visiblePassword,
                           textInputAction: TextInputAction.done,
+                          focusNode: _passwordFocusNode,
+                          onSubmitted: (_) {
+                            BlocProvider.of<LoginBloc>(context).add(
+                              LoginButtonPressed(
+                                emailController.text,
+                                passwordController.text,
+                              ),
+                            );
+                          },
 
                         ),
                         // Login Button

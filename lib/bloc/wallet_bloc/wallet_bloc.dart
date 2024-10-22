@@ -103,8 +103,8 @@ Future<double> _fetchWalletGanche(String privateKey) async {
   // Fetch balance
   EtherAmount balance = await client.getBalance(ownAddress);
   globalEthBalance = balance.getValueInUnit(EtherUnit.ether);
-  globalWalletEthAddress = ownAddress.toString();
-  print(globalWalletEthAddress); // Convert balance to ETH
+  // globalWalletEthAddress = ownAddress.toString();
+  // print(globalWalletEthAddress); // Convert balance to ETH
   return globalEthBalance;
 
 }

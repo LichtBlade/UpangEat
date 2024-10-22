@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:upang_eat/Pages/stall_information.dart';
 import 'package:upang_eat/main.dart';
 import 'package:upang_eat/models/stall_model.dart';
@@ -27,10 +28,23 @@ class _HomeStallCardState extends State<HomeStallCard> {
               Image.network("${IpAddress.ipAddress}/uploads/profile_${widget.stall.stallId}.jpg",
                   height: 100,
                   width: 130,
-                  fit: BoxFit.cover, errorBuilder:
+                  fit: BoxFit.cover,
+                  errorBuilder:
                       (context, error, stackTrace) {
                     return const Text('Error loading image');
-                  }),
+                  },
+                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                  if (frame == null) {
+                    return Skeletonizer(
+                      child: Image.asset("assets/foods/1_1.jpg",
+                        height: 100,
+                        width: 130,
+                        fit: BoxFit.cover,),
+                    );
+                  } else {
+                    return child;
+                  }
+                },),
               SizedBox(
                 width: 110,
                 child:

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:upang_eat/bloc/stall_bloc/stall_bloc.dart';
+import 'package:upang_eat/fake_data.dart';
+import 'package:upang_eat/models/food_model.dart';
 import 'package:upang_eat/models/stall_model.dart';
 import 'package:upang_eat/pages/tray.dart';
 import 'package:upang_eat/widgets/meal_card_square.dart';
@@ -8,6 +11,7 @@ import 'package:upang_eat/widgets/meal_card_square.dart';
 import '../bloc/food_bloc/food_bloc.dart';
 import '../main.dart';
 import '../widgets/home_meal_card.dart';
+import 'home.dart';
 
 class StallInformation extends StatefulWidget {
   final Stall stall;
@@ -24,7 +28,6 @@ class _StallInformationState extends State<StallInformation> {
     context.read<FoodBloc>().add(LoadFoodByStallId(widget.stall.stallId));
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +65,7 @@ class _StallInformationState extends State<StallInformation> {
                           BlocBuilder<FoodBloc, FoodState>(
                               builder: (context, state) {
                                 if (state is FoodLoading) {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
+                                  return _SkeletonSquareFood(foods: FakeData.fakeFood,);
                                 } else if (state is FoodLoaded) {
                                   final foods = state.foods;
                                   return GridView.builder(
@@ -96,8 +98,7 @@ class _StallInformationState extends State<StallInformation> {
                           BlocBuilder<FoodBloc, FoodState>(
                               builder: (context, state) {
                                 if (state is FoodLoading) {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
+                                  return const SkeletonHomeMealCard();
                                 } else if (state is FoodLoaded) {
                                   final foods = state.foods;
                                   return ListView.builder(
@@ -301,5 +302,34 @@ class _Header extends StatelessWidget {
           )
       ],
     );
+  }
+}
+
+class _SkeletonSquareFood extends StatelessWidget {
+  final FoodModel foods;
+  const _SkeletonSquareFood({super.key, required this.foods});
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 8.0,
+            mainAxisSpacing: 8.0,
+            childAspectRatio: 1/1
+        ),
+        padding:const EdgeInsets.symmetric(horizontal: 8.0),
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: 4,
+        itemBuilder: (context, index) {
+          final food = foods;
+          return Skeletonizer(
+            child: MealCardSquare(
+              food: food,
+            ),
+          );
+        });
   }
 }

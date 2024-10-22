@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:upang_eat/pages/stall_information.dart';
 import 'package:upang_eat/models/stall_model.dart';
 
@@ -35,6 +36,19 @@ class StallsStallCard extends StatelessWidget {
                         height: 100,
                         width: 100,
                         fit: BoxFit.cover,
+                        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                          if (frame == null) {
+                            return Skeletonizer(
+                              enabled: true,
+                              child: Image.asset("assets/foods/1_1.jpg",
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.cover,),
+                            );
+                          } else {
+                            return child;
+                          }
+                        },
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -42,6 +56,18 @@ class StallsStallCard extends StatelessWidget {
                           "${IpAddress.ipAddress}/uploads/banner_${stall.stallId}.jpg",
                           height: 100,
                           fit: BoxFit.cover,
+                          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                            if (frame == null) {
+                              return Skeletonizer(
+                                enabled: true,
+                                child: Image.asset("assets/foods/1_1.jpg",
+                                  height: 100,
+                                  fit: BoxFit.cover,),
+                              );
+                            } else {
+                              return child;
+                            }
+                          },
                         ),
                       ),
                     ],

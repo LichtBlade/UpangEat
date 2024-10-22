@@ -17,46 +17,48 @@ class Stalls extends StatefulWidget {
 class _StallsState extends State<Stalls> {
   @override
   void initState() {
-    context.read<StallBloc>().add(LoadStalls());
-
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Stalls"),
-      ),
-      body: Center(
-        child: SizedBox(
-          width: 350,
-          child: BlocBuilder<StallBloc, StallState>(
-            builder: (context, state) {
-              if (state is StallLoading) {
-                return Skeletonizer(
-                  child: ListView.builder(itemCount: 4,
+    return BlocProvider(
+        create: (context) => StallBloc(StallRepositoryImpl())..add(LoadStalls()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Stalls"),
+        ),
+        body: Center(
+          child: SizedBox(
+            width: 350,
+            child: BlocBuilder<StallBloc, StallState>(
+              builder: (context, state) {
+                if (state is StallLoading) {
+                  return Skeletonizer(
+                    child: ListView.builder(itemCount: 4,
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (context, index) {
+                          return StallsStallCard(stall: FakeData.fakeStall);
+                        }),
+                  );;
+                } else if (state is StallLoaded) {
+                  final stallData = state.stalls;
+                  return ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       scrollDirection: Axis.vertical,
+                      itemCount: stallData.length,
                       itemBuilder: (context, index) {
-                        return StallsStallCard(stall: FakeData.fakeStall);
-                      }),
-                );;
-              } else if (state is StallLoaded) {
-                final stallData = state.stalls;
-                return ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    scrollDirection: Axis.vertical,
-                    itemCount: stallData.length,
-                    itemBuilder: (context, index) {
-                      final stall = stallData[index];
-                      return StallsStallCard(stall: stall);
-                    });
-              } else if (state is StallError) {
-                return Text("Error: ${state.message}");
-              } else {
-                return const Text("Unexpected state}");
-              }
-            },
+                        final stall = stallData[index];
+                        return StallsStallCard(stall: stall);
+                      });
+                } else if (state is StallError) {
+                  return Text("Error: ${state.message}");
+                } else {
+                  return const Text("Unexpected state}");
+                }
+              },
+            ),
           ),
         ),
       ),

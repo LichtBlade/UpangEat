@@ -38,7 +38,6 @@ class _HomeState extends State<Home> {
 
     context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
     context.read<CategoryBloc>().add(LoadCategory());
-
     super.initState();
   }
 
@@ -60,7 +59,6 @@ class _HomeState extends State<Home> {
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           body: RefreshIndicator(
             onRefresh: () async {
-
               context.read<StallBloc>().add(LoadStalls());
               context.read<CategoryBloc>().add(LoadCategory());
               context.read<FoodBloc>().add(LoadFood());
