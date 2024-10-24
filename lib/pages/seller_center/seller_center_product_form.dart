@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:upang_eat/bloc/food_bloc/food_bloc.dart';
 import 'package:upang_eat/models/food_model.dart';
-import 'package:upang_eat/repositories/food_repository_impl.dart';
 import 'package:upang_eat/widgets/form_widgets/upload_image_card.dart';
 
 class SellerCenterProductForm extends StatefulWidget {
