@@ -14,7 +14,10 @@ class FirebaseClient {
     TaskSnapshot snapshot = await uploadTask;
     String downloadUrl = await snapshot.ref.getDownloadURL();
 
+
     return downloadUrl;
+
+
   }
 
   Future<void> saveFoodImage({required Uint8List file}) async {

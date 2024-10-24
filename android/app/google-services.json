@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "890417640755",
+    "project_id": "upangeats",
+    "storage_bucket": "upangeats.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890417640755:android:7692fcf830d7105ba77a46",
+        "android_client_info": {
+          "package_name": "com.example.upang_eat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDPuDoSdlZF0cm2Qaa5o2nH00toYHNFFo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

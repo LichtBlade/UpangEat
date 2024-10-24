@@ -2,6 +2,7 @@
 
 import 'dart:typed_data';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -272,6 +273,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                         selectedImage: _selectedImage,
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           OutlinedButton(
                             onPressed: () async {
@@ -283,7 +285,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                                 Text('Add Image'),
                               ],
                             ),
-                          )
+                          ),
                         ],
                       )
                     ],
