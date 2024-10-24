@@ -6,8 +6,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:upang_eat/bloc/food_bloc/food_bloc.dart';
 import 'package:upang_eat/models/food_model.dart';
+import 'package:upang_eat/services/storage_service.dart';
 import 'package:upang_eat/widgets/form_widgets/upload_image_card.dart';
 
 class SellerCenterProductForm extends StatefulWidget {
@@ -41,7 +43,7 @@ class SellerCenterProductForm extends StatefulWidget {
 }
 
 class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
-  Uint8List? _selectedImage;
+  XFile? _selectedImage;
   String _selectedType = 'Breakfast';
 
   final _formKey = GlobalKey<FormState>();
@@ -277,7 +279,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                         children: [
                           OutlinedButton(
                             onPressed: () async {
-                              _selectImage();
+                              _pickImageFromGallery();
                             },
                             child: const Row(
                               children: [
@@ -326,25 +328,21 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
     );
   }
 
-  Future<Uint8List?> _pickImageFromGallery() async {
-    final XFile? file =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+  Future<XFile?> _pickImageFromGallery() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
-    if (file != null) {
-      return await file.readAsBytes(); // Converts picked file to Uint8List
-    }
+    if (image == null) return null;
 
-    print('No Image Selected');
-    return null;
+    setState(() {
+      _selectedImage = image;
+    });
+
+    return image;
   }
 
-  void _selectImage() async {
-    Uint8List? img = await _pickImageFromGallery();
-
-    if (img != null) {
-      setState(() {
-        _selectedImage = img; // This is where Uint8List gets assigned
-      });
-    }
+  Future<void> fetchFoodImages() async {
+    await Provider.of<StorageService>(context, listen: false)
+        .fetchImages('food/');
   }
 }

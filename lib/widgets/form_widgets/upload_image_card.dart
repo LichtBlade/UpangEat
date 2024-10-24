@@ -2,9 +2,10 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UploadImageCard extends StatefulWidget {
-  final Uint8List? selectedImage;
+  final XFile? selectedImage;
 
   const UploadImageCard({super.key, this.selectedImage});
 
@@ -24,7 +25,10 @@ class UploadImageCardState extends State<UploadImageCard> {
             width: 500,
             child: Center(
               child: widget.selectedImage != null
-                  ? Image.memory(widget.selectedImage!)
+                  ? Image.file(
+                      File(widget.selectedImage!.path),
+                      fit: BoxFit.fill,
+                    )
                   : const Icon(Icons.image),
             )),
       ),

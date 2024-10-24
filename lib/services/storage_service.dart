@@ -23,11 +23,11 @@ class StorageService with ChangeNotifier {
   bool get isUploading => _isUploading;
 
   //* READ IMAGES
-  Future<void> fetchFoodImages() async {
+  Future<void> fetchImages(String path) async {
     // start loading
     _isLoading = true;
 
-    final ListResult result = await firebaseStorage.ref('foods/').listAll();
+    final ListResult result = await firebaseStorage.ref(path).listAll();
 
     final urls =
         await Future.wait(result.items.map((ref) => ref.getDownloadURL()));
@@ -37,12 +37,9 @@ class StorageService with ChangeNotifier {
     // loading finished
     _isLoading = false;
 
-    // update ui
-    notifyListeners();
   }
 
   //* DELETE IMAGES
-
   Future<void> deleteImage(String imageUrl) async {
     try {
       _imageUrls.remove(imageUrl);
@@ -59,21 +56,15 @@ class StorageService with ChangeNotifier {
   }
 
   //* UPLOAD IMAGES
-
-  Future<void> uploadImage() async {
+  Future<void> uploadImage(String path, XFile? image) async {
     _isUploading = true;
-
-    notifyListeners();
-
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image == null) return;
 
     File file = File(image.path);
 
     try {
-      String filePath = 'food/${DateTime.now()}.png';
+      String filePath = '$path${DateTime.now()}.png';
 
       await firebaseStorage.ref(filePath).putFile(file);
 
@@ -84,12 +75,10 @@ class StorageService with ChangeNotifier {
       throw Exception(e);
     } finally {
       _isUploading = false;
-      notifyListeners();
     }
   }
 
   //* Other methods
-
   String extractPathFromURL(String url) {
     Uri uri = Uri.parse(url);
 
