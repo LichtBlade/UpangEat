@@ -15,13 +15,11 @@ class StorageService {
   bool _isLoading = false;
 
   // uplaoading status
-  bool _isUploading = false;
 
   //* GETTERS
   List<String> get imageUrls => _imageUrls;
   String get imageUrl => _imageUrl;
   bool get isLoading => _isLoading;
-  bool get isUploading => _isUploading;
 
   //* READ IMAGES
   Future<void> fetchImages(String path) async {
@@ -67,9 +65,8 @@ class StorageService {
   }
 
   //* UPLOAD IMAGES
-  Future<void> uploadImage(String path, XFile? image) async {
-
-    if (image == null) return;
+  Future<String?> uploadImage(String path, XFile? image) async {
+    if (image == null) return null;
 
     File file = File(image.path);
 
@@ -80,10 +77,10 @@ class StorageService {
 
       String downloadUrl = await firebaseStorage.ref(filePath).getDownloadURL();
 
-      _imageUrls.add(downloadUrl);
+      return downloadUrl;
     } catch (e) {
       throw Exception(e);
-    } 
+    }
   }
 
   //* Other methods

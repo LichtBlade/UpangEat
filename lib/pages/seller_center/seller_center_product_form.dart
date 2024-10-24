@@ -41,6 +41,7 @@ class SellerCenterProductForm extends StatefulWidget {
 class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
   XFile? _selectedImage;
   String _selectedType = 'Breakfast';
+  String _imageUrl = '';
 
   final _formKey = GlobalKey<FormState>();
 
@@ -105,7 +106,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                           itemName: _itemName.text,
                           description: _description.text,
                           price: int.parse(_price.text),
-                          // imageURL: '',
+                          imageURL: _imageUrl,
                           isAvailable: _isActive,
                           isBreakfast:
                               _selectedType == 'Breakfast' ? true : false,
@@ -117,7 +118,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                           itemName: _itemName.text,
                           description: _description.text,
                           price: int.parse(_price.text),
-                          imageURL: '',
+                          imageURL: _imageUrl,
                           isAvailable: _isActive,
                           isBreakfast:
                               _selectedType == 'Breakfast' ? true : false,
@@ -326,21 +327,40 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
     );
   }
 
-  Future<XFile?> _pickImageFromGallery() async {
+  // Image picker logic
+  Future<void> _pickImageFromGallery() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
-    if (image == null) return null;
+    if (image == null) return;
 
     setState(() {
       _selectedImage = image;
-      _uploadFoodImage();
     });
 
-    return image;
+    // Upload image right after selecting
+    _uploadFoodImage();
   }
 
-  void _uploadFoodImage() async {
-    _storageService.uploadImage('food/', _selectedImage);
+  Future<void> _uploadFoodImage() async {
+    if (_selectedImage != null) {
+      final String? uploadedImageurl =
+          await _storageService.uploadImage('food/', _selectedImage);
+
+      if (uploadedImageurl != null) {
+        setState(() {
+          _imageUrl = uploadedImageurl;
+          print(_imageUrl);
+        });
+      } else {
+        print("Error uploading image");
+      }
+    }
+  }
+
+  void _removeImage() {
+    setState(() {
+      _selectedImage = null;
+    });
   }
 }
