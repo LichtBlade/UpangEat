@@ -41,7 +41,7 @@ class _StallsState extends State<Stalls> {
                         itemBuilder: (context, index) {
                           return StallsStallCard(stall: FakeData.fakeStall);
                         }),
-                  );;
+                  );
                 } else if (state is StallLoaded) {
                   final stallData = state.stalls;
                   return ListView.builder(
