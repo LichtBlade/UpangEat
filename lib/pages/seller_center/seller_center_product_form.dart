@@ -327,6 +327,16 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
     );
   }
 
+
+  /*
+   ! WARNING ##########################################################
+   * Broken Code
+   * Bugs:
+   * - Image uploads to firebase, but url does not upload to db
+   * Also Spaghetti ass code.
+   */
+
+
   // Image picker logic
   Future<void> _pickImageFromGallery() async {
     final ImagePicker picker = ImagePicker();
