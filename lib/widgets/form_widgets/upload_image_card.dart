@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class UploadImageCard extends StatefulWidget {
-  const UploadImageCard({super.key});
+  final File? selectedImage;
+
+  const UploadImageCard({super.key, this.selectedImage});
 
   @override
   State<UploadImageCard> createState() => UploadImageCardState();
@@ -10,23 +14,18 @@ class UploadImageCard extends StatefulWidget {
 class UploadImageCardState extends State<UploadImageCard> {
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        color: Colors.white,
-        height: 200,
-        width: 500,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              onPressed: () {
-                
-              },
-              icon: const Icon(Icons.image),
-            ),
-          ],
-        ),
+    return Card(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+            color: Colors.white,
+            height: 200,
+            width: 500,
+            child: Center(
+              child: widget.selectedImage != null
+                  ? Image.file(widget.selectedImage!)
+                  : const Icon(Icons.image),
+            )),
       ),
     );
   }
