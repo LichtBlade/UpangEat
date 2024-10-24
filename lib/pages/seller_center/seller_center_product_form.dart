@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-// TODO: implement image input
+
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +42,7 @@ class SellerCenterProductForm extends StatefulWidget {
 }
 
 class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
-  File? _selectedImage;
+  Uint8List? _selectedImage;
   String _selectedType = 'Breakfast';
 
   final _formKey = GlobalKey<FormState>();
@@ -275,8 +276,8 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                       Row(
                         children: [
                           OutlinedButton(
-                            onPressed: () {
-                              _pickImageFromGallery();
+                            onPressed: () async {
+                              _selectImage();
                             },
                             child: const Row(
                               children: [
@@ -325,12 +326,25 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
     );
   }
 
-  Future _pickImageFromGallery() async {
-    final returnedImage =
+  Future<Uint8List?> _pickImageFromGallery() async {
+    final XFile? file =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    setState(() {
-      _selectedImage = File(returnedImage!.path);
-    });
+    if (file != null) {
+      return await file.readAsBytes(); // Converts picked file to Uint8List
+    }
+
+    print('No Image Selected');
+    return null;
+  }
+
+  void _selectImage() async {
+    Uint8List? img = await _pickImageFromGallery();
+
+    if (img != null) {
+      setState(() {
+        _selectedImage = img; // This is where Uint8List gets assigned
+      });
+    }
   }
 }
