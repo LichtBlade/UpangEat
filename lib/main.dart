@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/bloc/admin_bloc/admin_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:upang_eat/bloc/order_bloc/order_bloc.dart';
 import 'package:upang_eat/bloc/stall_bloc/stall_bloc.dart';
 import 'package:upang_eat/bloc/transaction_bloc/transaction_bloc.dart';
 import 'package:upang_eat/bloc/wallet_bloc/wallet_bloc.dart';
+import 'package:upang_eat/firebase_options.dart';
 import 'package:upang_eat/pages/seller_center/seller_center.dart';
 import 'package:upang_eat/repositories/admin_repository_impl.dart';
 import 'package:upang_eat/repositories/auth_repository_impl.dart';
@@ -30,7 +32,11 @@ import 'bloc/analytic_food_bloc/analytic_food_bloc.dart';
 import 'bloc/login_bloc/login_bloc.dart';
 import 'bloc/tray_bloc/tray_bloc.dart';
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(const MyApp());
 }
 

@@ -1,15 +1,15 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class StorageService with ChangeNotifier {
+class StorageService {
   //* Firebase storage
   final firebaseStorage = FirebaseStorage.instance;
 
   // Image URLS stored here
   List<String> _imageUrls = [];
+  String _imageUrl = '';
 
   // loading status
   bool _isLoading = false;
@@ -19,6 +19,7 @@ class StorageService with ChangeNotifier {
 
   //* GETTERS
   List<String> get imageUrls => _imageUrls;
+  String get imageUrl => _imageUrl;
   bool get isLoading => _isLoading;
   bool get isUploading => _isUploading;
 
@@ -36,8 +37,21 @@ class StorageService with ChangeNotifier {
 
     // loading finished
     _isLoading = false;
-
   }
+
+  // Future<void> fetchImage(String path) async {
+  //   // start loading
+  //   _isLoading = true;
+
+  //   final result = firebaseStorage.ref(path);
+
+  //   final String url = await Future.wait(result.getDownloadURL());
+
+  //   _imageUrl = url;
+
+  //   // loading finished
+  //   _isLoading = false;
+  // }
 
   //* DELETE IMAGES
   Future<void> deleteImage(String imageUrl) async {
@@ -50,14 +64,10 @@ class StorageService with ChangeNotifier {
     } catch (e) {
       throw Exception(e);
     }
-
-    //update UI
-    notifyListeners();
   }
 
   //* UPLOAD IMAGES
   Future<void> uploadImage(String path, XFile? image) async {
-    _isUploading = true;
 
     if (image == null) return;
 
@@ -73,9 +83,7 @@ class StorageService with ChangeNotifier {
       _imageUrls.add(downloadUrl);
     } catch (e) {
       throw Exception(e);
-    } finally {
-      _isUploading = false;
-    }
+    } 
   }
 
   //* Other methods

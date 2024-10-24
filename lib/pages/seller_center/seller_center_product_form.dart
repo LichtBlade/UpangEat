@@ -1,12 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'dart:typed_data';
-
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:upang_eat/bloc/food_bloc/food_bloc.dart';
 import 'package:upang_eat/models/food_model.dart';
 import 'package:upang_eat/services/storage_service.dart';
@@ -47,6 +43,8 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
   String _selectedType = 'Breakfast';
 
   final _formKey = GlobalKey<FormState>();
+
+  final _storageService = StorageService();
 
   final TextEditingController _itemName = TextEditingController();
   final TextEditingController _description = TextEditingController();
@@ -336,13 +334,13 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
 
     setState(() {
       _selectedImage = image;
+      _uploadFoodImage();
     });
 
     return image;
   }
 
-  Future<void> fetchFoodImages() async {
-    await Provider.of<StorageService>(context, listen: false)
-        .fetchImages('food/');
+  void _uploadFoodImage() async {
+    _storageService.uploadImage('food/', _selectedImage);
   }
 }
