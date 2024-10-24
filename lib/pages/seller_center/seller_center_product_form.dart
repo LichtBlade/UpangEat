@@ -350,8 +350,8 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
       if (uploadedImageurl != null) {
         setState(() {
           _imageUrl = uploadedImageurl;
-          print(_imageUrl);
         });
+        print(_imageUrl);
       } else {
         print("Error uploading image");
       }
