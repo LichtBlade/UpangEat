@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/models/food_model.dart';
@@ -17,7 +16,6 @@ class FoodCard extends StatefulWidget {
 }
 
 class _FoodCardState extends State<FoodCard> {
-
   @override
   void initState() {
     super.initState();
@@ -36,19 +34,25 @@ class _FoodCardState extends State<FoodCard> {
               child: SizedBox(
                 height: 80,
                 width: 80,
-                child: Image.network("${IpAddress.ipAddress}/uploads/${widget.food.stallId}_${widget.food.foodItemId}.jpg", fit: BoxFit.cover,errorBuilder:
-                    (context, error, stackTrace) {
-                  return const Text('Error loading image');
+                child: Image.network(
+                    widget.food.imageUrl != null
+                        ? widget.food.imageUrl!
+                        : "${IpAddress.ipAddress}/uploads/${widget.food.stallId}_${widget.food.foodItemId}.jpg", 
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                  return const Center(child: Text('Error Loading image'),);
                 }),
               ),
             ),
-            const SizedBox(width: 8,),
+            const SizedBox(
+              width: 8,
+            ),
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
-                    crossAxisAlignment:  CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
                         width: 100,
@@ -57,21 +61,29 @@ class _FoodCardState extends State<FoodCard> {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700),
+                              fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       ),
                       Text(
                         '₱${widget.food.price}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w600),
                       )
                     ],
                   ),
                   Row(
                     children: [
-                      Text(widget.food.isAvailable ? "Available" : "Unavailable", style: TextStyle(color: widget.food.isAvailable ? Colors.green : Colors.black26), overflow: TextOverflow.ellipsis, maxLines: 1,),
+                      Text(
+                        widget.food.isAvailable ? "Available" : "Unavailable",
+                        style: TextStyle(
+                            color: widget.food.isAvailable
+                                ? Colors.green
+                                : Colors.black26),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
                       PopupMenuButton(
                         itemBuilder: (context) => [
                           PopupMenuItem(
@@ -79,7 +91,9 @@ class _FoodCardState extends State<FoodCard> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => SellerCenterProductForm(
-                                  stallId: widget.food.stallId, isUpdate: true, food: widget.food,
+                                  stallId: widget.food.stallId,
+                                  isUpdate: true,
+                                  food: widget.food,
                                 ),
                               ),
                             ),
@@ -89,7 +103,9 @@ class _FoodCardState extends State<FoodCard> {
                             ),
                           ),
                           PopupMenuItem(
-                            onTap: () => context.read<FoodBloc>().add(DeleteFood(widget.food.foodItemId, widget.food.stallId)),
+                            onTap: () => context.read<FoodBloc>().add(
+                                DeleteFood(widget.food.foodItemId,
+                                    widget.food.stallId)),
                             child: const ListTile(
                               leading: Icon(
                                 Icons.delete,
@@ -127,6 +143,5 @@ class _FoodCardState extends State<FoodCard> {
         ),
       ),
     );
-
   }
 }
