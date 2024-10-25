@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/bloc/admin_bloc/admin_bloc.dart';
 import 'package:upang_eat/bloc/admin_bloc/admin_event.dart';
@@ -72,6 +73,12 @@ class _CreateStallFormState extends State<CreateStallForm> {
                               border: OutlineInputBorder(),
                               labelText: 'Owner User ID',
                             ),
+                            keyboardType: TextInputType.number, 
+                                inputFormatters:
+                                <TextInputFormatter>
+                                  [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  ],
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter Owner User ID';
@@ -79,20 +86,27 @@ class _CreateStallFormState extends State<CreateStallForm> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 16.0),
-                          TextFormField(
-                            controller: _contactNoController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Contact No.',
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter Contact No.';
-                              }
-                              return null;
-                            },
-                          ),
+                          // const SizedBox(height: 16.0),
+                          // TextFormField(
+                          //   controller: _contactNoController,
+                          //   decoration:
+                          //       const InputDecoration(
+                          //       border: OutlineInputBorder(),
+                          //       labelText: 'Contact No.',
+                          //     ),
+                          //       keyboardType: TextInputType.number, 
+                          //       inputFormatters:
+                          //       <TextInputFormatter>
+                          //         [
+                          //         FilteringTextInputFormatter.digitsOnly,
+                          //         ],
+                          //       validator: (value) {
+                          //         if (value == null || value.isEmpty) {
+                          //           return 'Please enter Contact No.';
+                          //         }
+                          //         return null;
+                          //       },
+                          //     ),
                           const SizedBox(height: 16.0),
                           TextFormField(
                             controller: _descriptionController,
@@ -145,6 +159,9 @@ class _CreateStallFormState extends State<CreateStallForm> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFc5473d),
                                 foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
                               ),
                               child: const Text('Create Stall'),
                             ),

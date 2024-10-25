@@ -129,7 +129,8 @@ class _UserFormCardState extends State<UserFormCard> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: TextFormField(
+                      child: 
+                      TextFormField(
                         controller: _mobileController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -212,6 +213,9 @@ class _UserFormCardState extends State<UserFormCard> {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFC5473D), // Button background color
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
                             ),
 
                             child: const Text('Create Account'),
