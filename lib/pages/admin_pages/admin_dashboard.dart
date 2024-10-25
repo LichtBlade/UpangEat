@@ -117,6 +117,9 @@ class _DashboardState extends State<AdminDashboard> {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFc5473d),
+                                shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
                               ),
                               child: const Text(
                                   'Add Stall',
@@ -131,6 +134,9 @@ class _DashboardState extends State<AdminDashboard> {
                               ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFc5473d),
+                                shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
                               ),
                               child: const Text(
                                   'See All Stalls',
@@ -156,6 +162,9 @@ class _DashboardState extends State<AdminDashboard> {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFc5473d),
+                                shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
                               ),
                               child: const Text(
                                   'Add User',
