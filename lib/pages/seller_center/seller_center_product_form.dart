@@ -1,10 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-// TODO: implement image input
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:upang_eat/bloc/food_bloc/food_bloc.dart';
 import 'package:upang_eat/models/food_model.dart';
-import 'package:upang_eat/repositories/food_repository_impl.dart';
+import 'package:upang_eat/services/storage_service.dart';
+import 'package:upang_eat/widgets/form_widgets/upload_image_card.dart';
 
 class SellerCenterProductForm extends StatefulWidget {
   final int stallId;
@@ -13,9 +15,23 @@ class SellerCenterProductForm extends StatefulWidget {
 
   const SellerCenterProductForm({
     super.key,
-    required this.stallId, this.isUpdate = false, this.food = const FoodModel(foodItemId: 0, stallId: 0, itemName: "", price: 0, isAvailable: true, isBreakfast: false, isLunch: false, isMerienda: true, imageUrl: "", description: "", stallName: "", trayId: 0, trayQuantity: 0),
+    required this.stallId,
+    this.isUpdate = false,
+    this.food = const FoodModel(
+        foodItemId: 0,
+        stallId: 0,
+        itemName: "",
+        price: 0,
+        isAvailable: true,
+        isBreakfast: false,
+        isLunch: false,
+        isMerienda: true,
+        imageUrl: "",
+        description: "",
+        stallName: "",
+        trayId: 0,
+        trayQuantity: 0),
   });
-
 
   @override
   State<SellerCenterProductForm> createState() =>
@@ -23,11 +39,15 @@ class SellerCenterProductForm extends StatefulWidget {
 }
 
 class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
+  XFile? _selectedImage;
   String _selectedType = 'Breakfast';
+  String _imageUrl = '';
 
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _itemName = TextEditingController() ;
+  final _storageService = StorageService();
+
+  final TextEditingController _itemName = TextEditingController();
   final TextEditingController _description = TextEditingController();
   final TextEditingController _price = TextEditingController();
   final TextEditingController _category = TextEditingController();
@@ -46,11 +66,15 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
     _itemName.text = widget.food!.itemName;
     _description.text = widget.food!.description!;
     _price.text = widget.food!.price.toString();
-    _selectedType = switch ((widget.food!.isBreakfast, widget.food!.isLunch, widget.food!.isMerienda)) {
-    (true, false, false) => 'Breakfast',
-    (false, true, false) => 'Lunch',
-    (false, false, true) => 'Merienda',
-    _ => 'Unknown', // Handle other cases if needed
+    _selectedType = switch ((
+      widget.food!.isBreakfast,
+      widget.food!.isLunch,
+      widget.food!.isMerienda
+    )) {
+      (true, false, false) => 'Breakfast',
+      (false, true, false) => 'Lunch',
+      (false, false, true) => 'Merienda',
+      _ => 'Unknown', // Handle other cases if needed
     };
     return Scaffold(
       appBar: AppBar(
@@ -62,44 +86,58 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
             color: Colors.white,
           ),
         ),
-        leading: IconButton(onPressed: () {
-          Navigator.pop(context);
-        }, icon: const Icon(Icons.arrow_back, color: Colors.white,),),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         actions: [
-          IconButton(onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              widget.isUpdate!
-                  ? context.read<FoodBloc>().add(UpdateFood(
-                id: widget.food!.foodItemId,
-
-                  stallId: widget.stallId,
-                  itemName: _itemName.text,
-                  description: _description.text,
-                  price: int.parse(_price.text),
-                  // imageURL: '',
-                  isAvailable: _isActive,
-                  isBreakfast: _selectedType == 'Breakfast' ? true : false,
-                  isLunch: _selectedType == 'Lunch' ? true : false,
-                  isMerienda: _selectedType == 'Merienda' ? true : false))
-                  : context.read<FoodBloc>().add(CreateFood(
-                  stallId: widget.stallId,
-                  itemName: _itemName.text,
-                  description: _description.text,
-                  price: int.parse(_price.text),
-                  imageURL: '',
-                  isAvailable: _isActive,
-                  isBreakfast: _selectedType == 'Breakfast' ? true : false,
-                  isLunch: _selectedType == 'Lunch' ? true : false,
-                  isMerienda: _selectedType == 'Merienda' ? true : false));
-            }
-          }, icon: const Icon(Icons.check, color: Colors.white,))
+          IconButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  widget.isUpdate!
+                      ? context.read<FoodBloc>().add(UpdateFood(
+                          id: widget.food!.foodItemId,
+                          stallId: widget.stallId,
+                          itemName: _itemName.text,
+                          description: _description.text,
+                          price: int.parse(_price.text),
+                          imageURL: _imageUrl,
+                          isAvailable: _isActive,
+                          isBreakfast:
+                              _selectedType == 'Breakfast' ? true : false,
+                          isLunch: _selectedType == 'Lunch' ? true : false,
+                          isMerienda:
+                              _selectedType == 'Merienda' ? true : false))
+                      : context.read<FoodBloc>().add(CreateFood(
+                          stallId: widget.stallId,
+                          itemName: _itemName.text,
+                          description: _description.text,
+                          price: int.parse(_price.text),
+                          imageURL: _imageUrl,
+                          isAvailable: _isActive,
+                          isBreakfast:
+                              _selectedType == 'Breakfast' ? true : false,
+                          isLunch: _selectedType == 'Lunch' ? true : false,
+                          isMerienda:
+                              _selectedType == 'Merienda' ? true : false));
+                }
+              },
+              icon: const Icon(
+                Icons.check,
+                color: Colors.white,
+              ))
         ],
       ),
       body: BlocListener<FoodBloc, FoodState>(
         listener: (context, state) {
           if (state is FoodLoading) {
             print("Loading");
-          } else if (state is FoodUpdated){
+          } else if (state is FoodUpdated) {
             ScaffoldMessenger.of(context)
               ..clearSnackBars()
               ..showSnackBar(
@@ -108,7 +146,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                 ),
               );
             Navigator.pop(context);
-          }else if (state is FoodAdded) {
+          } else if (state is FoodAdded) {
             print("Loaded");
 
             ScaffoldMessenger.of(context)
@@ -164,10 +202,10 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                       controller: _itemName,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
                       ),
                       textAlignVertical: TextAlignVertical.center,
-
                       maxLines: 1,
                       maxLength: 100,
                       validator: (value) {
@@ -175,8 +213,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                           return 'Please enter name';
                         }
                         return null;
-                      }
-                  ),
+                      }),
 
                   // Price
                   _titleText('Price'),
@@ -212,7 +249,6 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                       contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                     ),
                     textAlignVertical: TextAlignVertical.center,
-
                   ),
 
                   //Description
@@ -224,30 +260,37 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                     keyboardType: TextInputType.multiline,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 8.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                     ),
                     textAlignVertical: TextAlignVertical.top,
                   ),
 
                   //Image
                   _titleText('Image'),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                        color: Colors.white,
-                        height: 200,
-                        width: 500,
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.image,
-                              color: Colors.grey,
+                  Column(
+                    children: [
+                      UploadImageCard(
+                        selectedImage: _selectedImage,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () async {
+                              _pickImageFromGallery();
+                            },
+                            child: const Row(
+                              children: [
+                                Icon(Icons.add),
+                                Text('Add Image'),
+                              ],
                             ),
-                          ],
-                        )),
-                  ),
+                          ),
+                        ],
+                      )
+                    ],
+                  )
                 ],
               ),
             ),
@@ -282,5 +325,43 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
         Text(meal),
       ],
     );
+  }
+
+
+  // Image picker logic
+  Future<void> _pickImageFromGallery() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image == null) return;
+
+    setState(() {
+      _selectedImage = image;
+    });
+
+    // Upload image right after selecting
+    _uploadFoodImage();
+  }
+
+  Future<void> _uploadFoodImage() async {
+    if (_selectedImage != null) {
+      final String? uploadedImageurl =
+          await _storageService.uploadImage('food/', _selectedImage);
+
+      if (uploadedImageurl != null) {
+        setState(() {
+          _imageUrl = uploadedImageurl;
+        });
+        print(_imageUrl);
+      } else {
+        print("Error uploading image");
+      }
+    }
+  }
+
+  void _removeImage() {
+    setState(() {
+      _selectedImage = null;
+    });
   }
 }
