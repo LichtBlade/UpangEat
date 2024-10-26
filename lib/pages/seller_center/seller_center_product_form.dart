@@ -77,6 +77,8 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
       (false, false, true) => 'Merienda',
       _ => 'Unknown', // Handle other cases if needed
     };
+    _imageUrl = widget.food!.imageUrl;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 222, 15, 57),
@@ -272,7 +274,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                   Column(
                     children: [
                       UploadImageCard(
-                        selectedImage: _selectedImage,
+                        imageUrl: _imageUrl,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -365,16 +367,17 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
           await _storageService.uploadImage('food/', _selectedImage);
 
       if (uploadedImageurl == null) return;
+
       setState(() {
         _imageUrl = uploadedImageurl;
       });
+      print("This is from product form:$_imageUrl");
     } catch (e) {
       throw Exception(e);
     }
   }
 
-  void _removeImage() async{
-
+  void _removeImage() async {
     await _storageService.deleteImage(_imageUrl!);
 
     setState(() {
