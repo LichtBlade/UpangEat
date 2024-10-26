@@ -35,7 +35,7 @@ class UploadImageCardState extends State<UploadImageCard> {
             widget.imageUrl!,
             errorBuilder: (context, error, stackTrace) {
               print(error.toString());
-              return Text("$error");
+              return const Icon(Icons.image);
             },
           )
         : const Icon(Icons.image);

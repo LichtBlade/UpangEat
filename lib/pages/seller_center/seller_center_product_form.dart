@@ -57,6 +57,9 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
   @override
   void initState() {
     _isActive = widget.food?.isAvailable ?? true;
+
+    _imageUrl = widget.food!.imageUrl;
+    _uploadButtonIsActive = widget.isUpdate! ? false : true;
     super.initState();
   }
 
@@ -77,7 +80,6 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
       (false, false, true) => 'Merienda',
       _ => 'Unknown', // Handle other cases if needed
     };
-    _imageUrl = widget.food!.imageUrl;
 
     return Scaffold(
       appBar: AppBar(
@@ -343,7 +345,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
     );
   }
 
-  // Image picker logic
+  // Image picker
   Future<void> _pickImageFromGallery() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -368,10 +370,10 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
 
       if (uploadedImageurl == null) return;
 
+      // Update _imageUrl after uploading
       setState(() {
         _imageUrl = uploadedImageurl;
       });
-      print("This is from product form:$_imageUrl");
     } catch (e) {
       throw Exception(e);
     }
