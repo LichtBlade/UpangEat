@@ -28,7 +28,7 @@ class _MealCardSquareState extends State<MealCardSquare> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(14.0),
             child: Column(children: [
-              Image.network("${IpAddress.ipAddress}/uploads/${widget.food.stallId}_${widget.food.foodItemId}.jpg",
+              Image.network(widget.food.imageUrl!,
                   height: 100,
                   width: double.infinity,
                   fit: BoxFit.cover, errorBuilder:

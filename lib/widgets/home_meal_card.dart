@@ -34,7 +34,8 @@ class _HomeMealCardState extends State<HomeMealCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _Image(
-                imageUrl: "${IpAddress.ipAddress}/uploads/${widget.food.stallId}_${widget.food.foodItemId}.jpg",
+                // imageUrl: "${IpAddress.ipAddress}/uploads/${widget.food.stallId}_${widget.food.foodItemId}.jpg",
+                imageUrl: widget.food.imageUrl!,
               ),
               _Contents(
                 stallName: widget.food.stallName!,
