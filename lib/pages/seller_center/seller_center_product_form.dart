@@ -239,13 +239,17 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                     },
                   ),
                   _titleText('Type'),
-                  Row(
+                  StatefulBuilder(
+                    builder: (context, setState){
+                  return Row(
                     children: [
-                      _buildRadioButton('Breakfast'),
-                      _buildRadioButton('Lunch'),
-                      _buildRadioButton('Merienda')
+                      _buildRadioButton(setState, 'Breakfast'),
+                      _buildRadioButton(setState, 'Lunch'),
+                      _buildRadioButton(setState, 'Merienda')
                     ],
-                  ),
+                  );
+                }
+          ),
                   _titleText('Category'),
                   TextFormField(
                     controller: _category,
@@ -255,6 +259,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                     ),
                     textAlignVertical: TextAlignVertical.center,
                   ),
+                  
 
                   //Description
                   _titleText('Description'),
@@ -273,7 +278,9 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
 
                   //Image
                   _titleText('Image'),
-                  Column(
+                  StatefulBuilder(
+                    builder: (context, setState){
+                  return Column(
                     children: [
                       UploadImageCard(
                         imageUrl: _imageUrl,
@@ -284,7 +291,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                           OutlinedButton(
                             onPressed: _uploadButtonIsActive
                                 ? () async {
-                                    _pickImageFromGallery();
+                                    _pickImageFromGallery(setState);
                                   }
                                 : null,
                             child: const Row(
@@ -296,7 +303,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                           ),
                           OutlinedButton(
                             onPressed: !_uploadButtonIsActive
-                                ? () => _removeImage()
+                                ? () => _removeImage(setState)
                                 : null,
                             child: const Row(
                               children: [
@@ -308,6 +315,8 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                         ],
                       )
                     ],
+                  );
+                    }
                   )
                 ],
               ),
@@ -328,7 +337,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
     );
   }
 
-  Widget _buildRadioButton(String meal) {
+  Widget _buildRadioButton(StateSetter setState, String meal) {
     return Row(
       children: [
         Radio<String>(
@@ -346,7 +355,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
   }
 
   // Image picker
-  Future<void> _pickImageFromGallery() async {
+  Future<void> _pickImageFromGallery(StateSetter setState) async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
@@ -358,10 +367,10 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
     });
 
     // Upload image right after selecting
-    _uploadFoodImage();
+    _uploadFoodImage(setState);
   }
 
-  Future<void> _uploadFoodImage() async {
+  Future<void> _uploadFoodImage(StateSetter setState) async {
     try {
       if (_selectedImage == null) return;
 
@@ -374,17 +383,67 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
       setState(() {
         _imageUrl = uploadedImageurl;
       });
+
+          // widget.isUpdate!
+          //       ? context.read<FoodBloc>().add(UpdateFood(
+          //           id: widget.food!.foodItemId,
+          //           stallId: widget.stallId,
+          //           itemName: _itemName.text,
+          //           description: _description.text,
+          //           price: int.parse(_price.text),
+          //           imageURL: _imageUrl!, // Now this will have the correct URL
+          //           isAvailable: _isActive,
+          //           isBreakfast: _selectedType == 'Breakfast' ? true : false,
+          //           isLunch: _selectedType == 'Lunch' ? true : false,
+          //           isMerienda: _selectedType == 'Merienda' ? true : false))
+          //       : context.read<FoodBloc>().add(CreateFood(
+          //           stallId: widget.stallId,
+          //           itemName: _itemName.text,
+          //           description: _description.text,
+          //           price: int.parse(_price.text),
+          //           imageURL: _imageUrl!, // Now this will have the correct URL
+          //           isAvailable: _isActive,
+          //           isBreakfast: _selectedType == 'Breakfast' ? true : false,
+          //           isLunch: _selectedType == 'Lunch' ? true : false,
+          //           isMerienda: _selectedType == 'Merienda' ? true : false));
+
     } catch (e) {
       throw Exception(e);
     }
   }
 
-  void _removeImage() async {
-    await _storageService.deleteImage(_imageUrl!);
+  void _removeImage(StateSetter setState) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Remove Image"),
+          content: const Text("Are you sure you want to remove this image?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); 
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); 
 
-    setState(() {
-      _selectedImage = null;
-      _uploadButtonIsActive = true;
-    });
+                await _storageService.deleteImage(_imageUrl!);
+
+                // fix for add button unclickable after removing image
+                setState(() {
+                  _imageUrl = null; 
+                  _selectedImage = null;
+                  _uploadButtonIsActive = true; 
+                });
+              },
+              child: const Text("Remove"),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
