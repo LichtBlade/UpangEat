@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UploadImageCard extends StatefulWidget {
-  final XFile? selectedImage;
+  final String? imageUrl;
 
-  const UploadImageCard({super.key, this.selectedImage});
+  const UploadImageCard({super.key, this.imageUrl});
 
   @override
   State<UploadImageCard> createState() => UploadImageCardState();
@@ -19,18 +19,25 @@ class UploadImageCardState extends State<UploadImageCard> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Container(
-            color: Colors.white,
-            height: 200,
-            width: 500,
-            child: Center(
-              child: widget.selectedImage != null
-                  ? Image.file(
-                      File(widget.selectedImage!.path),
-                      fit: BoxFit.fill,
-                    )
-                  : const Icon(Icons.image),
-            )),
+          color: Colors.white,
+          height: 200,
+          width: 500,
+          child: Center(child: _returnImageUrl()),
+        ),
       ),
     );
+  }
+
+  Widget _returnImageUrl() {
+    print("${widget.imageUrl} this is from upload card");
+    return widget.imageUrl != null
+        ? Image.network(
+            widget.imageUrl!,
+            errorBuilder: (context, error, stackTrace) {
+              print(error.toString());
+              return const Icon(Icons.image);
+            },
+          )
+        : const Icon(Icons.image);
   }
 }

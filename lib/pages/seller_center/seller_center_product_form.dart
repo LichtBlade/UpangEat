@@ -41,7 +41,7 @@ class SellerCenterProductForm extends StatefulWidget {
 class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
   XFile? _selectedImage;
   String _selectedType = 'Breakfast';
-  String _imageUrl = '';
+  String? _imageUrl;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -52,10 +52,14 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
   final TextEditingController _price = TextEditingController();
   final TextEditingController _category = TextEditingController();
   bool _isActive = false;
+  bool _uploadButtonIsActive = true;
 
   @override
   void initState() {
     _isActive = widget.food?.isAvailable ?? true;
+
+    _imageUrl = widget.food!.imageUrl;
+    _uploadButtonIsActive = widget.isUpdate! ? false : true;
     super.initState();
   }
 
@@ -76,6 +80,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
       (false, false, true) => 'Merienda',
       _ => 'Unknown', // Handle other cases if needed
     };
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 222, 15, 57),
@@ -271,19 +276,32 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
                   Column(
                     children: [
                       UploadImageCard(
-                        selectedImage: _selectedImage,
+                        imageUrl: _imageUrl,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           OutlinedButton(
-                            onPressed: () async {
-                              _pickImageFromGallery();
-                            },
+                            onPressed: _uploadButtonIsActive
+                                ? () async {
+                                    _pickImageFromGallery();
+                                  }
+                                : null,
                             child: const Row(
                               children: [
                                 Icon(Icons.add),
                                 Text('Add Image'),
+                              ],
+                            ),
+                          ),
+                          OutlinedButton(
+                            onPressed: !_uploadButtonIsActive
+                                ? () => _removeImage()
+                                : null,
+                            child: const Row(
+                              children: [
+                                Icon(Icons.remove),
+                                Text('Remove Image'),
                               ],
                             ),
                           ),
@@ -327,8 +345,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
     );
   }
 
-
-  // Image picker logic
+  // Image picker
   Future<void> _pickImageFromGallery() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -337,6 +354,7 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
 
     setState(() {
       _selectedImage = image;
+      _uploadButtonIsActive = false;
     });
 
     // Upload image right after selecting
@@ -344,24 +362,29 @@ class _SellerCenterProductFormState extends State<SellerCenterProductForm> {
   }
 
   Future<void> _uploadFoodImage() async {
-    if (_selectedImage != null) {
+    try {
+      if (_selectedImage == null) return;
+
       final String? uploadedImageurl =
           await _storageService.uploadImage('food/', _selectedImage);
 
-      if (uploadedImageurl != null) {
-        setState(() {
-          _imageUrl = uploadedImageurl;
-        });
-        print(_imageUrl);
-      } else {
-        print("Error uploading image");
-      }
+      if (uploadedImageurl == null) return;
+
+      // Update _imageUrl after uploading
+      setState(() {
+        _imageUrl = uploadedImageurl;
+      });
+    } catch (e) {
+      throw Exception(e);
     }
   }
 
-  void _removeImage() {
+  void _removeImage() async {
+    await _storageService.deleteImage(_imageUrl!);
+
     setState(() {
       _selectedImage = null;
+      _uploadButtonIsActive = true;
     });
   }
 }
