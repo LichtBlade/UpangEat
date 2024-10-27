@@ -10,7 +10,7 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
+        Card.filled(
           margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
           child: Padding(
             padding: const EdgeInsets.all(6.0),

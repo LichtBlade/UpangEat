@@ -8,6 +8,7 @@ import 'package:upang_eat/bloc/admin_bloc/admin_bloc.dart';
 import 'package:upang_eat/bloc/category_bloc/category_bloc.dart';
 import 'package:upang_eat/bloc/create_user/create_user_bloc.dart';
 import 'package:upang_eat/bloc/food_bloc/food_bloc.dart';
+import 'package:upang_eat/bloc/notification_bloc/notification_bloc.dart';
 import 'package:upang_eat/bloc/order_bloc/order_bloc.dart';
 import 'package:upang_eat/bloc/stall_bloc/stall_bloc.dart';
 import 'package:upang_eat/bloc/transaction_bloc/transaction_bloc.dart';
@@ -18,6 +19,7 @@ import 'package:upang_eat/repositories/admin_repository_impl.dart';
 import 'package:upang_eat/repositories/auth_repository_impl.dart';
 import 'package:upang_eat/repositories/category_repository_impl.dart';
 import 'package:upang_eat/repositories/food_repository_impl.dart';
+import 'package:upang_eat/repositories/notification_repository_impl.dart';
 import 'package:upang_eat/repositories/order_repository_impl.dart';
 import 'package:upang_eat/repositories/stall_repository_impl.dart';
 import 'package:upang_eat/repositories/transaction_repository_impl.dart';
@@ -47,7 +49,7 @@ class IpAddress {
     if (Platform.isIOS) {
       return "http://localhost:3000"; // iOS uses localhost
     } else if (Platform.isAndroid) {
-      return "http://192.168.68.106:3000"; // Android emulator uses this IP
+      return "http://192.168.68.104:3000"; // Android emulator uses this IP
     } else {
       return "http://defaultAddress:3000"; // Default case if platform is unknown
     }
@@ -57,7 +59,7 @@ class IpAddress {
     if (Platform.isIOS) {
       return "http://localhost:7545"; // iOS uses localhost
     } else if (Platform.isAndroid) {
-      return "http://10.0.2.2:7545"; // Android emulator uses this IP
+      return "http://192.168.68.104:7545"; // Android emulator uses this IP
     } else {
       return "http://defaultAddress:7545"; // Default case if platform is unknown
     }
@@ -67,7 +69,7 @@ class IpAddress {
     if (Platform.isIOS) {
       return "ws://localhost:7545"; // iOS uses localhost
     } else if (Platform.isAndroid) {
-      return "http://10.0.2.2:7545"; // Android emulator uses this IP
+      return "ws://192.168.68.104:7545"; // Android emulator uses this IP
     } else {
       return "ws://defaultAddress:7545"; // Default case if platform is unknown
     }
@@ -127,6 +129,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider<AnalyticFoodBloc>(
           create: (context) => AnalyticFoodBloc(FoodRepositoryImpl()),
+        ),
+        BlocProvider<NotificationBloc>(
+          create: (context) => NotificationBloc(NotificationRepositoryImpl()),
         ),
       ],
       child: MaterialApp(

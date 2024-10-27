@@ -4,6 +4,7 @@ import 'package:upang_eat/Pages/stalls.dart';
 import 'package:upang_eat/Widgets/custom_drawer.dart';
 import 'package:upang_eat/fake_data.dart';
 import 'package:upang_eat/pages/category_more.dart';
+import 'package:upang_eat/pages/notifications.dart';
 import 'package:upang_eat/pages/order_status.dart';
 import 'package:upang_eat/pages/tray.dart';
 import 'package:upang_eat/repositories/food_repository.dart';
@@ -14,6 +15,7 @@ import 'package:upang_eat/widgets/carousel.dart';
 import '../bloc/category_bloc/category_bloc.dart';
 import '../bloc/food_bloc/food_bloc.dart';
 import '../bloc/login_bloc/login_bloc.dart';
+import '../bloc/notification_bloc/notification_bloc.dart';
 import '../bloc/order_bloc/order_bloc.dart';
 import '../bloc/stall_bloc/stall_bloc.dart';
 import '../models/order_model.dart';
@@ -35,68 +37,68 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   void initState() {
-
     context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
     context.read<CategoryBloc>().add(LoadCategory());
+    context.read<NotificationBloc>().add(FetchNotification(globalUserData!.userId));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-  providers: [
-    BlocProvider(
-        create: (context) => FoodBloc(FoodRepositoryImpl())..add(LoadFood()),
-),
-    BlocProvider(
-      create: (context) => StallBloc(StallRepositoryImpl())..add(LoadStalls()),
-    ),
-  ],
-  child: Scaffold(
-          appBar: _HomeAppBar(),
-          drawer: CustomDrawer(),
-          floatingActionButton: const _FloatingActionBar(),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-          body: RefreshIndicator(
-            onRefresh: () async {
-              context.read<StallBloc>().add(LoadStalls());
-              context.read<CategoryBloc>().add(LoadCategory());
-              context.read<FoodBloc>().add(LoadFood());
-              context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
-            },
-            child: CustomScrollView(
-              slivers: [
-                // const SliverToBoxAdapter(
-                //   child: _HomeSearchBar(),
-                // ),
-                const SliverToBoxAdapter(
-                  child: _Header(title: "Categories"),
+      providers: [
+        BlocProvider(
+          create: (context) => FoodBloc(FoodRepositoryImpl())..add(LoadFood()),
+        ),
+        BlocProvider(
+          create: (context) => StallBloc(StallRepositoryImpl())..add(LoadStalls()),
+        ),
+      ],
+      child: Scaffold(
+        appBar: _HomeAppBar(),
+        drawer: CustomDrawer(),
+        floatingActionButton: const _FloatingActionBar(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        body: RefreshIndicator(
+          onRefresh: () async {
+            context.read<StallBloc>().add(LoadStalls());
+            context.read<CategoryBloc>().add(LoadCategory());
+            context.read<FoodBloc>().add(LoadFood());
+            context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
+          },
+          child: CustomScrollView(
+            slivers: [
+              // const SliverToBoxAdapter(
+              //   child: _HomeSearchBar(),
+              // ),
+              const SliverToBoxAdapter(
+                child: _Header(title: "Categories"),
+              ),
+              SliverToBoxAdapter(
+                child: _CategoriesHorizontalList(),
+              ),
+              const SliverToBoxAdapter(
+                child: _Header(
+                  title: "Stalls",
+                  isHaveMore: true,
+                  bottomPadding: 0,
                 ),
-                SliverToBoxAdapter(
-                  child: _CategoriesHorizontalList(),
-                ),
-                const SliverToBoxAdapter(
-                  child: _Header(
-                    title: "Stalls",
-                    isHaveMore: true,
-                    bottomPadding: 0,
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: _StallCardHorizontalList(),
-                ),
-                // const SliverToBoxAdapter(
-                //   child: Carousel(),
-                // ),
-                const SliverToBoxAdapter(
-                  child: _Header(title: "Meals"),
-                ),
-                const _MealCardVerticalList()
-              ],
-            ),
+              ),
+              SliverToBoxAdapter(
+                child: _StallCardHorizontalList(),
+              ),
+              // const SliverToBoxAdapter(
+              //   child: Carousel(),
+              // ),
+              const SliverToBoxAdapter(
+                child: _Header(title: "Meals"),
+              ),
+              const _MealCardVerticalList()
+            ],
           ),
         ),
-);
+      ),
+    );
   }
 }
 
@@ -117,10 +119,41 @@ class _HomeAppBarState extends State<_HomeAppBar> {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
             children: [
+              IconButton(onPressed: () {
+                setState(() {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Notifications())).then((_) {
+
+                      context.read<NotificationBloc>().add(FetchNotification(globalUserData!.userId));
+
+                  });
+                });
+              }, icon: BlocBuilder<NotificationBloc, NotificationState>(
+                builder: (context, state) {
+                  if (state is NotificationLoaded){
+                    int unreadNotificationCount = state.notifications.where((notification)=> notification.status == "unread").length;
+
+                    if (unreadNotificationCount < 1){
+                      return const Icon(Icons.notifications_outlined);
+                    }
+
+                    return Badge.count(
+                      count: unreadNotificationCount,
+                      child: const Icon(Icons.notifications_outlined),
+                    );
+                  }
+                  return const Icon(Icons.notifications_outlined);
+
+                },
+              )),
               IconButton(
                   onPressed: () {
                     setState(() {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Tray(id: globalUserData!.userId,))).then((value) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Tray(
+                                    id: globalUserData!.userId,
+                                  ))).then((value) {
                         if (value == true) {
                           setState(() {});
                         }
@@ -279,11 +312,7 @@ class _FloatingActionBarState extends State<_FloatingActionBar> {
         } else if (state is OrderLoaded) {
           print("Order is loaded");
           final List<OrderModel> orders = state.order;
-          final hasRelevantOrders = orders.any((order) =>
-          order.orderStatus == 'pending' ||
-              order.orderStatus == 'ready' ||
-              order.orderStatus == 'accepted'
-          );
+          final hasRelevantOrders = orders.any((order) => order.orderStatus == 'pending' || order.orderStatus == 'ready' || order.orderStatus == 'accepted');
           if (!hasRelevantOrders) {
             return const SizedBox.shrink();
           }
@@ -291,11 +320,21 @@ class _FloatingActionBarState extends State<_FloatingActionBar> {
             width: 250,
             child: FloatingActionButton.extended(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const OrderStatus(isAllowPending: true, isAllowAccepted: true, isAllowReady: true,)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const OrderStatus(
+                              isAllowPending: true,
+                              isAllowAccepted: true,
+                              isAllowReady: true,
+                            )));
               },
               extendedIconLabelSpacing: 16.0,
               icon: const Icon(Icons.my_library_books),
-              label: const Text("Check Order Status", style: TextStyle(fontSize: 16),),
+              label: const Text(
+                "Check Order Status",
+                style: TextStyle(fontSize: 16),
+              ),
             ),
           );
         } else if (state is OrderError) {
@@ -330,7 +369,7 @@ class _MealCardVerticalListState extends State<_MealCardVerticalList> {
         final foods = state.foods;
         foods.shuffle();
         return SliverList(
-          delegate: SliverChildBuilderDelegate(childCount: foods.length,  (BuildContext context, int index) {
+          delegate: SliverChildBuilderDelegate(childCount: foods.length, (BuildContext context, int index) {
             final food = foods[index];
             return HomeMealCard(
               food: food,
