@@ -32,7 +32,7 @@ class StallsStallCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Image.network(
-                        "${IpAddress.ipAddress}/uploads/profile_${stall.stallId}.jpg",
+                        stall.imageUrl!,
                         height: 100,
                         width: 100,
                         fit: BoxFit.cover,
@@ -53,7 +53,7 @@ class StallsStallCard extends StatelessWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Image.network(
-                          "${IpAddress.ipAddress}/uploads/banner_${stall.stallId}.jpg",
+                          stall.imageBannerUrl!,
                           height: 100,
                           fit: BoxFit.cover,
                           frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {

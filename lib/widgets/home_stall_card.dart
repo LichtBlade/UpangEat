@@ -25,7 +25,7 @@ class _HomeStallCardState extends State<HomeStallCard> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(14.0),
             child: Column(children: [
-              Image.network("${IpAddress.ipAddress}/uploads/profile_${widget.stall.stallId}.jpg",
+              Image.network(widget.stall.imageUrl!,
                   height: 100,
                   width: 130,
                   fit: BoxFit.cover,

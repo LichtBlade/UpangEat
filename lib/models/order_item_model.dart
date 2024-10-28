@@ -24,7 +24,7 @@ class OrderItemModel extends Equatable {
       itemName: json['item_name'],
       quantity: json['quantity'],
       subtotal: json['subtotal'],
-      imageUrl: json['image_url'] == "" ? "assets/stalls/profiles/1.jpg" : "assets/stalls/profiles/1.jpg",
+      imageUrl: json['image_url'],
     );
   }
   Map<String, dynamic> toJson() {

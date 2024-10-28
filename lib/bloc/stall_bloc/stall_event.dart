@@ -26,3 +26,12 @@ class CreateStall extends StallEvent {
   @override
   List<Object?> get props => [stall];
 }
+
+class UpdateStall extends StallEvent {
+  final Stall stall;
+
+  const UpdateStall(this.stall);
+
+  @override
+  List<Object?> get props => [stall];
+}

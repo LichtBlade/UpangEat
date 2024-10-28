@@ -19,6 +19,8 @@ abstract class StallRepository {
     required int contactNumber,
     required String description,
     required bool isActive,
+    String? imageUrl,
+    String? imageBannerUrl,
   });
   
   Future<void> deleteStall(int id);

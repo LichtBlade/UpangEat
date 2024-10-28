@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:upang_eat/Pages/home.dart';
 import 'package:upang_eat/bloc/stall_bloc/stall_bloc.dart';
 import 'package:upang_eat/bloc/tray_bloc/tray_bloc.dart';
@@ -98,10 +99,22 @@ class _BottomModalFoodInformationState extends State<BottomModalFoodInformation>
                       left: 0,
                       right: 0,
                       child: Image.network(
-                        "${IpAddress.ipAddress}/uploads/${widget.food.stallId}_${widget.food.foodItemId}.jpg",
+                        widget.food.imageUrl!,
                         height: 300,
                         width: double.infinity,
                         fit: BoxFit.cover,
+                          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                            if (frame == null) {
+                              return Skeletonizer(
+                                child: Image.asset("assets/foods/1_1.jpg",
+                                  height: 300,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,),
+                              );
+                            } else {
+                              return child;
+                            }
+                          }
                       )),
                   Positioned(
                     top: 250,

@@ -28,7 +28,7 @@ class _SellerDrawerState extends State<SellerDrawer> {
             decoration: const BoxDecoration(
               color: Color.fromARGB(255, 222, 25, 67),
             ),
-            padding: const EdgeInsets.only(top: 28.0),
+            padding: const EdgeInsets.only(top: 8.0),
             child: Column(
               children: [
                 Image.asset(
@@ -79,7 +79,7 @@ class _SellerDrawerState extends State<SellerDrawer> {
               setState(() {
                 Navigator.pop(context);
 
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const StallProfile(),

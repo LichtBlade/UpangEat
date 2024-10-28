@@ -86,6 +86,8 @@ class StallRepositoryImpl implements StallRepository {
     required int contactNumber,
     required String description,
     required bool isActive,
+    String? imageUrl,
+    String? imageBannerUrl,
   }) async {
     final response = await http.put(
       Uri.parse('$baseUrl/stalls/$stallId'),
@@ -96,6 +98,8 @@ class StallRepositoryImpl implements StallRepository {
         'contact_number': contactNumber,
         'description': description,
         'is_active': isActive ? 1 : 0,
+        'image_url': imageUrl,
+        'image_banner_url': imageBannerUrl
       }),
     );
 

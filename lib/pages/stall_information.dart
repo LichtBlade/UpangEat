@@ -37,7 +37,7 @@ class _StallInformationState extends State<StallInformation> {
         body: RefreshIndicator(
           onRefresh: () async {context.read<FoodBloc>().add(LoadFoodByStallId(widget.stall.stallId));},
           child: Stack(fit: StackFit.expand, children: [
-            _StallImage(imageUrl: "${IpAddress.ipAddress}/uploads/profile_${widget.stall.stallId}.jpg"),
+            _StallImage(imageUrl: widget.stall.imageUrl!),
             const _Gradient(),
             _StallName(stallName: widget.stall.stallName,),
             Positioned(

@@ -229,38 +229,38 @@ class _WalletState extends State<Wallet> {
                   ),
 
                   // History
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const TransactionHistory()),
-                          );
-                          print('History clicked');
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.orange, // Example color
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Image.asset(historyIcon),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      const Text(
-                        'History',
-                        style: TextStyle(fontSize: 16), // Example style
-                      ),
-                    ],
-                  ),
+                  // Column(
+                  //   children: [
+                  //     GestureDetector(
+                  //       onTap: () {
+                  //         Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) =>
+                  //                   const TransactionHistory()),
+                  //         );
+                  //         print('History clicked');
+                  //       },
+                  //       child: Container(
+                  //         padding: const EdgeInsets.all(10),
+                  //         height: 60,
+                  //         width: 60,
+                  //         decoration: BoxDecoration(
+                  //           color: Colors.orange, // Example color
+                  //           borderRadius: BorderRadius.circular(10),
+                  //         ),
+                  //         child: Center(
+                  //           child: Image.asset(historyIcon),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     const SizedBox(height: 5),
+                  //     const Text(
+                  //       'History',
+                  //       style: TextStyle(fontSize: 16), // Example style
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
 

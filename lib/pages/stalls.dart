@@ -34,7 +34,8 @@ class _StallsState extends State<Stalls> {
             child: BlocBuilder<StallBloc, StallState>(
               builder: (context, state) {
                 if (state is StallLoading) {
-                  return Skeletonizer(
+                  return const Center(child: CircularProgressIndicator(),);
+                    Skeletonizer(
                     child: ListView.builder(itemCount: 4,
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         scrollDirection: Axis.vertical,

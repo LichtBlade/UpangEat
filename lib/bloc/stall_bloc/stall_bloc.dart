@@ -12,21 +12,29 @@ class StallBloc extends Bloc<StallEvent, StallState> {
   StallBloc(this._stallRepository) : super(StallLoading()) {
     on<LoadStalls>((event, emit) async {
       emit(StallLoading());
-      try{
+      try {
         final stalls = await _stallRepository.fetchStalls();
-        emit (StallLoaded(stalls));
-      } catch (e){
-        emit (StallError(e.toString()));
+        emit(StallLoaded(stalls));
+      } catch (e) {
+        emit(StallError(e.toString()));
       }
     });
 
     on<LoadSingleStall>((event, emit) async {
       emit(StallLoading());
-      try{
+      try {
         final stall = await _stallRepository.fetchStallById(event.id);
-        emit (SingleStallLoaded(stall));
-      } catch (e){
-        emit (StallError(e.toString()));
+        emit(SingleStallLoaded(stall));
+      } catch (e) {
+        emit(StallError(e.toString()));
+      }
+    });
+
+    on<UpdateStall>((event, emit) async {
+      try {
+        await _stallRepository.updateStall(ownerId: event.stall.ownerId, description: event.stall.description!, stallName: event.stall.stallName, stallId: event.stall.stallId, contactNumber: event.stall.contactNumber!, isActive: event.stall.isActive, imageBannerUrl: event.stall.imageBannerUrl, imageUrl: event.stall.imageUrl);
+      } catch (e) {
+        emit(StallError(e.toString()));
       }
     });
   }
