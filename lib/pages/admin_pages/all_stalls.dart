@@ -41,12 +41,24 @@ class _AllStallsScreenState extends State<AllStallsScreen> {
 
           final stalls = snapshot.data!;
           return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
+            scrollDirection: Axis.vertical,
             child: DataTable(
+              dataRowMinHeight: 30.0,
+              dataRowMaxHeight: 65.0,
+              headingRowColor: MaterialStateProperty.all(const Color(0xFFc5473d)),
               columns: const [
-                DataColumn(label: Text('Stall Name')),
-                DataColumn(label: Text('Active')),
-                DataColumn(label: Text('Actions')),
+                DataColumn(label: Text(
+                  'Stall Name',
+                  style: columnTextStyle
+                )),
+                DataColumn(label: Text(
+                  'Active',
+                  style: columnTextStyle
+                )),
+                DataColumn(label: Text(
+                  'Actions',
+                  style: columnTextStyle
+                )),
               ],
               rows: stalls.map((stall) {
                 return DataRow(cells: [
@@ -134,3 +146,9 @@ class _AllStallsScreenState extends State<AllStallsScreen> {
     }
   }
 }
+
+const TextStyle columnTextStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  color: Colors.white,
+  fontSize: 16,
+);

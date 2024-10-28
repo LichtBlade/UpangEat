@@ -17,8 +17,8 @@ class _DailyAnalytics extends State<DailyAnalytics> {
   @override
   void initState() {
     final currentDate = DateTime.now();
-    final startDate = DateTime(currentDate.year, currentDate.month, currentDate.day); //yesterday
-    final endDate = DateTime(currentDate.year, currentDate.month, currentDate.day + 1); //today
+    final startDate = DateTime(currentDate.year, currentDate.month, currentDate.day); //dapat current date pero previous date
+    final endDate = DateTime(currentDate.year, currentDate.month, currentDate.day + 1); //dapat next date pero current date
 
     context.read<AnalyticFoodBloc>().add(LoadAnalyticFood(globalUserData!.stallId!, "$startDate", "$endDate"));
     super.initState();

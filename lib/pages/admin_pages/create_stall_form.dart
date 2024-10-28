@@ -150,7 +150,7 @@ class _CreateStallFormState extends State<CreateStallForm> {
                                       isActive: _isActive,
                                     ),
                                   );
-                                  Navigator.pushReplacement(
+                                  Navigator.pop(
                                     context,
                                     MaterialPageRoute(builder: (context) => const AdminDashboard()), // Replace with your AdminDashboard widget
                                   );
