@@ -54,7 +54,7 @@ class TrayCardState extends State<TrayCard> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
                 child: Image.network(
-                  "${IpAddress.ipAddress}/uploads/${widget.food.stallId}_${widget.food.foodItemId}.jpg",
+                  widget.food.imageUrl!,
                   width: 90,
                   height: 90,
                   fit: BoxFit.cover,errorBuilder:

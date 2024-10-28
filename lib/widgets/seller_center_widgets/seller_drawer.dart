@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:upang_eat/pages/seller_center/analytics.dart';
+import 'package:upang_eat/pages/seller_center/stall_profile.dart';
 import 'package:upang_eat/pages/user_login.dart';
 import 'package:upang_eat/user_data.dart';
 
@@ -67,6 +68,21 @@ class _SellerDrawerState extends State<SellerDrawer> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const Analytics(),
+                  ),
+                );
+              });
+            },
+          ),
+          ListTile(
+            title: const Text("Profile"),
+            onTap: () {
+              setState(() {
+                Navigator.pop(context);
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const StallProfile(),
                   ),
                 );
               });

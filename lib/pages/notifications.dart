@@ -66,13 +66,13 @@ class _NotificationCard extends StatelessWidget {
     final diff = now.difference(dateTime!);
 
     if (diff.inMinutes < 60) {
-      return "${diff.inMinutes} mins ago";
+      return "${diff.inMinutes} min${diff.inMinutes == 1 ? '' : 's'} ago";
     } else if (diff.inHours < 24) {
-      return "${diff.inHours} hours ago";
+      return "${diff.inHours} hour${diff.inHours == 1 ? '' : 's'} ago";
     } else if (diff.inDays == 1) {
       return "yesterday";
     } else if (diff.inDays < 7) {
-      return "${diff.inDays} days ago";
+      return "${diff.inDays} day${diff.inDays == 1 ? '' : 's'} ago";
     } else if (diff.inDays < 30) {
       return "${(diff.inDays / 7).floor()} week${(diff.inDays / 7).floor() > 1 ? 's' : ''} ago";
     } else {
@@ -97,7 +97,7 @@ class _NotificationCard extends StatelessWidget {
           text: "$word ",
           style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w700), // Green color
         ));
-      } else if (word.contains("canceled")) {
+      } else if (word.contains("cancelled")) {
         // If the word matches the keyword, color it green
         textSpans.add(TextSpan(
           text: "$word ",
