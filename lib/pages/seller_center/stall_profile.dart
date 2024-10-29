@@ -384,7 +384,6 @@ class _ImageFromFirebase extends StatelessWidget {
               child: FadeInImage.memoryNetwork( // Use FadeInImage with a placeholder
               placeholder: kTransparentImage, 
               image: path,
-              fit: BoxFit.cover,
               height: 250,
               imageErrorBuilder: (context, error, stackTrace) {
                 return const Center(
