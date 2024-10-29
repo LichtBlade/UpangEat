@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:upang_eat/bloc/admin_bloc/admin_bloc.dart';
+import 'package:upang_eat/bloc/admin_bloc/admin_event.dart';
+import 'package:upang_eat/bloc/admin_bloc/admin_state.dart';
 import 'package:upang_eat/models/stall_model.dart';
 import 'package:upang_eat/pages/admin_pages/edit_stall.dart';
 import 'package:upang_eat/repositories/stall_repository_impl.dart';
@@ -21,7 +25,15 @@ class _AllStallsScreenState extends State<AllStallsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<AdminBloc, AdminState>( // Add the BlocListener here
+      listener: (context, state) {
+        if (state is CreateStallEvent || state is UpdateStallEvent) {
+          setState(() { // Trigger a rebuild of the widget
+            futureStalls = StallRepositoryImpl().fetchStalls();
+          });
+        }
+      },
+      child: Scaffold(
       appBar: AppBar(
         title: const Text('All Stalls'),
         backgroundColor: Colors.white,
@@ -101,6 +113,7 @@ class _AllStallsScreenState extends State<AllStallsScreen> {
           );
         },
       ),
+      )
     );
   }
 

@@ -276,18 +276,22 @@ class _StallCardHorizontalList extends StatelessWidget {
           } else if (state is StallLoaded) {
             final stallData = state.stalls;
             stallData.shuffle();
+
+            final activeStalls = stallData.where((stall) => stall.isActive).toList(); 
+
             return ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                scrollDirection: Axis.horizontal,
-                itemCount: stallData.length,
-                itemBuilder: (context, index) {
-                  final stall = stallData[index];
-                  return HomeStallCard(stall: stall);
-                });
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              scrollDirection: Axis.horizontal,
+              itemCount: activeStalls.length, 
+              itemBuilder: (context, index) {
+                final stall = activeStalls[index];
+                return HomeStallCard(stall: stall);
+              },
+            );
           } else if (state is StallError) {
             return Text("Error: ${state.message}");
           } else {
-            return const Text("Unexpected state}");
+            return const Text("Unexpected state");
           }
         },
       ),

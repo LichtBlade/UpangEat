@@ -4,6 +4,8 @@ import 'package:upang_eat/Pages/stall_information.dart';
 import 'package:upang_eat/main.dart';
 import 'package:upang_eat/models/stall_model.dart';
 
+import 'package:transparent_image/transparent_image.dart'; 
+
 class HomeStallCard extends StatefulWidget {
   final Stall stall;
   const HomeStallCard({super.key, required this.stall});
@@ -25,26 +27,25 @@ class _HomeStallCardState extends State<HomeStallCard> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(14.0),
             child: Column(children: [
-              Image.network(widget.stall.imageUrl!,
-                  height: 100,
-                  width: 130,
+              SizedBox( 
+                height: 100,
+                width: 130,
+                child: FadeInImage.memoryNetwork( 
+                  placeholder: kTransparentImage, 
+                  image: widget.stall.imageUrl!,
                   fit: BoxFit.cover,
-                  errorBuilder:
-                      (context, error, stackTrace) {
-                    return const Text('Error loading image');
-                  },
-                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                  if (frame == null) {
-                    return Skeletonizer(
-                      child: Image.asset("assets/foods/1_1.jpg",
-                        height: 100,
-                        width: 130,
-                        fit: BoxFit.cover,),
-                    );
-                  } else {
-                    return child;
-                  }
-                },),
+                  imageErrorBuilder: (context, error, stackTrace) =>
+                      const Center( 
+                        child: Text(
+                          "No Image Uploaded",
+                          style: TextStyle(
+                            fontSize: 10, 
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                ),
+              ),
               SizedBox(
                 width: 110,
                 child:
