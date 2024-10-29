@@ -35,7 +35,7 @@ class _SellerCenterProductsState extends State<SellerCenterProducts> {
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 222, 15, 57),
         title: const Text(
-          'Boss Sisig',
+          'Product Section',
           style: TextStyle(
             color: Colors.white,
           ),

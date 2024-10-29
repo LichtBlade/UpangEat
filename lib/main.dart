@@ -49,7 +49,7 @@ class IpAddress {
     if (Platform.isIOS) {
       return "http://localhost:3000"; // iOS uses localhost
     } else if (Platform.isAndroid) {
-      return "http://10.0.2.2:3000"; // Android emulator uses this IP
+      return "http://192.168.100.203:3000"; // Android emulator uses this IP
     } else {
       return "http://defaultAddress:3000"; // Default case if platform is unknown
     }
@@ -59,7 +59,7 @@ class IpAddress {
     if (Platform.isIOS) {
       return "http://localhost:7545"; // iOS uses localhost
     } else if (Platform.isAndroid) {
-      return "http://10.0.2.2:7545"; // Android emulator uses this IP
+      return "http://192.168.100.203:7545"; // Android emulator uses this IP
     } else {
       return "http://defaultAddress:7545"; // Default case if platform is unknown
     }

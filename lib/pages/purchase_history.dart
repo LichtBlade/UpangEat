@@ -58,12 +58,29 @@ class _PurchaseHistoryState extends State<PurchaseHistory> {
                           shrinkWrap: true,
                           itemCount: order.items.length,
                           itemBuilder: (context, index) {
-                            final item = order.items[index];
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text("${item.quantity}x ${item.itemName}"), Text("₱ ${item.subtotal}")],
-                            );
-                          }),
+                        final item = order.items[index];
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("${item.quantity}x ${item.itemName}"),
+                            Text("₱ ${item.subtotal}"),
+                            if (item.imageUrl != null) 
+                              Image.network(
+                                item.imageUrl!,
+                                height: 50, 
+                                width: 50,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: Icon(Icons.error), 
+                                  );
+                                },
+                              ),
+                          ],
+                        );
+                      },
+                    ),
                       const SizedBox(
                         height: 18,
                       ),

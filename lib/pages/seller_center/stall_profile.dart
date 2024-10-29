@@ -13,6 +13,8 @@ import '../../bloc/stall_bloc/stall_bloc.dart';
 import '../../models/user_model.dart';
 import '../../services/storage_service.dart';
 
+import 'package:transparent_image/transparent_image.dart';
+
 class StallProfile extends StatefulWidget {
   const StallProfile({super.key});
 
@@ -367,20 +369,35 @@ class _ImageFromFirebase extends StatelessWidget {
           ),
           color: Colors.black12,
         ),
-        child: Image.network(
-          path,
-          height: 250,
-          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
-              ),
-            );
-          },
-        ));
-  }
-}
+        // child: Image.network(
+        //   path,
+        //   height: 250,
+        //   loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+        //     if (loadingProgress == null) return child;
+        //     return Center(
+        //       child: CircularProgressIndicator(
+        //         value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
+        //       ),
+        //     );
+        //   },
+        // ));
+              child: FadeInImage.memoryNetwork( // Use FadeInImage with a placeholder
+              placeholder: kTransparentImage, 
+              image: path,
+              fit: BoxFit.cover,
+              height: 250,
+              imageErrorBuilder: (context, error, stackTrace) {
+                return const Center(
+                  child: Text( // Display a Text widget on error
+                    'No Image Uploaded',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                );
+              },
+            ),
+          );
+        }
+      }
 
 class _UploadedImage extends StatelessWidget {
   final String path;

@@ -86,27 +86,27 @@ class _CreateStallFormState extends State<CreateStallForm> {
                               return null;
                             },
                           ),
-                          // const SizedBox(height: 16.0),
-                          // TextFormField(
-                          //   controller: _contactNoController,
-                          //   decoration:
-                          //       const InputDecoration(
-                          //       border: OutlineInputBorder(),
-                          //       labelText: 'Contact No.',
-                          //     ),
-                          //       keyboardType: TextInputType.number, 
-                          //       inputFormatters:
-                          //       <TextInputFormatter>
-                          //         [
-                          //         FilteringTextInputFormatter.digitsOnly,
-                          //         ],
-                          //       validator: (value) {
-                          //         if (value == null || value.isEmpty) {
-                          //           return 'Please enter Contact No.';
-                          //         }
-                          //         return null;
-                          //       },
-                          //     ),
+                          const SizedBox(height: 16.0),
+                          TextFormField(
+                            controller: _contactNoController,
+                            decoration:
+                                const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Contact No.',
+                              ),
+                                keyboardType: TextInputType.number, 
+                                inputFormatters:
+                                <TextInputFormatter>
+                                  [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter Contact No.';
+                                  }
+                                  return null;
+                                },
+                              ),
                           const SizedBox(height: 16.0),
                           TextFormField(
                             controller: _descriptionController,
@@ -152,7 +152,7 @@ class _CreateStallFormState extends State<CreateStallForm> {
                                   );
                                   Navigator.pop(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const AdminDashboard()), // Replace with your AdminDashboard widget
+                                    MaterialPageRoute(builder: (context) => const AdminDashboard()),
                                   );
                                 }
                               },

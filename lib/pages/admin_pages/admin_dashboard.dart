@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:upang_eat/bloc/admin_bloc/admin_bloc.dart';
+import 'package:upang_eat/bloc/admin_bloc/admin_event.dart';
+import 'package:upang_eat/bloc/admin_bloc/admin_state.dart';
 import 'package:upang_eat/main.dart';
 import 'package:upang_eat/pages/admin_pages/all_stalls.dart';
 import 'package:upang_eat/pages/admin_pages/create_stall_form.dart';
@@ -104,7 +108,13 @@ class _DashboardState extends State<AdminDashboard> {
           )
         ],
       ),
-      body: Stack(
+      body: BlocListener<AdminBloc, AdminState>( 
+        listener: (context, state) {
+          if (state is CreateStallEvent || state is UpdateStallEvent) {
+            _loadDashboardData(); 
+          }
+        },
+        child: Stack(
         children: [
           Container(
             decoration: const BoxDecoration(
@@ -229,8 +239,9 @@ class _DashboardState extends State<AdminDashboard> {
           ),
         ],
       ),
-
+      )
     );
+
   }
 
   Widget _buildStatCard(String title, int value) {
@@ -239,7 +250,7 @@ class _DashboardState extends State<AdminDashboard> {
       elevation: 8,
       child: Container(
         padding: const EdgeInsets.all(8.0),
-        width: 100,
+        width: 80,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
