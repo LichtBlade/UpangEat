@@ -205,7 +205,7 @@ class _UserFormCardState extends State<UserFormCard> {
                                     userType: _selectedUserType!,
                                   ),
                                 );
-                                Navigator.pushReplacement(
+                                Navigator.pop(
                                   context,
                                   MaterialPageRoute(builder: (context) => const AdminDashboard()), // Replace with your AdminDashboard widget
                                 );

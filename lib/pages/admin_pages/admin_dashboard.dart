@@ -8,6 +8,7 @@ import 'package:upang_eat/repositories/user_repository_impl.dart';
 import 'package:upang_eat/widgets/admin_widgets/linechart_card.dart';
 
 import '../../main.dart';
+import '../user_login.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -46,13 +47,62 @@ class _DashboardState extends State<AdminDashboard> {
     }
   }
 
+  Future<void> _confirmLogout() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // Prevents dismissing the dialog by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Logout'),
+          content: const Text('Are you sure you want to logout?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel',
+                style: TextStyle(color: Color(0xFF000000)),),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Logout',
+                style: TextStyle(color: Color(0xFFc5473d)),),
+              onPressed: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const UserLogin()),
+                      (route) => false, // This removes all previous routes
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
+        centerTitle: true,
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
+        actions: [
+          PopupMenuButton(
+            iconColor: Colors.black,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                child: ListTile(
+                  title: const Text('Logout'),
+                  onTap: () {
+                    // Navigator.of(context).pop(); // Close the popup menu
+                    _confirmLogout(); // Show logout confirmation dialog
+                  },
+                )
+              ),
+            ]
+          )
+        ],
       ),
       body: Stack(
         children: [

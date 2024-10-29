@@ -156,7 +156,7 @@ class _EditStallScreenState extends State<EditStallScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Stall updated successfully!')),
                               );
-                              Navigator.of(context).pushReplacement(
+                              Navigator.of(context).pop(
                                 MaterialPageRoute(builder: (context) => const AllStallsScreen()),
                               );
                             }
