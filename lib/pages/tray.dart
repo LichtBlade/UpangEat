@@ -9,16 +9,11 @@ import "package:upang_eat/models/order_model.dart";
 import "package:upang_eat/models/tray_model.dart";
 import "package:upang_eat/pages/payment_processing.dart";
 import "package:upang_eat/user_data.dart";
-import "package:upang_eat/main.dart";
-import "package:web3dart/web3dart.dart";
-import "package:web_socket_channel/io.dart";
-import 'package:http/http.dart' as http;
+
 import "../bloc/food_bloc/food_bloc.dart";
 import "../bloc/order_bloc/order_bloc.dart";
-import "../bloc/wallet_bloc/wallet_bloc.dart";
 import "../fake_data.dart";
 import "../models/order_item_model.dart";
-import "../repositories/tray_repository_impl.dart";
 import "../widgets/tray_card.dart";
 
 class Tray extends StatefulWidget {
@@ -33,13 +28,13 @@ class _TrayState extends State<Tray> {
   @override
   void initState() {
     super.initState();
-    context.read<TrayBloc>().add(TrayLoadFood(widget.id));
+    context.read<FoodBloc>().add(LoadFoodTray(widget.id));
   }
 
   double convertPhpToEth(double totalPayment) {
     if (globalEthPrice > 0) {
       // Ensure the ETH price is not zero to avoid division by zero
-      ethAmount = totalPayment / globalEthPrice; // Convert PHP to ETH
+      double ethAmount = totalPayment / globalEthPrice; // Convert PHP to ETH
       return ethAmount; // Return the amount in ETH
     } else {
       print("Error: ETH price is zero or not set.");
@@ -54,11 +49,10 @@ class _TrayState extends State<Tray> {
       body: BlocListener<TrayBloc, TrayState>(
         listener: (context, state) {
           if (state is TrayItemsRemoved) {
-            context.read<TrayBloc>().add(TrayLoadFood(widget.id));
-          } else if (state is TrayFoodLoaded) {
-            // context.read<TrayBloc>().add(TrayLoadFood(widget.id));
+            context.read<FoodBloc>().add(LoadFoodTray(widget.id));
           } else if (state is TrayError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         child: Stack(children: [
@@ -84,25 +78,48 @@ class _TrayState extends State<Tray> {
                 showDialog(
                     context: context,
                     builder: (context) {
-                      final foodState = context.read<TrayBloc>().state;
-                      if (foodState is TrayFoodLoaded) {
+                      final foodState = context.read<FoodBloc>().state;
+                      if (foodState is FoodLoaded) {
                         final foods = foodState.foods;
                         final totalAmount = foodState.totalPrice;
-                        final convertToEth = convertPhpToEth(totalAmount.toDouble());
+                        final convertToEth =
+                        convertPhpToEth(totalAmount.toDouble());
                         if (foods.isEmpty) {
-                          return AlertDialog(title: const Text("Empty Tray"), content: const Text("Your tray is empty. Add some delicious items before proceeding to payment."), actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Ok'),
-                            ),
-                          ]);
+                          return AlertDialog(
+                              title: const Text("Empty Tray"),
+                              content: const Text(
+                                  "Your tray is empty. Add some delicious items before proceeding to payment."),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Ok'),
+                                ),
+                              ]);
+                        }
+
+                        if (convertToEth >= globalEthBalance) {
+                          // Show error if the balance is insufficient
+                          return AlertDialog(
+                            title: const Text("Insufficient Balance"),
+                            content: const Text(
+                                "You don't have enough balance to complete this transaction. Please add more funds."),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Ok'),
+                              ),
+                            ],
+                          );
                         }
 
                         return AlertDialog(
                           title: const Text("Proceed to Payment"),
-                          content: Text("Please review the amount of $convertToEth ETH for your order before confirming payment."),
+                          content: Text(
+                              "Please review the amount of $convertToEth ETH for your order before confirming payment."),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -111,49 +128,35 @@ class _TrayState extends State<Tray> {
                               child: const Text('Cancel'),
                             ),
                             TextButton(
-                              onPressed: () async {
-                                try {
-                                  double ethAmount = convertToEth; // ETH amount
-                                  // await sendEther(ethAmount, globalPaymentEth);
-                                  context.read<WalletBloc>().add(LoadEthBalance(ethAmount, globalPaymentEth));
-                                  print(ethAmount);
-                                  print(globalPaymentEth);
+                              onPressed: () {
+                                // Create a list of OrderItemModel from foods
+                                final orderItems = foods
+                                    .map((food) => OrderItemModel(
+                                    orderItemId: 0,
+                                    itemId: food.foodItemId,
+                                    quantity: food.trayQuantity ?? 1,
+                                    subtotal: food.price *
+                                        (food.trayQuantity ?? 1)))
+                                    .toList();
 
-                                  // Create a list of OrderItemModel from foods
-                                  final orderItems = foods.map((food) => OrderItemModel(orderItemId: 0, itemId: food.foodItemId, quantity: food.trayQuantity ?? 1, subtotal: food.price * (food.trayQuantity ?? 1))).toList();
+                                // Create the OrderModel
+                                final order = OrderModel(
+                                  orderId: 0,
+                                  userId: widget.id,
+                                  totalAmount: totalAmount,
+                                  items: orderItems,
+                                );
+                                print(order);
+                                context
+                                    .read<OrderBloc>()
+                                    .add(CreateOrder(order, widget.id));
 
-                                  // Create the OrderModel
-                                  final order = OrderModel(
-                                    orderId: 0,
-                                    userId: widget.id,
-                                    totalAmount: totalAmount,
-                                    items: orderItems,
-                                  );
-                                  print(order);
-                                  context.read<OrderBloc>().add(CreateOrder(order, widget.id));
-
-                                  Navigator.of(context).pop();
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentProcessing()));
-                                } catch (e) {
-                                  // Show an error dialog if balance is insufficient or other error occurs
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text("Payment Error"),
-                                        content: Text(e.toString()),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('Ok'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
+                                Navigator.of(context).pop();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                        const PaymentProcessing()));
                               },
                               child: const Text('Confirm'),
                             ),
@@ -161,14 +164,18 @@ class _TrayState extends State<Tray> {
                         );
                       } else {
                         print("error: creating order");
-                        return AlertDialog(title: const Text("Empty Tray"), content: const Text("Your tray is empty. Add some delicious items before proceeding to payment."), actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Ok'),
-                          ),
-                        ]);
+                        return AlertDialog(
+                            title: const Text("Empty Tray"),
+                            content: const Text(
+                                "Your tray is empty. Add some delicious items before proceeding to payment."),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Ok'),
+                              ),
+                            ]);
                       }
                     });
               },
@@ -182,67 +189,6 @@ class _TrayState extends State<Tray> {
         ]),
       ),
     );
-  }
-}
-
-Future<void> sendEther(double ethAmount, String accountID) async {
-  String rpcUrl = IpAddress.rpGanacheUrl; // For Android emulator
-  String wsUrl = IpAddress.wsGanacheUrl;
-  String test = '';
-
-  try {
-    // Create Web3 client
-    Web3Client client = Web3Client(
-      rpcUrl,
-      http.Client(),
-      socketConnector: () {
-        return IOWebSocketChannel.connect(wsUrl).cast<String>();
-      },
-    );
-
-    // Private key (use a test key for Ganache or testnets)
-    String privateKey = globalPrivateKey;
-
-    // Obtain credentials from private key
-    Credentials credentials = await client.credentialsFromPrivateKey(privateKey);
-
-    EthereumAddress ownAddress = await credentials.extractAddress();
-    print("Own Address: $ownAddress");
-
-    // Convert accountID (string) to EthereumAddress
-    EthereumAddress receiver = EthereumAddress.fromHex(accountID);
-
-    // Get the current balance of the user's wallet
-    EtherAmount balance = await client.getBalance(ownAddress);
-
-    // Convert ethAmount (ETH) to Wei
-    BigInt weiAmount = BigInt.from(ethAmount * 1e18); // Multiply ETH by 10^18 to get Wei
-
-    // Check if the user's balance is sufficient
-    if (balance.getInWei < weiAmount) {
-      print("Insufficient balance.");
-      throw Exception("Insufficient balance. Please top up your wallet.");
-    }
-
-    // Send Ether transaction
-    var result = await client.sendTransaction(
-      credentials,
-      Transaction(
-        from: ownAddress,
-        to: receiver, // EthereumAddress object
-        value: EtherAmount.inWei(weiAmount), // Use the Wei amount
-        gasPrice: EtherAmount.inWei(BigInt.from(1000000000)), // Set a gas price
-        maxGas: 21000, // Set gas limit
-      ),
-      chainId: 1337, // Ganache default chain ID
-    );
-
-    print("Transaction Hash: $result \n\n Successful Transaction");
-  } catch (e) {
-    print("Transaction failed: $e");
-    print(globalPaymentEth);
-    print(test);
-    throw e; // Re-throw the exception to handle in the UI
   }
 }
 
@@ -262,9 +208,9 @@ class _AppBarState extends State<_AppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: BlocBuilder<TrayBloc, TrayState>(
+      title: BlocBuilder<FoodBloc, FoodState>(
         builder: (context, state) {
-          if (state is TrayFoodLoaded) {
+          if (state is FoodLoaded) {
             _productCount = state.foods.length;
           }
           return Text("Tray ($_productCount)");
@@ -338,7 +284,9 @@ class _OrderSummaryAndWalletState extends State<_OrderSummaryAndWallet> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          isSwitch ? formattedPhpBalance : "${ethBalance.toStringAsFixed(4)} ETH",
+                          isSwitch
+                              ? formattedPhpBalance
+                              : "${ethBalance.toStringAsFixed(6)} ETH",
                           maxLines: 1,
                           style: const TextStyle(
                             color: Color(0xFF202020),
@@ -365,17 +313,18 @@ class _OrderSummaryAndWalletState extends State<_OrderSummaryAndWallet> {
           margin: const EdgeInsets.symmetric(horizontal: 0),
           color: Colors.black12,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+            padding:
+            const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
             child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text("Subtotal"),
-                    BlocBuilder<TrayBloc, TrayState>(
+                    BlocBuilder<FoodBloc, FoodState>(
                       builder: (context, state) {
                         int totalPrice = 0;
-                        if (state is TrayFoodLoaded) {
+                        if (state is FoodLoaded) {
                           totalPrice = state.totalPrice;
                           return Text("₱ $totalPrice");
                         }
@@ -397,16 +346,21 @@ class _OrderSummaryAndWalletState extends State<_OrderSummaryAndWallet> {
                   children: [
                     const Text(
                       "Total",
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                      style:
+                      TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                     ),
-                    BlocBuilder<TrayBloc, TrayState>(
+                    BlocBuilder<FoodBloc, FoodState>(
                       builder: (context, state) {
                         int totalPrice = 0;
-                        if (state is TrayFoodLoaded) {
+                        if (state is FoodLoaded) {
                           totalPrice = state.totalPrice;
-                          return Text("₱ $totalPrice", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16));
+                          return Text("₱ $totalPrice",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 16));
                         } else {
-                          return const Text("₱ 0", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16));
+                          return const Text("₱ 0",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 16));
                         }
                       },
                     )
@@ -426,9 +380,9 @@ class _FoodBlocBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TrayBloc, TrayState>(
+    return BlocBuilder<FoodBloc, FoodState>(
       builder: (context, state) {
-        if (state is TrayLoading) {
+        if (state is FoodLoading) {
           return Skeletonizer(
             child: ListView.builder(
                 itemCount: 8,
@@ -437,23 +391,23 @@ class _FoodBlocBuilder extends StatelessWidget {
                   return TrayCard(food: FakeData.fakeFood);
                 }),
           );
-        } else if (state is TrayFoodLoaded) {
+        } else if (state is FoodLoaded) {
           final foods = state.foods;
           print(foods);
           return foods.isNotEmpty
               ? ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  itemCount: foods.length,
-                  itemBuilder: (context, index) {
-                    final food = foods[index];
-                    return TrayCard(food: food);
-                  })
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              itemCount: foods.length,
+              itemBuilder: (context, index) {
+                final food = foods[index];
+                return TrayCard(food: food);
+              })
               : Center(
-                  child: Image.asset(
-                    "assets/mingming.png",
-                  ),
-                );
-        } else if (state is TrayError) {
+                child: Image.asset(
+                  "assets/mingming.png",
+                ),
+              );
+        } else if (state is FoodError) {
           return Text(state.message);
         } else {
           return const Text("Unexpected state");

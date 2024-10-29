@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upang_eat/bloc/admin_bloc/admin_bloc.dart';
 import 'package:upang_eat/bloc/category_bloc/category_bloc.dart';
 import 'package:upang_eat/bloc/create_user/create_user_bloc.dart';
@@ -15,6 +16,7 @@ import 'package:upang_eat/bloc/transaction_bloc/transaction_bloc.dart';
 import 'package:upang_eat/bloc/wallet_bloc/wallet_bloc.dart';
 import 'package:upang_eat/firebase_options.dart';
 import 'package:upang_eat/pages/seller_center/seller_center.dart';
+import 'package:upang_eat/pages/slideshow.dart';
 import 'package:upang_eat/repositories/admin_repository_impl.dart';
 import 'package:upang_eat/repositories/auth_repository_impl.dart';
 import 'package:upang_eat/repositories/category_repository_impl.dart';
@@ -84,10 +86,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool _showSlideshow = false; // Flag to track whether to show slideshow
   @override
   void initState() {
     super.initState();
-    fetchTokenPrices();
+    fetchTokenPrices().catchError((error) {
+      // Handle fetch error
+      print("Error fetching token prices: $error");
+    });
+    _checkIfSlideshowShown();  // Check if slideshow has been shown
+  }
+
+  Future<void> _checkIfSlideshowShown() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? isShown = prefs.getBool('slideshowShown');
+    setState(() {
+      _showSlideshow = isShown ?? false; // Use a default value if null
+    });
   }
 
   @override
@@ -146,7 +161,7 @@ class _MyAppState extends State<MyApp> {
         // home: const Home(),
 
         //test for admin
-        home: const UserLogin(),
+        home: _showSlideshow ? UserLogin() : SlideshowScreen(), // Show slideshow only if it hasn't been shown
 
         //test for login
         // home: LoginPage(),

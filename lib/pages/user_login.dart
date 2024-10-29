@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:upang_eat/Pages/home.dart';
 import 'package:upang_eat/main.dart';
 import 'package:upang_eat/pages/admin_pages/admin_dashboard.dart';
 import 'package:upang_eat/pages/seller_center/seller_center.dart';
@@ -11,6 +10,7 @@ import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 import '../bloc/login_bloc/login_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'home.dart';
 
 class UserLogin extends StatefulWidget {
   const UserLogin({super.key});
@@ -80,7 +80,7 @@ class _UserLoginState extends State<UserLogin> {
                 globalPrivateKey = globalUserWallet;
                 _fetchWalletGanche(globalPrivateKey);
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => SlideshowScreen()),
+                  MaterialPageRoute(builder: (context) => Home()),
                 );
               }
             } else if (state is LoginFailed) {
