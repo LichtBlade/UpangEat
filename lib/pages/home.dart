@@ -37,11 +37,27 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   void initState() {
-    context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
+    // context.read<OrderBloc>().add(UserFetchOrder(globalUserData?.userId ?? 0));
+    // context.read<CategoryBloc>().add(LoadCategory());
+    // context.read<NotificationBloc>().add(FetchNotification(globalUserData!.userId));
+    // super.initState();
+    super.initState(); // Call super first to ensure the base class is initialized.
+
+    final userId = globalUserData?.userId; // Nullable userId
+
+    // Fetch orders
+    context.read<OrderBloc>().add(UserFetchOrder(userId ?? 0)); // Fallback to 0 if userId is null
     context.read<CategoryBloc>().add(LoadCategory());
-    context.read<NotificationBloc>().add(FetchNotification(globalUserData!.userId));
-    super.initState();
+
+    // Fetch notifications only if globalUserData is not null
+    if (globalUserData != null) {
+      context.read<NotificationBloc>().add(FetchNotification(userId!)); // Safe to use ! here
+    } else {
+      // Handle the case where globalUserData is null if necessary
+      // For example, you might want to log a message or provide a default notification
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {

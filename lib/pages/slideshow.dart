@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:upang_eat/pages/user_login.dart';
 
 import 'home.dart';
 
@@ -46,8 +48,10 @@ class _SlideshowScreenState extends State<SlideshowScreen> {
             right: 20,
             child: _currentPage == 4
                 ? ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('slideshowShown', true); // Set the flag to true
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserLogin()));
               },
               child: const Text("Understood"),
             )

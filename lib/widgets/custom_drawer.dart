@@ -49,9 +49,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 const Text(
                   "Upang Eats",
                   style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 22,
-                      color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 22,
+                    color: Colors.white,
                   ),
                 )
               ],
@@ -140,4 +140,20 @@ class _CustomDrawerState extends State<CustomDrawer> {
       ),
     );
   }
+
+  // void _logout() async {
+  //   // Clear user data from SharedPreferences
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.clear();
+  //
+  //   // Optionally, you can also reset any necessary state in the Bloc or Provider
+  //   context.read<LoginBloc>().add(RemoveUserData());
+  //
+  //   // Navigate back to the login page
+  //   Navigator.of(context).pushAndRemoveUntil(
+  //     MaterialPageRoute(builder: (context) => const UserLogin()),
+  //         (Route<dynamic> route) => false,
+  //   );
+  // }
+
 }
